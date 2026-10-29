@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Christ at Bountiful (Paper Diorama)</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #e8c096; font-family: Georgia, 'Times New Roman', serif; }
+  canvas { display: block; touch-action: none; }
+  .label {
+    position: fixed; background: #fbf5e4; color: #4a3826; padding: 8px 14px;
+    box-shadow: 2px 3px 0 rgba(70, 40, 15, 0.35); pointer-events: none; user-select: none;
+  }
+  #title { top: 14px; left: 14px; font-size: 18px; transform: rotate(-1deg); }
+  #vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(60,30,10,0.35) 100%); }
+  #hint { bottom: 14px; left: 14px; font-size: 13px; transform: rotate(0.6deg); max-width: calc(100vw - 60px); }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="vignette"></div>
+<div id="title" class="label"></div>
+<div id="hint" class="label">WASD / arrows: walk and turn &middot; Shift: run &middot; drag: look &middot; wheel: zoom &middot; touch: left side moves, right side looks</div>
+<script type="module">
+  import scene from './scene.js';
+  import { run } from './engine/world.js';
+  document.getElementById('title').textContent = scene.title;
+  run(scene);
+</script>
+</body>
+</html>

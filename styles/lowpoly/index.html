@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>3 Nephi 11: Christ at the Temple in Bountiful</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #cf9f80; touch-action: none; }
+    canvas { display: block; }
+    .hud { position: fixed; left: 20px; color: #fff8ec; font-family: Georgia, 'Times New Roman', serif; text-shadow: 0 1px 6px rgba(40, 20, 10, 0.6); pointer-events: none; user-select: none; }
+    #title { top: 16px; font-size: 22px; letter-spacing: 0.02em; }
+    #hint { bottom: 16px; font-family: system-ui, sans-serif; font-size: 12px; opacity: 0.85; background: rgba(40, 24, 16, 0.35); padding: 6px 10px; border-radius: 6px; }
+    @media (max-width: 600px) { #title { font-size: 16px; right: 20px; } }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="title" class="hud"></div>
+  <div id="hint" class="hud">Click to look &middot; WASD / arrows to walk &middot; Shift to run &middot; Esc frees the mouse &middot; Touch: left side moves, right side looks</div>
+  <script type="module">
+    import { createWorld } from './engine/index.js';
+    import scene from './scene.js';
+    document.getElementById('title').textContent = scene.title;
+    createWorld(scene);
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Christ at Bountiful (Voxel)</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #1c1a18; touch-action: none; }
+    canvas { display: block; }
+    .hud { position: fixed; left: 16px; color: #fff6e6; font: 14px/1.4 Georgia, serif; text-shadow: 0 1px 3px rgba(0,0,0,0.7); pointer-events: none; }
+    #title { top: 14px; font-size: 20px; letter-spacing: 0.02em; }
+    #hint { bottom: 14px; font: 12px/1.5 system-ui, sans-serif; background: rgba(20,16,12,0.45); padding: 6px 10px; border-radius: 6px; }
+    #loading { position: fixed; inset: 0; display: grid; place-items: center; color: #e8dcc6; font: 16px Georgia, serif; }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="loading">Building the land Bountiful...</div>
+  <div class="hud" id="title"></div>
+  <div class="hud" id="hint">Click and move mouse to look (Esc releases) · WASD / arrows to walk · Shift to run<br>Touch: drag left side to walk, right side to look</div>
+  <script type="module">
+    import { run } from './engine/engine.js';
+    import scene from './scene.js';
+    document.getElementById('title').textContent = scene.title;
+    requestAnimationFrame(() => setTimeout(() => {
+      run(scene);
+      document.getElementById('loading').remove();
+    }, 30));
+  </script>
+</body>
+</html>

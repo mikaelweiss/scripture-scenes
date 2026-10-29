@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>3 Nephi 11: Christ at the Temple in Bountiful</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #e9dcc3; }
+    canvas { display: block; touch-action: none; cursor: crosshair; }
+    .hud { position: fixed; pointer-events: none; color: #3d2b1f; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+    #plate { top: 18px; left: 22px; max-width: min(520px, calc(100vw - 44px)); }
+    #title { margin: 0; font-size: clamp(17px, 2.3vw, 24px); font-weight: 600; font-style: italic; letter-spacing: 0.01em; text-shadow: 0 0 10px rgba(244, 234, 214, 0.9), 0 0 3px rgba(244, 234, 214, 0.9); }
+    #subtitle { margin: 4px 0 0; font-size: 13px; opacity: 0.85; text-shadow: 0 0 8px rgba(244, 234, 214, 0.95); }
+    #hint { bottom: 16px; left: 50%; transform: translateX(-50%); font-size: 13px; padding: 7px 14px; background: rgba(244, 234, 214, 0.72); border-radius: 3px; white-space: nowrap; box-shadow: 0 1px 6px rgba(61, 43, 31, 0.18); }
+    @media (max-width: 640px) { #hint { white-space: normal; text-align: center; width: calc(100vw - 64px); } }
+  </style>
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <div id="plate" class="hud"><h1 id="title"></h1><p id="subtitle"></p></div>
+  <div id="hint" class="hud">Click to look &middot; WASD / arrows to walk &middot; Shift to hurry &middot; Touch: left drag walks, right drag looks</div>
+  <script type="module">
+    import { start } from './engine/main.js';
+    import scene from './scene.js';
+    start(scene);
+  </script>
+</body>
+</html>

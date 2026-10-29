@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Christ at Bountiful</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #262b3a; font-family: Georgia, 'Times New Roman', serif; }
+    canvas { display: block; touch-action: none; }
+    .hud { position: fixed; inset: 0; pointer-events: none; color: #fbf3e2; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
+    .hud h1 { position: absolute; top: 16px; left: 20px; margin: 0; font-size: 22px; font-weight: normal; letter-spacing: 0.02em; }
+    .hud .hint { position: absolute; left: 20px; bottom: 14px; margin: 0; font: 13px/1.4 system-ui, sans-serif; opacity: 0.85; max-width: 60vw; }
+    .hud .buttons { position: absolute; right: 16px; bottom: 14px; display: flex; gap: 8px; pointer-events: auto; }
+    .hud button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 240, 210, 0.5); background: rgba(40, 36, 44, 0.45); color: #fbf3e2; font-size: 20px; cursor: pointer; }
+    .hud button:active { background: rgba(255, 230, 180, 0.35); }
+    @media (max-width: 600px) { .hud h1 { font-size: 17px; left: 16px; right: 16px; } .hud .hint { left: 16px; bottom: 64px; max-width: none; right: 16px; } }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <script type="module">
+    import { run } from './engine/engine.js';
+    import scene from './scene.js';
+    run(scene);
+  </script>
+</body>
+</html>
