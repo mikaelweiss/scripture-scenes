@@ -93,8 +93,9 @@ function walkers(ctx, floorY) {
     { robe: '#5a7a4a', mantle: '#8c5a3c', skin: '#8a5a3b', hair: '#d9c7a3', sash: '#e8c060', arms: [0.3, 0.3] },
   ];
   const figs = men.map((c) => makeFigure(c, ctx.kit));
+  for (const g of figs) g.scale.setScalar(1.15);
   const fourth = makeFigure({ robe: '#fbf7ee', mantle: '#f3eddf', skin: '#fbf3e4', hair: '#fbf7ee', sash: '#efe3c2', arms: [0.45, 0.5] }, ctx.kit, { glow: 0.55 });
-  fourth.scale.setScalar(1.12);
+  fourth.scale.setScalar(1.3);
   figs.push(fourth);
   for (const g of figs) ctx.scene.add(g);
   const halo = glow(ctx, { pos: [0, 0, 0], size: 6, color: '#fff4d6', opacity: 0.9, pulse: 0.05 });
@@ -229,8 +230,9 @@ export default {
     ],
   },
   player: {
-    start: [0, 1],
-    lookAt: [0, -22],
+    start: [0, -3],
+    lookAt: [0, -21],
+    fov: 48,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#2f5f9a' },
   },
 };

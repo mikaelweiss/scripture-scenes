@@ -1,10 +1,10 @@
-// Jonah 3: Nineveh believes God. The people put on sackcloth, and the king sits in ashes before his palace.
+// Jonah 3: Nineveh believes God. The people put on sackcloth, and the king sits in ashes in the great square.
 // x is east, z is south. The palace stands at the north end of the great square, Jonah preaches on its west side.
 import * as THREE from 'three';
 import { Batch, DAY_STYLE, attach, ball, box, boxGeo, cityWall, cyl, frameAt, glow, house, makeRng, ox, palm, person, sheep } from './lib/ot-38-kit.js';
 
-const JONAH = [-9, 4];
-const KING = [0, -30.5];
+const JONAH = [-5, 3];
+const KING = [4, -9];
 const PALACE = [0, -48];
 const STONE = '#d2bc94';
 const SACK = '#5a4a3a';
@@ -98,11 +98,11 @@ function city(b, ctx) {
 
 function ashes(b, ctx) {
   const rng = makeRng(7);
-  const piles = [[KING[0] + 1.6, KING[1] + 0.8], [-3, 10], [10, -4], [16, 10], [-22, 14], [4, 16], [-4, -18], [20, -16]];
+  const piles = [[KING[0] + 1.6, KING[1] + 0.8], [-14, 9], [10, -4], [16, 10], [-22, 14], [12, 15], [-8, -16], [20, -16]];
   piles.forEach(([x, z], i) => {
     const y = ctx.terrainHeight(x, z);
-    b.add('#8a8580', ball(1.2, [x, y, z], [1.4, 0.35, 1.2], 9), { cast: false });
-    b.add('#6a6560', ball(0.6, [x + 0.3, y + 0.25, z], [1, 0.5, 1], 7), { cast: false });
+    b.add('#7a756f', ball(0.8, [x, y, z], [1.4, 0.3, 1.2], 9), { cast: false });
+    b.add('#5e5954', ball(0.45, [x + 0.3, y + 0.25, z], [1, 0.5, 1], 7), { cast: false });
     ctx.exclude({ kind: 'circle', x, z, r: 1.6 });
   });
   for (let i = 0; i < 260; i++) {
@@ -113,23 +113,29 @@ function ashes(b, ctx) {
 
 function people(b, ctx) {
   const [kx, kz] = KING;
-  const king = person(ctx, { pos: KING, face: [kx, kz + 10], kneel: true, scale: 1.05, colors: { robe: SACK, mantle: '#4a3e32', skin: '#a87650', hair: '#8a8580', sash: '#3e342a', arms: [0.3, 0.6] } });
+  const ky = ctx.terrainHeight(kx, kz);
+  b.add('#8a8580', ball(1.7, [kx, ky, kz], [1.3, 0.42, 1.3], 10), { cast: false });
+  const king = person(ctx, { pos: KING, y: ky + 0.55, face: [kx - 2, kz + 10], kneel: true, scale: 1.3, colors: { robe: SACK, mantle: '#4a3e32', skin: '#a87650', hair: '#8a8580', sash: '#3e342a', arms: [0.3, 0.6] } });
   king.rotation.x = 0.2;
-  // His robe laid aside and his crown set down beside him.
-  b.add('#6a2a6a', box(1.8, 0.1, 1.2, [kx - 2.2, ctx.terrainHeight(kx - 2.2, kz) + 0.05, kz + 0.3], [0, 0.4, 0]), { cast: false });
-  b.add('#e2b13c', box(0.9, 0.1, 0.3, [kx - 2.2, ctx.terrainHeight(kx - 2.2, kz) + 0.12, kz + 0.3], [0, 0.4, 0]), { emissive: '#4a3008' });
-  b.add('#e2b13c', cyl(0.18, 0.16, 0.3, [kx - 1.3, ctx.terrainHeight(kx - 1.3, kz) + 0.15, kz - 0.6], [0, 0, 0], 8), { emissive: '#4a3008' });
-  b.add('#8a8580', ball(1.4, [kx, ctx.terrainHeight(kx, kz), kz], [1.3, 0.2, 1.3], 10), { cast: false });
+  // The throne he arose from stands empty behind him, his robe and crown laid upon it.
+  const [tx, tz] = [kx + 0.4, kz - 2.6];
+  const ty = ctx.terrainHeight(tx, tz);
+  b.add('#e2b13c', box(1.6, 0.9, 1.3, [tx, ty + 0.45, tz]), { emissive: '#4a3008' });
+  b.add('#e2b13c', box(1.6, 2.4, 0.3, [tx, ty + 1.2, tz - 0.6]), { emissive: '#4a3008' });
+  b.add('#7a2a7a', box(1.7, 0.14, 1.4, [tx, ty + 0.96, tz + 0.05]));
+  b.add('#7a2a7a', box(1.7, 0.9, 0.12, [tx, ty + 0.5, tz + 0.72]));
+  b.add('#ffd25a', cyl(0.24, 0.2, 0.36, [tx + 0.3, ty + 1.2, tz], [0, 0, 0], 8), { emissive: '#6a4a10' });
+  ctx.addCollider({ x: tx, z: tz, hx: 0.9, hz: 0.8, rot: 0, top: ty + 2.4 });
   // Nobles kneeling about the king.
   [[-2.6, 1.6], [2.8, 1.4], [-4.2, -0.4], [4.4, -0.6]].forEach(([dx, dz], i) => person(ctx, { pos: [kx + dx, kz + dz], face: [kx, kz + 12], kneel: true, colors: { robe: i % 2 ? '#4a3e32' : SACK, mantle: '#3e342a', skin: '#9c6a45', hair: '#8a8580' } }));
 
   // Jonah on a step of stone, crying the word.
   const [jx, jz] = JONAH;
   const jy = ctx.terrainHeight(jx, jz);
-  b.add(STONE, boxGeo(3.4, 1.7, 3, [jx, jy + 0.6, jz], { uv: { su: 2 } }), { stone: true });
-  ctx.addCollider({ x: jx, z: jz, hx: 1.7, hz: 1.5, rot: 0, top: jy + 1.45, walkable: true });
+  b.add(STONE, boxGeo(3.4, 2.4, 3, [jx, jy + 0.95, jz], { uv: { su: 2 } }), { stone: true });
+  ctx.addCollider({ x: jx, z: jz, hx: 1.7, hz: 1.5, rot: 0, top: jy + 2.15, walkable: true });
   ctx.exclude({ kind: 'circle', x: jx, z: jz, r: 2.6 });
-  person(ctx, { pos: JONAH, y: jy + 1.45, face: [4, 14], scale: 1.08, colors: { robe: '#b5823a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#d9c7a3', arms: [0.5, 1.3] } });
+  person(ctx, { pos: JONAH, y: jy + 2.15, face: [4, 16], scale: 1.18, colors: { robe: '#b5823a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#d9c7a3', arms: [0.5, 1.3] } });
 
   // Beasts too are covered in sackcloth.
   const rng = makeRng(77);
@@ -191,13 +197,14 @@ export default {
     groups: [
       { center: JONAH, radius: [3, 15], count: 200, kneel: 0.65, children: 0.15, facingJitter: 0.5, lean: 0.3 },
       { shape: 'rect', center: [8, -2], size: [24, 40], count: 260, kneel: 0.7, children: 0.15, facingJitter: 1.2, lean: 0.35, facing: [0, -40] },
-      { shape: 'rect', center: [0, -24], size: [30, 8], count: 70, kneel: 0.8, facing: KING, facingJitter: 0.4, lean: 0.3 },
+      { shape: 'rect', center: [4, -19], size: [26, 8], count: 70, kneel: 0.8, facing: KING, facingJitter: 0.4, lean: 0.3 },
       { shape: 'rect', center: [-20, 18], size: [16, 16], count: 80, kneel: 0.5, children: 0.2, facingJitter: 1, lean: 0.2 },
     ],
   },
   player: {
-    start: [1, 17],
-    lookAt: [-5, -30],
+    start: [1, 6],
+    lookAt: [0, -12],
+    fov: 48,
     colors: { robe: '#b5823a', mantle: '#4f7f80', skin: '#a8724a', hair: '#2b1a12', sash: '#d9c7a3' },
   },
 };

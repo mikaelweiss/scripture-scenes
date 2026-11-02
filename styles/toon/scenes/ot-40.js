@@ -5,8 +5,8 @@ import { Batch, DAY_STYLE, PALETTE, addSun, attach, ball, box, boxGeo, cyl, fram
 
 const PIT = { x0: -12, x1: 12, z0: -30, z1: -6 };
 const RIM = { x0: -22, x1: 22, z0: -40, z1: 4, h: 3.6 };
-const DANIEL = [-1, -23];
-const ANGEL = [1.4, -24.2];
+const DANIEL = [-1, -17.5];
+const ANGEL = [1.4, -18.7];
 const KING = [3, -4.8];
 const STONE = '#c7ae86';
 const STONE_DARK = '#a88e68';
@@ -90,12 +90,12 @@ function lions(b, ctx) {
   const toward = (x, z, tx, tz) => Math.atan2(tx - x, tz - z);
   const [dx, dz] = DANIEL;
   const list = [
-    { pos: [-5.5, -24], face: [dx, dz], mane: true },
+    { pos: [-5.5, -21.5], face: [dx, dz], mane: true },
     { pos: [5, -26.5], face: [dx, dz], sleeping: true, mane: false },
-    { pos: [-5, -17], face: [dx, dz], mane: false },
-    { pos: [4.2, -18.5], face: [dx + 2, dz + 3], sleeping: true, mane: true },
+    { pos: [-5.5, -14.5], face: [dx, dz], mane: false },
+    { pos: [5.6, -17], face: [dx + 2, dz + 3], sleeping: true, mane: true },
     { pos: [-2, -27.6], rot: 1.6, sleeping: true, mane: false },
-    { pos: [1.5, -13], face: [-6, -11], mane: true, standing: true },
+    { pos: [2.5, -11], face: [-6, -9], mane: true, standing: true },
     { pos: [-8, -11], face: [dx, dz], sleeping: true, mane: false },
     { pos: [8.5, -12], face: [dx, dz], mane: false },
     { pos: [-9, -26], face: [dx, dz], sleeping: true, mane: true },
@@ -105,8 +105,8 @@ function lions(b, ctx) {
 
 function figures(ctx) {
   const [dx, dz] = DANIEL;
-  person(ctx, { pos: DANIEL, face: [KING[0], KING[1] + 4], scale: 1.05, colors: { robe: '#e6d8b8', mantle: '#4f6fa0', skin: '#a8724a', hair: '#cfc6b4', sash: '#c8912e', arms: [0.55, 0.9] } });
-  person(ctx, { pos: ANGEL, face: [0, 0], scale: 1.15, glow: 0.6, colors: { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#fbf3e4', hair: '#fbf7ee', sash: '#efe3c2', arms: [0.5, 0.4] } });
+  person(ctx, { pos: DANIEL, face: [KING[0], KING[1] + 4], scale: 1.2, colors: { robe: '#e6d8b8', mantle: '#4f6fa0', skin: '#a8724a', hair: '#cfc6b4', sash: '#c8912e', arms: [0.55, 0.9] } });
+  person(ctx, { pos: ANGEL, face: [0, 0], scale: 1.32, glow: 0.6, colors: { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#fbf3e4', hair: '#fbf7ee', sash: '#efe3c2', arms: [0.5, 0.4] } });
   glow(ctx, { pos: [ANGEL[0], 1.4, ANGEL[1]], size: 7, color: '#fff3d0', opacity: 0.85 });
   glow(ctx, { pos: [dx + 0.6, 1, dz - 0.5], size: 13, color: '#ffe8b0', opacity: 0.3 });
   const l = new THREE.PointLight('#fff0d0', 26, 18, 1.3);
@@ -194,8 +194,9 @@ export default {
     groups: [{ center: [0, -18], radius: [30, 44], angle: [-1.2, 1.2], count: 40, facingJitter: 0.6 }],
   },
   player: {
-    start: [-2, -3.6],
-    lookAt: [DANIEL[0], DANIEL[1]],
+    start: [-6.5, -3.4],
+    lookAt: [DANIEL[0] + 6, DANIEL[1]],
+    fov: 48,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#2f5f9a' },
   },
 };

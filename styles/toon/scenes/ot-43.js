@@ -4,11 +4,11 @@ import * as THREE from 'three';
 import { Batch, DAY_STYLE, attach, boxGeo, box, cyl, flames, glow, makeRng, person } from './lib/ot-38-kit.js';
 import { makeFigure } from '../engine/people.js';
 
-const THRONE = [0, -32];
-const STEPS = { n: 12, rise: 0.5, run: 1.1, width: 14 };
+const THRONE = [0, -24];
+const STEPS = { n: 12, rise: 0.36, run: 0.95, width: 14 };
 const TOP = STEPS.n * STEPS.rise;
-const ALTAR = [-6, -11];
-const ISAIAH = [-2.6, -4];
+const ALTAR = [-8, -5];
+const ISAIAH = [-3, -1];
 const GOLD = '#e8c060';
 const GOLD_EM = '#6a4a10';
 const WHITE = '#fbf7ee';
@@ -27,10 +27,10 @@ function temple(b, ctx) {
   ctx.addCollider({ x: tx, z: tz - 1, hx: STEPS.width / 2, hz: 4, rot: 0, top: TOP, walkable: true });
 
   // The throne itself.
-  b.add(GOLD, box(4.6, 1.4, 3, [tx, TOP + 0.7, tz - 1.5]), { emissive: GOLD_EM });
-  b.add(GOLD, box(4.6, 7, 0.6, [tx, TOP + 3.5, tz - 3]), { emissive: GOLD_EM });
-  for (const s of [-1, 1]) b.add(GOLD, box(0.6, 2.2, 3, [tx + s * 2.3, TOP + 1.1, tz - 1.5]), { emissive: GOLD_EM });
-  ctx.addCollider({ x: tx, z: tz - 1.8, hx: 2.4, hz: 1.8, rot: 0, top: TOP + 6 });
+  b.add(GOLD, box(6.2, 1.8, 3.6, [tx, TOP + 0.9, tz - 1.6]), { emissive: GOLD_EM });
+  b.add(GOLD, box(6.2, 9.5, 0.7, [tx, TOP + 4.75, tz - 3.3]), { emissive: GOLD_EM });
+  for (const s of [-1, 1]) b.add(GOLD, box(0.8, 2.9, 3.6, [tx + s * 3.1, TOP + 1.45, tz - 1.6]), { emissive: GOLD_EM });
+  ctx.addCollider({ x: tx, z: tz - 1.8, hx: 3.2, hz: 2, rot: 0, top: TOP + 9 });
 
   // Great posts of the door and the colonnade of the house.
   const back = tz - 8;
@@ -87,11 +87,11 @@ function train(ctx) {
 function lord(ctx) {
   const [tx, tz] = THRONE;
   const fig = makeFigure({ robe: WHITE, mantle: '#f6f0e2', skin: WHITE, hair: WHITE, sash: '#f3e6c4', arms: [0.35, 0.7] }, ctx.kit, { glow: 0.85 });
-  fig.scale.set(2.4, 2.2, 2.4);
-  fig.position.set(tx, TOP + 0.3, tz - 1.2);
+  fig.scale.set(3.3, 3.1, 3.3);
+  fig.position.set(tx, TOP + 0.4, tz - 1.2);
   ctx.scene.add(fig);
-  glow(ctx, { pos: [tx, TOP + 3.2, tz - 0.5], size: 9, color: '#fff6dc', opacity: 0.55, pulse: 0.03 });
-  glow(ctx, { pos: [tx, TOP + 4, tz - 1], size: 24, color: '#ffe8b0', opacity: 0.22, pulse: 0.02 });
+  glow(ctx, { pos: [tx, TOP + 4.2, tz - 0.5], size: 11, color: '#fff6dc', opacity: 0.5, pulse: 0.03 });
+  glow(ctx, { pos: [tx, TOP + 5, tz - 1], size: 28, color: '#ffe8b0', opacity: 0.2, pulse: 0.02 });
   const l = new THREE.PointLight('#fff4dc', 25, 40, 1.2);
   l.position.set(tx, TOP + 5, tz + 4);
   ctx.scene.add(l);
@@ -172,10 +172,10 @@ function custom(ctx) {
   train(ctx);
   lord(ctx);
   const [tx, tz] = THRONE;
-  seraph(ctx, { pos: [tx - 7, TOP + 3.2, tz + 1], face: [tx + 2, tz + 6], scale: 1.6 });
-  seraph(ctx, { pos: [tx + 7, TOP + 3.6, tz + 1.5], face: [tx - 2, tz + 6], scale: 1.6 });
-  seraph(ctx, { pos: [tx - 4.5, TOP + 6.6, tz - 1], face: [tx + 1, tz + 8], scale: 1.4 });
-  seraph(ctx, { pos: [tx + 4.5, TOP + 7, tz - 0.5], face: [tx - 1, tz + 8], scale: 1.4 });
+  seraph(ctx, { pos: [tx - 8.5, TOP + 3.6, tz + 1], face: [tx + 2, tz + 6], scale: 1.6 });
+  seraph(ctx, { pos: [tx + 8.5, TOP + 4, tz + 1.5], face: [tx - 2, tz + 6], scale: 1.6 });
+  seraph(ctx, { pos: [tx - 6, TOP + 7.6, tz - 1], face: [tx + 1, tz + 8], scale: 1.4 });
+  seraph(ctx, { pos: [tx + 6, TOP + 8, tz - 0.5], face: [tx - 1, tz + 8], scale: 1.4 });
   seraph(ctx, { pos: [ISAIAH[0] + 0.3, 0.9, ISAIAH[1] - 1.6], face: [ISAIAH[0], ISAIAH[1]], scale: 1.05, coal: true });
   person(ctx, { pos: ISAIAH, face: [ISAIAH[0] + 0.3, ISAIAH[1] - 2], colors: { robe: '#c8a97a', mantle: '#5e4632', skin: '#a8724a', hair: '#3a2418', sash: '#8c3a3a', arms: [0.55, 1.1] } });
   haze(ctx);
@@ -197,8 +197,9 @@ export default {
   custom,
   clouds: { layers: [{ count: 40, distance: [260, 600], height: [30, 140], size: [40, 80], color: '#fbf6ea', shade: '#c8b89a', drift: 0.003 }] },
   player: {
-    start: [1.5, 3],
-    lookAt: [0, -32],
+    start: [1.5, 6],
+    lookAt: [0, -24],
+    fov: 46,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

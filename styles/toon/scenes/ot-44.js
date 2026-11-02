@@ -5,7 +5,7 @@ import { Batch, DAY_STYLE, ball, glow, lying, makeRng, person } from './lib/ot-3
 import { FX_LAYER } from '../engine/renderer.js';
 import { glowTexture } from '../engine/textures.js';
 
-const EZEKIEL = [-3, 7];
+const EZEKIEL = [-4.5, -3];
 const ARMY = [0, -44];
 const BONE = '#f2ead6';
 const BONE_GLOW = '#5a5244';
@@ -130,7 +130,7 @@ function winds(ctx) {
   const pos = new Float32Array(n * 3);
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pts = new THREE.Points(g, new THREE.PointsMaterial({ size: 2.2, map: glowTexture(), color: '#fff2cc', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.8, fog: false }));
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ size: 1.8, map: glowTexture(), color: '#fff2cc', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.6, fog: false }));
   pts.layers.set(FX_LAYER);
   pts.frustumCulled = false;
   ctx.scene.add(pts);
@@ -215,8 +215,9 @@ export default {
     ],
   },
   player: {
-    start: [2, 6],
+    start: [1, 0],
     lookAt: [0, -50],
+    fov: 50,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

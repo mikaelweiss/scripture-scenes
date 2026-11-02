@@ -229,12 +229,13 @@ function crew(ctx) {
   person(ctx, { pos: [1.6, 5.4], y, face: [3, 9], colors: { ...sailors[2], arms: [0.5, 0.8] } });
   person(ctx, { pos: [-1.2, -6.8], y, face: [0, -2], colors: { ...sailors[1], arms: [0.5, 1.1] } });
 
-  const jonah = makeFigure({ robe: '#b5823a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#d9c7a3', arms: [2.4, 0.2] }, ctx.kit);
+  const jonah = makeFigure({ robe: '#d49a3a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#d9c7a3', arms: [2.4, 0.2] }, ctx.kit);
   jonah.position.set(JONAH[0], DECK, JONAH[1]);
   jonah.rotation.set(0.2, -Math.PI / 2, -2.1, 'YXZ');
+  jonah.scale.setScalar(1.12);
   ctx.scene.add(jonah);
   ctx.onFrame((t) => {
-    jonah.position.y = DECK + 1.1 + Math.sin(t * 1.2) * 0.12;
+    jonah.position.y = DECK + 1.5 + Math.sin(t * 1.2) * 0.12;
   });
 }
 
@@ -295,8 +296,9 @@ export default {
     ],
   },
   player: {
-    start: [-1.4, 2.5],
-    lookAt: [9, -3],
+    start: [-0.6, 3.4],
+    lookAt: [9, -2],
+    fov: 46,
     colors: { robe: '#6b5a4a', mantle: '#8c5a3c', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },
 };
