@@ -4,8 +4,8 @@ import * as THREE from 'three';
 import { LAMANITES, figure, huts, toonStyle } from './lib/bom-19-kit.js';
 
 const HALL = [0, -20];
-const BED = [0, -21];
-const ABISH = [1, -5];
+const BED = [0, -20];
+const ABISH = [5.2, -10.2];
 const COLUMN_H = 6.4;
 
 const servantColors = (i) => ({ robe: LAMANITES.robes[i % 6], mantle: LAMANITES.mantles[i % 5], skin: LAMANITES.skins[i % 4], hair: '#1f140e', sash: '#c8912e' });
@@ -52,7 +52,7 @@ export default {
       stairDepth: 0.5,
       colors: { stone: '#e3cfa6', stair: '#d8c095', fret: ['#b5523b', '#efe3c2'] },
     },
-    { type: 'columns', from: [-13, -11.5], to: [13, -11.5], count: 6, radius: 0.55, height: COLUMN_H, broken: 0, color: '#efe3c2', capColor: '#c8912e', seed: 2 },
+    { type: 'columns', from: [-13, -11.5], to: [13, -11.5], count: 4, radius: 0.55, height: COLUMN_H, broken: 0, color: '#efe3c2', capColor: '#c8912e', seed: 2 },
     { type: 'columns', from: [-13, -28.5], to: [-13, -14.5], count: 4, radius: 0.55, height: COLUMN_H, broken: 0, color: '#efe3c2', capColor: '#c8912e', seed: 3 },
     { type: 'columns', from: [13, -28.5], to: [13, -14.5], count: 4, radius: 0.55, height: COLUMN_H, broken: 0, color: '#efe3c2', capColor: '#c8912e', seed: 4 },
     { type: 'trees', count: 90, ring: [55, 220], height: [6, 11], broken: 0, fallen: 0, trunkColor: '#6b4a33', leafColors: ['#3e8e6e', '#4f9a74', '#2f7f6a', '#5f9e6a'] },
@@ -61,6 +61,7 @@ export default {
 
   light: {
     glows: [{ pos: [BED[0], 2.4, BED[1]], size: 9, color: '#fff3d0', opacity: 0.35 }],
+    pointLights: [{ pos: [0, 4.6, -16], color: '#ffeccc', intensity: 26, distance: 20 }],
   },
 
   custom(ctx) {
@@ -92,14 +93,18 @@ export default {
     }
     ctx.addCollider({ x: BED[0], z: BED[1], hx: 0.85, hz: 1.35, rot: 0, top: floorY + 0.62, walkable: true });
 
-    figure(ctx, { pos: [BED[0], BED[1] + 0.9], yaw: 0, pose: 'lie', clear: 1.4, colors: { robe: '#efe3c2', mantle: '#b5523b', skin: '#8a5a3b', hair: '#1f140e', sash: '#c8912e' } });
-    figure(ctx, { pos: [-1.9, -20], yaw: -0.3, pose: 'lie', roll: 0.3, clear: 1.2, colors: { robe: '#2f8f8a', mantle: '#c8912e', skin: '#8a5a3b', hair: '#1f140e', sash: '#e9dcc0' } });
-    figure(ctx, { pos: [2.3, -18.5], yaw: 0.9, pose: 'prone', roll: -0.2, clear: 1.2, colors: { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e' } });
-    [[-5, -17, 1.2], [5.5, -22, -0.8], [-6, -23.5, 2.6], [6.5, -16, 2], [-3.5, -14.8, 4.4], [8, -25, 0.4]].forEach(([x, z, yaw], i) => {
-      figure(ctx, { pos: [x, z], yaw, pose: i % 2 ? 'prone' : 'lie', roll: i % 2 ? 0.25 : -0.25, clear: 1.1, colors: servantColors(i) });
+    figure(ctx, { pos: [BED[0], BED[1] - 0.1], yaw: Math.PI, pose: 'lie', clear: 1.4, colors: { robe: '#efe3c2', mantle: '#b5523b', skin: '#8a5a3b', hair: '#1f140e', sash: '#c8912e' } });
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.13, 0.12, 8), kit.toon('#e0b040'));
+    crown.position.set(BED[0], floorY + 0.76, BED[1] - 0.92);
+    crown.rotation.x = Math.PI / 2;
+    scene.add(crown);
+    figure(ctx, { pos: [-2.3, -18.6], yaw: -2.4, pose: 'prone', arms: 'reach', clear: 1.2, colors: { robe: '#2f8f8a', mantle: '#c8912e', skin: '#8a5a3b', hair: '#1f140e', sash: '#e9dcc0' } });
+    figure(ctx, { pos: [2.6, -16.4], yaw: 0.6, pose: 'prone', roll: 0.3, clear: 1.2, colors: { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e' } });
+    [[-5.2, -15.2, 1.2], [5.6, -13.6, -2.2], [-7.2, -19.5, 2.6], [7.4, -20, 0.4], [-2.6, -13.2, -1.4], [9, -16.5, 2.2]].forEach(([x, z, yaw], i) => {
+      figure(ctx, { pos: [x, z], yaw, pose: i % 2 ? 'prone' : 'lie', roll: [0.3, -0.3, 0][i % 3], clear: 1.1, colors: servantColors(i) });
     });
 
-    figure(ctx, { pos: ABISH, facing: [0, 12], pose: 'raise', scale: 0.97, colors: { robe: '#c8912e', mantle: '#b5523b', skin: '#8a5a3b', hair: '#1f140e', sash: '#efe3c2', arms: [0.5, 1.5] } });
+    figure(ctx, { pos: ABISH, facing: [ABISH[0] + 3, 10], pose: 'raise', scale: 0.97, colors: { robe: '#c8912e', mantle: '#b5523b', skin: '#8a5a3b', hair: '#1f140e', sash: '#efe3c2', arms: [0.5, 2.3] } });
 
     const houses = [];
     for (let i = 0; i < 30; i++) {
@@ -125,8 +130,8 @@ export default {
   },
 
   player: {
-    start: [-1.2, 5],
-    lookAt: [0, -16],
+    start: [-1.5, -9.4],
+    lookAt: [0.8, -19],
     colors: { robe: '#a8552f', mantle: '#5e4632', skin: '#8a5a3b', hair: '#1f140e', sash: '#c8912e' },
   },
 };

@@ -9,11 +9,11 @@ const AT = (lift) => [ANGEL[0], lift, ANGEL[1]];
 const ROAD = [[2, 140], [0, 60], [-1, 20], [0, -10], [3, -60], [10, -140], [16, -260]];
 
 const YOUNG = [
-  { pos: [0.2, -6.5], yaw: 0.1, pose: 'lie', robe: '#b5523b', mantle: '#c8912e' },
-  { pos: [-2.6, -5], yaw: -0.5, pose: 'prone', robe: '#4f7f80', mantle: '#d9c7a3', roll: 0.3 },
-  { pos: [2.8, -4.4], yaw: 0.7, pose: 'prone', robe: '#6f8a6a', mantle: '#8c5a3c', roll: -0.3 },
-  { pos: [-1.4, -2.2], yaw: 0.2, pose: 'kneel', robe: '#a87b4f', mantle: '#3e6e66', face: true },
-  { pos: [1.8, -1.8], yaw: -0.2, pose: 'kneel', robe: '#c98b3c', mantle: '#5e4632', face: true },
+  { pos: [0.2, -6.8], yaw: -1.3, pose: 'lie', arms: 'out', robe: '#b5523b', mantle: '#c8912e' },
+  { pos: [-5.2, -5.4], yaw: 2.6, pose: 'prone', arms: 'reach', robe: '#4f7f80', mantle: '#d9c7a3' },
+  { pos: [4.8, -6], yaw: -2.6, pose: 'prone', arms: 'reach', robe: '#6f8a6a', mantle: '#8c5a3c' },
+  { pos: [-2.4, -3.8], pose: 'kneel', robe: '#a87b4f', mantle: '#3e6e66', face: true },
+  { pos: [-0.2, -2.6], pose: 'kneel', robe: '#c98b3c', mantle: '#5e4632', face: true },
 ];
 
 export default {
@@ -49,9 +49,9 @@ export default {
   mountains: { count: 32, distance: [500, 800], height: [60, 170], widthRatio: [1.4, 2.4], colors: ['#6f9a8a', '#5d8c84', '#7da08a', '#86a38f'] },
 
   objects: [
-    { type: 'trees', count: 120, ring: [14, 200], height: [5, 10], broken: 0, fallen: 0, trunkColor: '#6b4a33', leafColors: ['#3e8e6e', '#4f9a74', '#2f7f6a', '#5f9e6a'] },
+    { type: 'trees', count: 120, ring: [20, 200], angle: [Math.PI + 0.32, Math.PI * 3 - 0.32], height: [5, 10], broken: 0, fallen: 0, trunkColor: '#6b4a33', leafColors: ['#3e8e6e', '#4f9a74', '#2f7f6a', '#5f9e6a'] },
     { type: 'stones', count: 500, ring: [3, 80], size: [0.12, 0.45], colors: ['#cdb48a', '#b89a70', '#d9c39a'] },
-    { type: 'stones', count: 28, center: ANGEL, ring: [4, 12], size: [0.3, 0.7], colors: ['#b89a70', '#a58a66'], seed: 9 },
+    { type: 'stones', count: 14, center: ANGEL, ring: [4.5, 9], size: [0.25, 0.55], colors: ['#b89a70', '#a58a66'], seed: 9 },
   ],
 
   cracks: [
@@ -101,7 +101,7 @@ export default {
     ctx.exclude({ kind: 'circle', x: ANGEL[0], z: ANGEL[1], r: 3.5 });
 
     const angel = figure(ctx, {
-      pos: ANGEL, facing: [0, 20], lift: ANGEL_LIFT, scale: 1.35, glow: 0.55, clear: 0,
+      pos: ANGEL, facing: [0, 20], lift: ANGEL_LIFT, scale: 1.6, glow: 0.55, clear: 0,
       colors: { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#f3e6cf', hair: '#f3eddf', sash: '#e9dcc0', arms: [0.5, 1.1] },
     });
     angel.position.y = baseY + 0.45;
@@ -112,7 +112,7 @@ export default {
 
     for (const y of YOUNG) {
       figure(ctx, {
-        pos: y.pos, yaw: y.face ? Math.atan2(ANGEL[0] - y.pos[0], ANGEL[1] - y.pos[1]) : y.yaw, pose: y.pose, roll: y.roll ?? 0, clear: 1.2,
+        pos: y.pos, yaw: y.face ? Math.atan2(ANGEL[0] - y.pos[0], ANGEL[1] - y.pos[1]) : y.yaw, pose: y.pose, arms: y.arms, clear: 1.2,
         colors: { robe: y.robe, mantle: y.mantle, skin: '#a87650', hair: '#2b1a12', sash: '#c8912e' },
       });
     }
@@ -138,8 +138,9 @@ export default {
   },
 
   player: {
-    start: [4.5, 0.5],
-    lookAt: [-1.5, -13],
+    start: [4.4, -1.2],
+    lookAt: [-0.6, -14],
+    fov: 46,
     colors: { robe: '#7a6a52', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

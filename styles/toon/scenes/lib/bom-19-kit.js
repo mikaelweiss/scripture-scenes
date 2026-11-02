@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { makeFigure } from '../../engine/people.js';
+import { makeFigure, personParts } from '../../engine/people.js';
 import { FX_LAYER } from '../../engine/renderer.js';
 import { glowTexture } from '../../engine/textures.js';
 import { between, makeRng, pick } from '../../engine/util.js';
@@ -53,25 +53,112 @@ const add = (ctx, geos, color, { cast = true, emissive } = {}) => {
 const yawTo = (x, z, [tx, tz]) => Math.atan2(tx - x, tz - z);
 
 // pose: stand, kneel, lie (face up), prone (face down), raise (arms up).
-export function figure(ctx, { pos, facing, yaw, colors, scale = 1, glow = 0, pose = 'stand', lift = 0, clear = 0.9, roll = 0 }) {
+export function figure(ctx, { pos, facing, yaw, colors, scale = 1, glow = 0, pose = 'stand', lift = 0, clear = 0.9, roll = 0, arms }) {
   const [x, z] = pos;
   const c = { ...colors };
   if (pose === 'raise') c.arms = c.arms ?? [0.35, 2.6];
+  if (pose === 'lie' || pose === 'prone') return fallen(ctx, { pos, yaw: (yaw ?? (facing ? yawTo(x, z, facing) : 0)) + (pose === 'lie' ? Math.PI : 0), colors, scale, lift, clear, roll, arms, faceUp: pose === 'lie' });
   const fig = makeFigure(c, ctx.kit, { glow });
   const outer = new THREE.Group();
   outer.add(fig);
   outer.position.set(x, ctx.groundHeight(x, z) + lift, z);
   outer.rotation.y = yaw ?? (facing ? yawTo(x, z, facing) : 0);
-  if (pose === 'lie' || pose === 'prone') {
-    fig.rotation.set(pose === 'lie' ? -Math.PI / 2 : Math.PI / 2, 0, roll);
-    fig.position.set(0, 0.22, 0);
-  } else if (pose === 'kneel') {
+  if (pose === 'kneel') {
     fig.scale.set(1.12, 0.6, 1.12);
   }
   outer.scale.setScalar(scale);
   ctx.scene.add(outer);
   if (clear) ctx.exclude({ kind: 'circle', x, z, r: clear });
   return outer;
+}
+
+// A person lying on the ground: flattened robe over a cloth pool, head, splayed arms and feet.
+// The head points along local +z. arms: 'reach' (flung past the head), 'out' (spread wide) or 'side'.
+export function fallen(ctx, { pos, yaw = 0, colors, scale = 1, lift = 0, clear = 1.1, roll = 0, faceUp = true, arms }) {
+  const [x, z] = pos;
+  const parts = personParts();
+  const lay = (g) => g.rotateX(Math.PI / 2).translate(0, 0, -0.85).scale(1, 0.52, 1).rotateZ(roll * 0.4).translate(0, 0.16, 0);
+  const robe = [lay(parts.robe), new THREE.CylinderGeometry(1, 1, 0.05, 18).scale(0.48, 1, 0.62).translate(0, 0.025, -0.4)];
+  const mantle = [lay(parts.mantle)];
+  const headZ = 0.76;
+  const skin = [new THREE.SphereGeometry(0.14, 12, 9).translate(0, 0.15, headZ)];
+  const hair = [new THREE.SphereGeometry(0.143, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55).rotateX(faceUp ? 1.9 : 0.75).translate(0, 0.155, headZ + 0.01)];
+  for (const s of [-1, 1]) skin.push(new THREE.SphereGeometry(0.065, 8, 6).scale(1, faceUp ? 1.7 : 0.8, faceUp ? 1 : 1.6).translate(s * 0.1, faceUp ? 0.11 : 0.06, -0.9));
+  const kind = arms ?? (roll > 0.1 ? 'reach' : roll < -0.1 ? 'out' : 'side');
+  const dirs = {
+    reach: [[-0.35, 0, 1], [0.45, 0, 0.9]],
+    out: [[-1, 0, 0.35], [1, 0, -0.1]],
+    side: [[-0.3, 0, -1], [0.75, 0, 0.55]],
+  }[kind];
+  const sleeves = [];
+  const up = new THREE.Vector3(0, 1, 0);
+  dirs.forEach(([dx, , dz], i) => {
+    const d = new THREE.Vector3(dx, 0, dz).normalize();
+    const sh = new THREE.Vector3(i ? 0.21 : -0.21, 0.13, 0.5);
+    const mid = sh.clone().addScaledVector(d, 0.3);
+    sleeves.push(new THREE.CapsuleGeometry(0.075, 0.42, 4, 8).applyQuaternion(new THREE.Quaternion().setFromUnitVectors(up, d)).translate(mid.x, 0.09, mid.z));
+    const hand = sh.clone().addScaledVector(d, 0.6);
+    skin.push(new THREE.SphereGeometry(0.06, 8, 6).translate(hand.x, 0.06, hand.z));
+  });
+  const group = new THREE.Group();
+  const glow = colors.glow ?? 0;
+  for (const [geos, color] of [[robe, colors.robe], [[...mantle, ...sleeves], colors.mantle], [skin, colors.skin], [hair, colors.hair]]) {
+    const mesh = new THREE.Mesh(mergeGeometries(geos.map((g) => g.toNonIndexed())), ctx.kit.toon(color, glow ? { emissive: new THREE.Color(color).multiplyScalar(glow) } : {}));
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    group.add(mesh);
+  }
+  if (colors.sash) {
+    const sash = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.035, 6, 16), ctx.kit.toon(colors.sash));
+    sash.scale.set(1, 0.52, 1);
+    sash.position.set(0, 0.16, 0.13);
+    group.add(sash);
+  }
+  group.position.set(x, ctx.groundHeight(x, z) + lift, z);
+  group.rotation.y = yaw;
+  group.scale.setScalar(scale);
+  ctx.scene.add(group);
+  if (clear) ctx.exclude({ kind: 'circle', x, z, r: clear });
+  return group;
+}
+
+// A slinger: one arm aims at the target, the other whirls a sling overhead.
+export function slinger(ctx, { pos, facing, colors, scale = 1, speed = 9 }) {
+  const fig = figure(ctx, { pos, facing, scale, colors: { ...colors, arms: undefined } });
+  const mat = (c) => ctx.kit.toon(c);
+  const arm = (side, rx, rz) => {
+    const shoulder = new THREE.Group();
+    shoulder.position.set(side * 0.2, 1.32, 0);
+    const sleeve = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.42, 4, 8), mat(colors.mantle));
+    sleeve.position.y = -0.26;
+    sleeve.castShadow = true;
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 6), mat(colors.skin));
+    hand.position.y = -0.55;
+    shoulder.add(sleeve, hand);
+    shoulder.rotation.set(rx, 0, rz);
+    fig.children[0].add(shoulder);
+    return shoulder;
+  };
+  arm(1, -1.45, 0.15);
+  const raised = arm(-1, -2.75, -0.35);
+  const spin = new THREE.Group();
+  spin.position.set(0, -0.6, 0);
+  raised.add(spin);
+  const whirl = new THREE.Group();
+  whirl.rotation.x = Math.PI - 2.75;
+  spin.add(whirl);
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.85, 4).rotateZ(Math.PI / 2).translate(0.42, 0, 0), mat('#5a3a22'));
+  const pouch = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6).scale(1.3, 0.7, 1), mat('#6b4a33'));
+  pouch.position.x = 0.86;
+  const stone = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075, 0), mat('#8a7a64'));
+  stone.position.set(0.86, 0.06, 0);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.98, 40).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: '#fff6dc', transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide }));
+  ring.layers.set(FX_LAYER);
+  const rotor = new THREE.Group();
+  rotor.add(cord, pouch, stone);
+  whirl.add(rotor, ring);
+  ctx.onFrame((t) => { rotor.rotation.y = -t * speed; });
+  return fig;
 }
 
 // Low pitched-roof adobe houses, merged into three meshes.

@@ -1,9 +1,11 @@
 // Alma 17: at the waters of Sebus, Ammon stands alone against the raiders while the servants gather the scattered flocks.
 // x is east, z is south. The water runs east-west to the north; the raiders gather on the east bank.
-import { LAMANITES, NO_PLAZA, figure, flock, rocks, rods, toonStyle, water } from './lib/bom-19-kit.js';
+import * as THREE from 'three';
+import { FX_LAYER } from '../engine/renderer.js';
+import { LAMANITES, NO_PLAZA, fallen, figure, flock, rocks, rods, slinger, toonStyle, water } from './lib/bom-19-kit.js';
 
 const AMMON = [2, -4];
-const RAIDERS = [18, -9];
+const RAIDERS = [13, -8];
 const SERVANTS = [[-7, 5], [-11, 2], [-4, 9], [-13, 8]];
 const HERD = [-9, 6];
 
@@ -55,10 +57,26 @@ export default {
       { pos: [34, -4], size: [5, 3, 4] }, { pos: [-40, 4], size: [4, 2.4, 3] },
     ], ['#a8957a', '#9a8670', '#8a7a64']);
 
-    figure(ctx, {
-      pos: AMMON, facing: RAIDERS, scale: 1.06,
-      colors: { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e', arms: [0.3, 2.5] },
+    slinger(ctx, {
+      pos: AMMON, facing: RAIDERS, scale: 1.2,
+      colors: { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e' },
     });
+    const shot = new THREE.Mesh(new THREE.IcosahedronGeometry(0.11, 0), ctx.kit.toon('#5a4a3a'));
+    const trail = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.09, 1.4, 6).rotateZ(Math.PI / 2).translate(-0.75, 0, 0), new THREE.MeshBasicMaterial({ color: '#fff6dc', transparent: true, opacity: 0.45, depthWrite: false }));
+    trail.layers.set(FX_LAYER);
+    const flight = new THREE.Group();
+    flight.add(shot, trail);
+    flight.rotation.y = -Math.atan2(RAIDERS[1] - AMMON[1], RAIDERS[0] - AMMON[0]);
+    ctx.scene.add(flight);
+    const from = new THREE.Vector3(AMMON[0] + 0.8, ctx.terrainHeight(...AMMON) + 2.4, AMMON[1] - 0.2);
+    const to = new THREE.Vector3(RAIDERS[0] - 1, ctx.terrainHeight(...RAIDERS) + 1.6, RAIDERS[1] + 0.6);
+    ctx.onFrame((t) => {
+      const k = (t * 0.7) % 1;
+      flight.position.lerpVectors(from, to, k);
+      flight.position.y += Math.sin(k * Math.PI) * 0.6;
+      flight.visible = k > 0.05 && k < 0.92;
+    });
+    fallen(ctx, { pos: [9.2, -6.4], yaw: -1.9, arms: 'reach', colors: { robe: LAMANITES.robes[0], mantle: LAMANITES.mantles[1], skin: LAMANITES.skins[0], hair: '#1f140e' } });
 
     CLUB_MEN.forEach(([x, z], i) => {
       const raise = i % 2 === 0;
@@ -81,8 +99,8 @@ export default {
     }));
 
     flock(ctx, { center: HERD, radius: [0, 6], count: 45, seed: 2, facing: [-12, 14], jitter: 2, graze: 0.4 });
-    flock(ctx, { center: [-4, -10], radius: [2, 12], count: 26, seed: 7, facing: [-20, 10], jitter: 0.6, graze: 0 });
-    flock(ctx, { center: [24, 8], radius: [4, 16], count: 24, seed: 9, facing: [50, 30], jitter: 0.8, graze: 0 });
+    flock(ctx, { center: [-10, -12], radius: [2, 9], count: 26, seed: 7, facing: [-20, 10], jitter: 0.6, graze: 0 });
+    flock(ctx, { center: [30, 14], radius: [4, 12], count: 24, seed: 9, facing: [50, 30], jitter: 0.8, graze: 0 });
     flock(ctx, { center: [-26, 18], radius: [3, 14], count: 22, seed: 11, jitter: 6, graze: 0.5 });
   },
 
@@ -92,14 +110,14 @@ export default {
     facing: AMMON,
     colors: LAMANITES,
     groups: [
-      { center: [28, -6], radius: [0, 4], count: 10, facingJitter: 0.4 },
-      { center: [32, -12], radius: [0, 3], count: 6, facingJitter: 0.4 },
+      { center: [20, -6], radius: [0, 3.5], count: 10, facingJitter: 0.4 },
+      { center: [21, -12], radius: [0, 3], count: 6, facingJitter: 0.4 },
     ],
   },
 
   player: {
-    start: [-3.5, 3.5],
-    lookAt: [12, -7],
+    start: [7.8, 0.6],
+    lookAt: [7.6, -8],
     colors: { robe: '#a8552f', mantle: '#5e4632', skin: '#8a5a3b', hair: '#1f140e', sash: '#c8912e' },
   },
 };

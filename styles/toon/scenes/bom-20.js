@@ -6,7 +6,7 @@ const PATH = [[-34, 4], [-10, 2], [14, -2], [40, -6], [70, -4], [110, -10], [160
 const EAST = [200, -14];
 
 const GUARDS = [
-  [-6, 14, 0.4], [-2.5, 15.5, 2.1], [4, 12, 4.8], [9, 14.5, 1.2], [-14, 13, 5.5],
+  [-6, 14, 0.4], [-2.5, 15.5, 2.1], [4, 12, 4.8], [9, 14.5, 1.2], [-14, 13, 4.1],
   [2, -12, 3.1], [-6, -13, 0.9], [12, -11, 4.2], [24, 9, 2.6], [27, 12, 5.1], [-22, -14, 1.7], [30, -15, 3.6],
 ];
 const POSTS = [[-4, 17.5], [8, 16.5], [3, -15], [26, 14], [-20, -16]];
@@ -63,7 +63,7 @@ export default {
     field(ctx, { center: [24, 30], size: [26, 14], rot: 0.1, color: '#d8b85a' });
 
     GUARDS.forEach(([x, z, yaw], i) => {
-      figure(ctx, { pos: [x, z], yaw, pose: i % 4 === 2 ? 'prone' : 'lie', roll: i % 2 ? 0.25 : -0.3, clear: 1.3,
+      figure(ctx, { pos: [x, z], yaw, pose: i % 4 === 2 ? 'prone' : 'lie', arms: i % 2 ? 'reach' : 'side', roll: i % 2 ? 0.25 : -0.3, clear: 1.3,
         colors: { robe: LAMANITES.robes[i % 6], mantle: LAMANITES.mantles[i % 5], skin: LAMANITES.skins[i % 4], hair: '#1f140e', sash: '#c8912e' } });
     });
     rods(ctx, GUARDS.map(([x, z, yaw]) => {
@@ -96,8 +96,9 @@ export default {
   },
 
   player: {
-    start: [-20, 16],
-    lookAt: [50, -6],
+    start: [-13, 20.5],
+    lookAt: [40, -9],
+    fov: 50,
     colors: { robe: '#b5523b', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

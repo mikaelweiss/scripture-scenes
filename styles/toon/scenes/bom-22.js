@@ -67,8 +67,8 @@ export default {
 
   smolder: [
     { pos: PYRE, radius: 2.8, embers: 34, flames: 2, smoke: 12, logs: 6, smokeScale: 1.2, smokeHeight: 12 },
-    { pos: [-4, -16], radius: 4, embers: 0, flames: 0, smoke: 7, logs: 0, smokeScale: 1.2, smokeHeight: 7, scorch: 0.1 },
-    { pos: [5, -13], radius: 4, embers: 0, flames: 0, smoke: 6, logs: 0, smokeScale: 1.1, smokeHeight: 6, scorch: 0.1 },
+    { pos: [-4, -17], radius: 4, embers: 0, flames: 0, smoke: 4, logs: 0, smokeScale: 0.9, smokeHeight: 7, scorch: 0.1 },
+    { pos: [7, -15], radius: 4, embers: 0, flames: 0, smoke: 3, logs: 0, smokeScale: 0.8, smokeHeight: 6, scorch: 0.1 },
   ],
 
   light: {
@@ -94,8 +94,8 @@ export default {
     rods(ctx, scrolls, '#4a3a2a', 0.09);
 
     const colors = (robe, mantle) => ({ robe, mantle, skin: '#a87650', hair: '#2b1a12', sash: '#c8912e', arms: [0.18, 0.15] });
-    figure(ctx, { pos: ALMA, facing: [0, 30], glow: 0.12, colors: colors('#e6d8b8', '#4f7f80') });
-    figure(ctx, { pos: AMULEK, facing: [0, 30], glow: 0.12, colors: colors('#d9c7a3', '#b5523b') });
+    figure(ctx, { pos: ALMA, facing: [-2, 30], scale: 1.08, glow: 0.12, colors: colors('#e6d8b8', '#4f7f80') });
+    figure(ctx, { pos: AMULEK, facing: [3, 30], scale: 1.08, glow: 0.12, colors: colors('#d9c7a3', '#b5523b') });
   },
 
   crowd: {
@@ -115,8 +115,9 @@ export default {
   },
 
   player: {
-    start: [3, 3.5],
-    lookAt: [-0.5, -5],
+    start: [4.6, 2.4],
+    lookAt: [1.2, -8],
+    fov: 48,
     colors: { robe: '#7a6a52', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

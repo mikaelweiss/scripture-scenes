@@ -4,7 +4,7 @@ import { LAMANITES, NEPHITES, NO_PLAZA, figure, fires, flock, huts, jars, moon, 
 
 const PATH = [[0, 34], [0, 14], [-2, -10], [-8, -40], [-10, -70], [-6, -110]];
 const PASS = [-6, -120];
-const START = [18, 6];
+const START = [21, 7];
 
 const column = [];
 for (let i = 0; i < 26; i++) {
@@ -32,9 +32,9 @@ export default {
 
   sun: {
     dir: [-0.4, 0.75, -0.6],
-    color: '#a9bcf0',
-    intensity: 1.5,
-    hemi: { sky: '#4a5f9a', ground: '#231f30', intensity: 0.9 },
+    color: '#b4c6f4',
+    intensity: 1.9,
+    hemi: { sky: '#5a70aa', ground: '#2e2a3e', intensity: 1.25 },
     shadowSize: 60,
   },
 
@@ -46,7 +46,7 @@ export default {
     undulation: 0.3,
     plaza: NO_PLAZA,
     colors: {
-      sand: '#5a5a74', dirt: '#4e4a62', grass: '#3e5560', grassDark: '#2e4250', plaza: '#5a5a74', plazaLine: '#5a5a74',
+      sand: '#66667f', dirt: '#58546c', grass: '#3e5560', grassDark: '#2e4250', plaza: '#5a5a74', plazaLine: '#5a5a74',
       scorch: '#1a1620', scorchEdge: '#2a2430', hill: '#34485a',
     },
   },
@@ -99,7 +99,7 @@ export default {
     const jarList = [];
     GUARDS.forEach((g, gi) => {
       g.sleepers.forEach(([x, z, yaw], i) => {
-        figure(ctx, { pos: [x, z], yaw, pose: i % 3 === 1 ? 'prone' : 'lie', roll: (i % 2 ? 0.3 : -0.25), clear: 1.2,
+        figure(ctx, { pos: [x, z], yaw, pose: i % 3 === 1 ? 'prone' : 'lie', arms: i % 2 ? 'reach' : 'side', roll: (i % 2 ? 0.3 : -0.25), clear: 1.2,
           colors: { robe: LAMANITES.robes[(gi * 3 + i) % LAMANITES.robes.length], mantle: LAMANITES.mantles[(i + gi) % 5], skin: LAMANITES.skins[i % 4], hair: '#1f140e', sash: '#c8912e' } });
         const sx = x + Math.cos(yaw) * 0.9, sz = z - Math.sin(yaw) * 0.9;
         spears.push({ from: [sx - Math.sin(yaw) * 1.3, 0.08, sz - Math.cos(yaw) * 1.3], to: [sx + Math.sin(yaw) * 1.3, 0.08, sz + Math.cos(yaw) * 1.3], ground: true });
@@ -132,7 +132,8 @@ export default {
 
   player: {
     start: START,
-    lookAt: [-6, -40],
+    lookAt: [-8, -24],
+    fov: 50,
     colors: { robe: '#4f7f80', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
