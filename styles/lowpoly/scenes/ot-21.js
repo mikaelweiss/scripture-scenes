@@ -9,7 +9,7 @@ import { sinaiFlat, sinaiPeaks, sinaiStorm } from './lib/ot-19-sinai.js';
 
 const MOUNT = [0, -300];
 const CALF = [0, -60];
-const MOSES = [1.5, -104];
+const MOSES = [1.5, -92];
 
 const tents = layoutTents({ center: [0, 40], ring: [10, 220], count: 230, seed: 21, face: CALF, avoid: [{ x: CALF[0], z: CALF[1], r: 34 }, { rect: [0, -100, 60, 50] }] });
 const zones = tentZones(tents);
@@ -87,7 +87,7 @@ export default {
   exposure: 1.05,
 
   sun: { direction: [0.85, 0.3, -0.25], color: '#ffc58a', intensity: 2.8 },
-  light: { sky: '#9aa4c8', ground: '#6a4c38', hemi: 1.0 },
+  light: { sky: '#9aa4c8', ground: '#8a6a50', hemi: 1.2 },
   sky: { top: '#4f6290', horizon: '#f0b888', ground: '#c89a74', sunColor: '#ffd9a0', glow: 1.0 },
   fog: { color: '#d4a888', near: 80, far: 640 },
   clouds: { count: 40, shadow: '#5a4a58', lit: '#ffc890', rim: '#fff0d0', distance: [400, 1000], altitude: [200, 320], hole: 0.2 },
@@ -96,7 +96,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2a5a', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -70], radius: 70 },
 
-  player: { start: [-1.5, -112], yaw: Math.PI, pitch: -0.13, eye: 1.65, speed: 4.5 },
+  player: { start: [-1.2, -98.5], yaw: Math.PI, pitch: -0.1, eye: 1.65, speed: 4.5 },
 
   terrain: desertTerrain({
     seed: 21,
@@ -109,7 +109,7 @@ export default {
   crowd: {
     palette: ISRAEL,
     groups: [
-      { count: 700, center: CALF, ring: [18, 58], spacing: 1.1, face: CALF, children: 0.2, seed: 31, avoid: [...zones, { rect: [0, -108, 30, 24] }] },
+      { count: 700, center: CALF, ring: [18, 58], spacing: 1.1, face: CALF, children: 0.2, seed: 31, avoid: [...zones, { rect: [0, -100, 26, 30] }] },
       { count: 500, center: [0, 40], ring: [0, 160], spacing: 1.6, face: CALF, children: 0.25, kneel: 0.1, seed: 32, avoid: [...zones, { x: CALF[0], z: CALF[1], r: 58 }, { rect: [0, -110, 120, 60] }] },
     ],
   },
@@ -126,7 +126,7 @@ export default {
     // Moses, tables raised, about to cast them down. Joshua a step behind.
     const my = ctx.heightAt(MOSES[0], MOSES[1]);
     person(ctx, { x: MOSES[0], z: MOSES[1], yaw: 0, robe: '#c8b89a', mantle: '#7a3a2a', skin: '#9b6a46', hood: true, scale: 1.05, arms: [[2.75, 0.32], [2.75, 0.32]] });
-    tablets(ctx, MOSES[0], my + 2.25, MOSES[1] + 0.12, 0, { scale: 1.15 });
+    tablets(ctx, MOSES[0], my + 2.3, MOSES[1] + 0.12, 0, { scale: 1.3, color: '#cfc8b8' });
     person(ctx, { x: MOSES[0] - 2.2, z: MOSES[1] - 1.6, yaw: 0.2, robe: '#8b6b4a', mantle: '#3f4d5e', skin: '#8a5a3c', hood: true, arms: [[0.5, 0.15], [0.2, 0.12]] });
     ctx.solid.add(new THREE.CylinderGeometry(0.04, 0.04, 2.2, 4), { position: [MOSES[0] - 1.85, my + 1, MOSES[1] - 1.3], rotation: [0.1, 0, 0.05], color: '#5a4332' });
 

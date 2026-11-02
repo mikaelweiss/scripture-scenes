@@ -205,6 +205,47 @@ export function person(ctx, p) {
   arms.forEach(([raise, spread], i) => batch.add(armGeo(i ? 1 : -1, raise, spread), opts(mantle ?? robe)));
 }
 
+const UP = new THREE.Vector3(0, 1, 0);
+function limb(a, b, r) {
+  const dir = b.clone().sub(a);
+  const g = new THREE.CylinderGeometry(r * 0.85, r, dir.length(), 5).translate(0, dir.length() / 2, 0);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(UP, dir.normalize()));
+  return g.translate(a.x, a.y, a.z);
+}
+
+// A person lying on the ground, feet at (x, z) and head toward yaw. prop raises the torso on one elbow
+// (0 is flat on the back), and reach lifts the free hand toward whatever the feet point at.
+export function lying(ctx, p) {
+  const { x, z, yaw = 0, scale = 1, robe = '#8b6b4a', mantle, skin = '#9b6a46', hood = false, prop = 0, reach = false } = p;
+  const len = 1.55 * scale;
+  const hx = x + Math.sin(yaw) * len, hz = z + Math.cos(yaw) * len;
+  const feetY = ctx.heightAt(x, z), headY = ctx.heightAt(hx, hz);
+  const at = { position: [x, feetY - 0.02, z], rotation: [-Math.atan2(headY - feetY, len), yaw, 0], scale: [scale, scale, scale], jitter: 0.04 };
+  const add = (geo, color) => ctx.solid.add(geo, { ...at, color });
+  const cloak = mantle ?? robe;
+
+  add(new THREE.CylinderGeometry(0.2, 0.27, 0.82, 7).rotateX(Math.PI / 2).scale(1, 0.62, 1).translate(0, 0.17, 0.41), robe);
+  for (const s of [-1, 1]) add(new THREE.BoxGeometry(0.09, 0.12, 0.16).translate(s * 0.09, 0.07, -0.04), skin);
+
+  const torso = new THREE.Matrix4().makeTranslation(0, 0.17, 0.8).multiply(new THREE.Matrix4().makeRotationX(-prop));
+  const inTorso = (g) => g.applyMatrix4(torso);
+  const pt = (px, py, pz) => new THREE.Vector3(px, py, pz).applyMatrix4(torso);
+  add(inTorso(new THREE.CylinderGeometry(0.22, 0.2, 0.6, 7).rotateX(Math.PI / 2).scale(1, 0.72, 1).translate(0, 0, 0.3)), robe);
+  if (mantle) add(inTorso(new THREE.CylinderGeometry(0.25, 0.24, 0.42, 7).rotateX(Math.PI / 2).scale(1, 0.78, 1).translate(0, 0.01, 0.36)), mantle);
+  add(inTorso(new THREE.IcosahedronGeometry(0.14, 0).scale(1, 0.95, 1.12).translate(0, 0.03, 0.76)), skin);
+  if (hood) add(inTorso(new THREE.SphereGeometry(0.17, 7, 4, 0, Math.PI * 2, 0, Math.PI / 2).rotateX(-Math.PI / 2 - 0.5).translate(0, 0.0, 0.78)), cloak);
+
+  [-1, 1].forEach((s, i) => {
+    const shoulder = pt(s * 0.25, 0.02, 0.54);
+    let hand;
+    if (reach && i === 1) hand = shoulder.clone().add(new THREE.Vector3(s * 0.12, 0.42, -0.42));
+    else if (prop > 0.2) hand = new THREE.Vector3(s * 0.34, 0.05, shoulder.z - 0.12);
+    else hand = new THREE.Vector3(s * (0.3 + (i ? 0.08 : 0)), 0.06, shoulder.z - 0.58);
+    add(limb(shoulder, hand, 0.065), cloak);
+    add(new THREE.IcosahedronGeometry(0.06, 0).translate(hand.x, hand.y, hand.z), skin);
+  });
+}
+
 // Picks robe colors for a hand-placed person from the shared palette.
 export function dress(rand, palette = ISRAEL) {
   const hasMantle = rand() < palette.mantleChance;
@@ -229,7 +270,7 @@ export function tablets(ctx, x, y, z, yaw, { scale = 1, color = '#9a958a' } = {}
 
 // Low drifting bank of mist or dust: flat additive sprites near the ground.
 let puffTex;
-function puffTexture() {
+export function puffTexture() {
   if (puffTex) return puffTex;
   const c = document.createElement('canvas');
   c.width = c.height = 128;

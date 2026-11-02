@@ -2,7 +2,7 @@
 // that covers the tent of meeting begins to glow as fire, and the tribes watch from their tents.
 import * as THREE from 'three';
 import { rng } from '../engine/util.js';
-import { ISRAEL, desertTerrain, layoutTents, tentZones, tent, campfire, flock, banner, person } from './lib/ot-19-camp.js';
+import { ISRAEL, desertTerrain, layoutTents, tentZones, tent, campfire, flock, banner, person, puffTexture } from './lib/ot-19-camp.js';
 
 const COURT = { x: 0, z: -25, w: 22.5, d: 45 };
 const TENT = { x: 0, z: -36, w: 4.6, d: 13.5, h: 4.6 };
@@ -82,7 +82,7 @@ function tabernacle(ctx) {
   const fireLight = new THREE.PointLight('#ff9a48', 40, 22, 1.5);
   fireLight.position.set(ax, ay + 3, az);
   ctx.scene.add(fireLight);
-  ctx.effects.smoke({ position: [ax, ay + 2, az], count: 12, height: 18, size: 0.6, color: '#a09890', seed: 8 });
+  ctx.effects.smoke({ position: [ax, ay + 2, az], count: 8, height: 9, size: 0.3, color: '#a09890', seed: 8 });
 
   const [lx, lz] = LAVER;
   const ly = ctx.heightAt(lx, lz);
@@ -91,41 +91,50 @@ function tabernacle(ctx) {
   ctx.colliders.add({ x: lx, z: lz, w: 1.4, d: 1.4, bottom: ly, top: ly + 1.3 });
 }
 
-// The cloud over the tent, glowing with fire from within as night falls.
+// The cloud over the tent: a soft, tall column glowing with fire from within as night falls.
 function pillar(ctx) {
   const r = rng(40);
   const { x, z, h } = TENT;
-  const base = ctx.heightAt(x, z) + h + 1;
-  const mat = (k) => new THREE.MeshLambertMaterial({ color: '#8a7a74', emissive: new THREE.Color('#ff7a2a').lerp(new THREE.Color('#c89070'), k), emissiveIntensity: 0.75 - k * 0.45, flatShading: true });
-  const mats = [0, 0.3, 0.6, 1].map(mat);
-  const puffs = [];
-  for (let i = 0; i < 130; i++) {
-    const t = (i / 130) ** 1.3;
-    const y = base + t * 150 + r.range(-3, 3);
-    const rad = 6 + t * 16 + r.range(-1, 2);
-    const a = r() * Math.PI * 2;
-    const m = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 0), mats[Math.min(3, Math.floor(t * 4 + r() * 0.8))]);
-    const s = rad * r.range(0.45, 0.8);
-    m.scale.set(s, s * 0.8, s);
-    m.position.set(x + Math.cos(a) * rad * 0.55, y, z + Math.sin(a) * rad * 0.55);
-    m.userData = { a, rad, y, ph: r() * 6 };
-    ctx.scene.add(m);
-    puffs.push(m);
+  const ground = ctx.heightAt(x, z);
+  const base = ground + h + 0.5;
+  const tex = puffTexture();
+  const smoke = [0, 1, 2, 3].map((k) => new THREE.SpriteMaterial({ map: tex, color: new THREE.Color('#ffb070').lerp(new THREE.Color('#c8a0a0'), k / 3), opacity: 0.55 - k * 0.07, transparent: true, depthWrite: false, fog: false }));
+  const fire = new THREE.SpriteMaterial({ map: tex, color: '#ffb860', opacity: 0.4, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+  const sprites = [];
+  const add = (mat, t, width, size) => {
+    const a = r() * Math.PI * 2, d = Math.sqrt(r()) * width;
+    const s = new THREE.Sprite(mat);
+    const y = base + t * 150;
+    s.scale.set(size, size * r.range(1.1, 1.6), 1);
+    s.position.set(x + Math.cos(a) * d, y, z + Math.sin(a) * d);
+    s.userData = { x: s.position.x, z: s.position.z, y, ph: r() * 6 };
+    ctx.scene.add(s);
+    sprites.push(s);
+  };
+  for (let i = 0; i < 110; i++) {
+    const t = (i / 110) ** 1.25;
+    const width = 3 + t * 9;
+    add(smoke[Math.min(3, Math.floor(t * 4))], t, width, r.range(9, 14) + t * 14);
+  }
+  for (let i = 0; i < 40; i++) {
+    const t = (i / 40) ** 1.4 * 0.7;
+    add(fire, t, 1.5 + t * 4, r.range(6, 10) + t * 8);
   }
   ctx.onFrame((t) => {
-    for (const m of puffs) {
-      const { a, rad, y, ph } = m.userData;
-      m.rotation.y = t * 0.05 + ph;
-      m.position.y = y + Math.sin(t * 0.3 + ph) * 1.2;
-      m.position.x = x + Math.cos(a + t * 0.04) * rad * 0.55;
+    for (const s of sprites) {
+      const { x: sx, z: sz, y, ph } = s.userData;
+      s.position.y = y + Math.sin(t * 0.25 + ph) * 1.5;
+      s.position.x = sx + Math.sin(t * 0.08 + ph) * 1.2;
+      s.position.z = sz + Math.cos(t * 0.07 + ph) * 1.2;
     }
-    for (const [i, mm] of mats.entries()) mm.emissiveIntensity = (0.75 - i * 0.15) * (0.9 + 0.1 * Math.sin(t * 2.3 + i));
+    fire.opacity = 0.4 * (0.9 + 0.1 * Math.sin(t * 1.7));
   });
-  ctx.effects.halo({ position: [x, base + 10, z], size: 34, color: '#ffae60', opacity: 0.3 });
+  ctx.effects.beam({ position: [x, base - 1, z], height: 160, radiusBottom: 4, radiusTop: 10, color: '#ffc080', opacity: 0.55 });
+  ctx.effects.halo({ position: [x, base + 6, z], size: 30, color: '#ffae60', opacity: 0.35 });
   const light = new THREE.PointLight('#ffb070', 260, 120, 1.3);
   light.position.set(x, base + 12, z + 6);
   ctx.scene.add(light);
-  ctx.effects.halo({ position: [x, ctx.heightAt(x, z) + 2.4, z + TENT.d / 2 + 0.4], size: 7, color: '#fff0c8', opacity: 0.5 });
+  ctx.effects.halo({ position: [x, ground + 2.4, z + TENT.d / 2 + 0.4], size: 7, color: '#fff0c8', opacity: 0.5 });
 }
 
 export default {
@@ -144,7 +153,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.48, shadowTint: '#201a48', highlightTint: '#ffd8a8' },
   shadow: { center: [0, -25], radius: 60 },
 
-  player: { start: [0, 26], yaw: 0, pitch: 0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [0, 16], yaw: 0, pitch: 0.24, eye: 1.65, speed: 4.5 },
 
   terrain: desertTerrain({
     seed: 22,

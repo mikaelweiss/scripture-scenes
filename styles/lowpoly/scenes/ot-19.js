@@ -2,7 +2,7 @@
 // small white flakes over the ground, and Israel goes out among the tents to gather it.
 import * as THREE from 'three';
 import { rng } from '../engine/util.js';
-import { ISRAEL, desertTerrain, scatterPoints, layoutTents, tentZones, tent, campfire, flock, basket, jar, haze } from './lib/ot-19-camp.js';
+import { ISRAEL, desertTerrain, scatterPoints, layoutTents, tentZones, tent, campfire, flock, basket, jar, haze, person, dress } from './lib/ot-19-camp.js';
 
 const CAMP = [0, -70];
 const FIELD = [0, -8];
@@ -13,7 +13,7 @@ const tents = [
 ];
 const zones = tentZones(tents);
 
-const gatherers = scatterPoints({ center: FIELD, ring: [3, 60], count: 460, spacing: 2.2, seed: 9, avoid: [{ x: 0, z: 26, r: 6 }, ...zones] });
+const gatherers = scatterPoints({ center: FIELD, ring: [3, 60], count: 460, spacing: 2.2, seed: 9, avoid: [{ x: 0, z: 26, r: 6 }, { x: 0, z: 17, r: 7 }, ...zones] });
 const faces = [[-40, -20], [40, -10], [0, -60], [0, 60], [-60, 30], [60, 40]];
 const groups = faces.map((face, k) => ({
   count: 999,
@@ -29,10 +29,10 @@ export default {
   title: 'Exodus 16:13-21: Manna in the wilderness',
   seed: 19,
   fov: 60,
-  exposure: 1.05,
+  exposure: 1.14,
 
   sun: { direction: [0.78, 0.17, -0.42], color: '#ffd2a0', intensity: 2.6 },
-  light: { sky: '#b4c4e4', ground: '#a07c5c', hemi: 1.15 },
+  light: { sky: '#b4c4e4', ground: '#c09a74', hemi: 1.35 },
   sky: { top: '#6f8fc4', horizon: '#f6d2b0', ground: '#e0c2a0', sunColor: '#fff0d0', glow: 1.1 },
   fog: { color: '#ead4c0', near: 50, far: 520 },
   clouds: { count: 34, shadow: '#a596a8', lit: '#ffe0c0', rim: '#fff6e4', distance: [260, 900], altitude: [110, 240], hole: 0.3 },
@@ -67,6 +67,16 @@ export default {
       if (i % 3 === 0) basket(ctx, x + r.range(-0.7, 0.7), z + r.range(0.4, 0.8), { fill: '#f2eee2' });
       else if (i % 7 === 1) jar(ctx, x + 0.5, z + 0.4, { s: 0.8 });
     });
+
+    // A family close by, kneeling to gather the flakes into baskets.
+    for (const [x, z, yaw, kind] of [[-2.6, 19.5, 0.5, 'kneel'], [-1.2, 18.2, -0.3, 'kneel'], [1.8, 20.5, -0.9, 'kneel'], [3.4, 17.2, 2.6, 'stand'], [-4.6, 15.5, 0.9, 'kneel'], [0.6, 14.6, 2.9, 'child'], [4.4, 22.4, -1.6, 'kneel']]) {
+      const d = dress(r);
+      const fx = x + Math.sin(yaw) * 0.6, fz = z + Math.cos(yaw) * 0.6;
+      if (kind === 'stand') person(ctx, { x, z, yaw, ...d, arms: [[1.1, 0.15], [1.1, 0.15]] });
+      else person(ctx, { x, z, yaw, ...d, kneel: true, scale: kind === 'child' ? 0.7 : 1, arms: [[0.75, 0.12], [0.6, 0.18]] });
+      basket(ctx, fx + Math.cos(yaw) * 0.35, fz - Math.sin(yaw) * 0.35, { fill: '#f2eee2', s: kind === 'child' ? 0.7 : 1 });
+    }
+    basket(ctx, 3.4 + Math.sin(2.6) * 0.45, 17.2 + Math.cos(2.6) * 0.45, { fill: '#f2eee2' });
 
     for (const [x, z] of [[-30, -50], [26, -64], [-62, -96], [48, -110], [6, -130], [-90, -40], [80, -40]]) campfire(ctx, x, z, { smoke: 10 });
     flock(ctx, [-110, -20], 26, 12, 5);

@@ -139,7 +139,7 @@ function procession(ctx) {
       person(ctx, { x: ark.x + sx * 1.3 + ex, z: ark.z + sz * 1.3 + ez, yaw: ark.yaw, robe: '#ece6d6', skin: '#9b6a46', arms: [[0.9, 0.05], [0.9, 0.05]] });
     }
   }
-  ctx.effects.halo({ position: [ark.x, ay + 0.4, ark.z], size: 3, color: '#ffe6a0', opacity: 0.35 });
+  ctx.effects.halo({ position: [ark.x, ay + 0.6, ark.z], size: 6, color: '#ffe6a0', opacity: 0.5 });
   // Joshua and the armed men going before the priests, and the rearward after the ark.
   for (let i = 0; i < 26; i++) {
     const before = i < 16;
@@ -167,7 +167,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.38, shadowTint: '#3a3a5a', highlightTint: '#ffeed0' },
   shadow: { center: [0, -60], radius: 90 },
 
-  player: { start: [6, 6], yaw: 0.06, pitch: 0.08, eye: 1.65, speed: 4.5 },
+  player: { start: [14, -3], yaw: -0.5, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: desertTerrain({
     seed: 24,
@@ -184,7 +184,7 @@ export default {
   crowd: {
     palette: ARMY,
     groups: [
-      { count: 1400, center: CITY, ring: [84, 120], arc: [0.2, Math.PI - 0.2], spacing: 1.05, face: CITY, children: 0, seed: 71, avoid: [{ rect: [6, 10, 10, 20] }] },
+      { count: 1400, center: CITY, ring: [84, 120], arc: [0.2, Math.PI - 0.2], spacing: 1.05, face: CITY, children: 0, seed: 71, avoid: [{ rect: [12, -2, 14, 14] }] },
       { count: 1000, center: CITY, ring: [84, 120], arc: [Math.PI - 0.2, Math.PI * 2 + 0.2], spacing: 1.3, face: CITY, children: 0, seed: 72 },
     ],
   },

@@ -19,7 +19,7 @@ export default {
   exposure: 1.15,
 
   sun: { direction: [-0.55, 0.42, 0.7], color: '#e8c098', intensity: 1.5 },
-  light: { sky: '#6a6478', ground: '#4a3a32', hemi: 1.25 },
+  light: { sky: '#7a7088', ground: '#6a5040', hemi: 1.4 },
   sky: { top: '#24212c', horizon: '#7a5c50', ground: '#4a3c34', sunColor: '#d0a080', glow: 0.4 },
   fog: { color: '#5e4e4a', near: 90, far: 900 },
   clouds: { count: 90, shadow: '#221e24', lit: '#6a5450', rim: '#a07a64', distance: [480, 1100], altitude: [300, 420], hole: 0 },

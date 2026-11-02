@@ -2,12 +2,12 @@
 // and the bitten who look upon it live.
 import * as THREE from 'three';
 import { rng } from '../engine/util.js';
-import { ISRAEL, desertTerrain, scatterPoints, layoutTents, tentZones, tent, person, dress } from './lib/ot-19-camp.js';
+import { ISRAEL, desertTerrain, scatterPoints, layoutTents, tentZones, tent, person, lying, dress } from './lib/ot-19-camp.js';
 
 const POLE = [0, -12];
 const tents = layoutTents({ center: POLE, ring: [62, 230], count: 200, seed: 23, face: POLE, avoid: [{ rect: [0, 40, 40, 60] }] });
 const zones = tentZones(tents);
-const fallen = scatterPoints({ center: [0, -4], ring: [3, 24], count: 44, spacing: 2.4, seed: 7, avoid: [{ x: 0, z: 12, r: 3.5 }, { x: POLE[0], z: POLE[1], r: 4 }] });
+const fallen = scatterPoints({ center: [0, -4], ring: [3, 20], count: 40, spacing: 2.2, seed: 7, avoid: [{ x: 0, z: 14, r: 6 }, { x: POLE[0], z: POLE[1], r: 4 }] });
 
 function serpentPole(ctx) {
   const [x, z] = POLE;
@@ -73,7 +73,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.36, shadowTint: '#4a3a5a', highlightTint: '#fff2d8' },
   shadow: { center: [0, -15], radius: 60 },
 
-  player: { start: [0, 12], yaw: 0, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [0, 14], yaw: 0, pitch: 0, eye: 1.65, speed: 4.5 },
 
   terrain: desertTerrain({
     seed: 23,
@@ -89,7 +89,7 @@ export default {
   crowd: {
     palette: ISRAEL,
     groups: [
-      { count: 900, center: POLE, ring: [7, 64], spacing: 1.15, face: [POLE[0], POLE[1]], children: 0.2, kneel: 0.35, seed: 51, avoid: [...zones, { rect: [0, 6, 6, 18] }, ...fallen.map(([x, z]) => ({ x, z, r: 1.4 }))] },
+      { count: 900, center: POLE, ring: [7, 64], spacing: 1.15, face: [POLE[0], POLE[1]], children: 0.2, kneel: 0.35, seed: 51, avoid: [...zones, { rect: [0, 8, 5, 16] }, ...fallen.map(([x, z]) => ({ x, z, r: 1.4 }))] },
     ],
   },
 
@@ -104,7 +104,8 @@ export default {
       const toPole = Math.atan2(px - x, pz - z);
       const d = dress(r);
       if (i % 3 === 0) person(ctx, { x, z, yaw: toPole, ...d, kneel: true, arms: [[1.9, 0.3], [0.4, 0.2]] });
-      else person(ctx, { x, z, yaw: toPole + Math.PI + (i % 2 ? 1.3 : -1.3) + r.range(-0.3, 0.3), ...d, lie: -Math.PI / 2 + r.range(0.55, 0.8), arms: [[i % 2 ? 2.2 : 0.2, 0.25], [0.15, 0.2]] });
+      else if (i % 3 === 1) lying(ctx, { x, z, yaw: toPole + Math.PI + r.range(-0.4, 0.4), ...d, prop: r.range(0.55, 0.8), reach: i % 2 === 1 });
+      else lying(ctx, { x, z, yaw: r() * Math.PI * 2, ...d, prop: r.range(0, 0.15) });
     });
     // Moses beside the pole, one arm raised toward it.
     person(ctx, { x: px + 1.6, z: pz + 1.2, yaw: 0.4, robe: '#c8b89a', mantle: '#7a3a2a', skin: '#9b6a46', hood: true, scale: 1.05, arms: [[2.6, 0.5], [0.3, 0.15]] });

@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { rng } from '../../engine/util.js';
+import { puffTexture } from './ot-19-camp.js';
 
 export const sinaiFlat = ({ x, z, base = 120, spread = 240 }) => ({ x, z, r: 0, falloff: spread, height: base });
 
@@ -80,6 +81,21 @@ export function sinaiStorm(ctx, summit, { fire = true, quake = true, lightning =
         jitter: 0.05,
       });
     }
+    const blaze = new T.SpriteMaterial({ map: puffTexture(), color: '#ff8a38', opacity: 0.32, transparent: true, depthWrite: false, blending: T.AdditiveBlending, fog: false });
+    const flames = [];
+    for (let i = 0; i < 36; i++) {
+      const a = r() * Math.PI * 2, d = r.range(8, 48);
+      const s = new T.Sprite(blaze);
+      const size = r.range(18, 34);
+      s.scale.set(size, size * 1.4, 1);
+      s.position.set(sx + Math.cos(a) * d, sy - 18 + r.range(0, 30), sz + 14 + Math.sin(a) * d * 0.6);
+      s.userData = { y: s.position.y, ph: r() * 6 };
+      scene.add(s);
+      flames.push(s);
+    }
+    ctx.onFrame((t) => {
+      for (const s of flames) s.position.y = s.userData.y + Math.sin(t * 1.6 + s.userData.ph) * 2.5;
+    });
     effects.halo({ position: [sx, sy, sz], size: 160, color: '#ff8a3a', opacity: 0.55 });
     const glow = new T.PointLight('#ff7a30', 1500, 420, 1.2);
     glow.position.set(sx, sy + 10, sz + 30);
