@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.5, shadowTint: '#141a40', highlightTint: '#ffd8a0' },
   shadow: { center: [0, -12], radius: 50 },
 
-  player: { start: [0, -17.5], yaw: -0.42, pitch: 0.03, eye: 1.65, speed: 4 },
+  player: { start: [1.4, -20.2], yaw: -0.4, pitch: -0.04, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
@@ -111,8 +111,8 @@ export default {
       ring.rotation.y = Math.PI / 2;
       plates.add(ring);
     }
-    plates.position.set(0, 1.08, 0.3);
-    plates.scale.setScalar(1.4);
+    plates.position.set(0, 0.98, 0.34);
+    plates.scale.setScalar(0.95);
     plates.rotation.x = -0.5;
     nephi.add(plates);
     const sword = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.9, 0.02), new THREE.MeshStandardMaterial({ color: '#c8ccd4', metalness: 0.9, roughness: 0.25, flatShading: true }));
@@ -134,6 +134,9 @@ export default {
     const lampLight = new THREE.PointLight('#ffb460', 8, 8, 1.6);
     lampLight.position.set(ZORAM[0] + 0.2, ctx.heightAt(...ZORAM) + 1.3, ZORAM[1] + 0.4);
     ctx.scene.add(lampLight);
+    const fill = new THREE.PointLight('#ffc888', 5, 7, 1.6);
+    fill.position.set(NEPHI[0] - 1.2, ctx.heightAt(...NEPHI) + 1.8, NEPHI[1] + 2.4);
+    ctx.scene.add(fill);
     ctx.onFrame((t) => (lampLight.intensity = 8 * (0.9 + Math.sin(t * 9) * 0.06 + Math.sin(t * 23) * 0.04)));
 
     for (const [x, z] of [[12.5, -25], [13.2, -26], [-16, -20], [-17, -21], [15, -40]]) jar(ctx, { x, z, size: 0.7, color: '#7a4a2e' });

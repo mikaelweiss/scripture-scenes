@@ -8,7 +8,7 @@ const TRAIL = Array.from({ length: 40 }, (_, i) => {
   const t = i / 39;
   return [2 + (PEAK[0] - 2) * t + Math.sin(t * 9) * 6 * (1 - t), -6 + (PEAK[1] + 6) * t];
 });
-const NEPHI_T = 0.2;
+const NEPHI_T = 0.14;
 
 export default {
   title: "1 Nephi 16:18-32: Nephi's broken bow",
@@ -74,7 +74,7 @@ export default {
     // The family, hungry and murmuring: sitting, kneeling, heads bowed.
     const family = [
       [-3.5, 2.5, '#e2d6bc', '#5a6a8a', true], [-4.8, 4.2, '#8a5a6a', '#c9b48e', true], [1.6, 4.5, '#7a4e36', '#a34f32', false], [2.6, 2.6, '#6e5a44', '#3f4d5e', false],
-      [-1.2, 0.2, '#a0825c', '#556246', true], [0.8, 1.0, '#94704e', null, true], [-6.5, 7.5, '#d8cdb5', '#6d3b2e', true], [4.2, 6.5, '#4f5a6b', '#8a7a5a', true], [-8, 2, '#b59a72', '#5a3d2b', true],
+      [-1.2, 0.2, '#a0825c', '#556246', true], [0.8, 1.0, '#94704e', null, true], [-7.4, 5.6, '#d8cdb5', '#6d3b2e', true], [4.2, 6.5, '#4f5a6b', '#8a7a5a', true], [-8, 2, '#b59a72', '#5a3d2b', true],
     ];
     for (const [x, z, robe, mantle, kneel] of family) person(ctx, { x, z, face: [-1 + r.range(-2, 2), 3 + r.range(-2, 2)], robe, mantle: mantle ?? undefined, skin: '#9b6a46', hood: r() < 0.5, kneel });
     for (const [x, z] of [[-2.8, 5.8], [3.4, 5.4]]) person(ctx, { x, z, face: [-1, 3], robe: '#c4b090', skin: '#a87652', scale: 0.6, kneel: true });
@@ -82,7 +82,7 @@ export default {
     camel(ctx, { x: -16, z: -6, rot: 1.2, sitting: true });
     for (let i = 0; i < 8; i++) {
       const x = r.range(-12, 12), z = r.range(-8, 10);
-      if (tents.some(([tx, tz]) => Math.hypot(tx - x, tz - z) < 4) || Math.hypot(x + 1, z - 3) < 4) continue;
+      if (tents.some(([tx, tz]) => Math.hypot(tx - x, tz - z) < 4) || Math.hypot(x + 1, z - 3) < 4 || Math.hypot(x + 3, z - 9) < 5) continue;
       if (r() < 0.5) jar(ctx, { x, z, size: 0.5 });
       else bundle(ctx, { x, z, size: 0.7, color: r.pick(['#9a8462', '#7a5a3c']) });
     }

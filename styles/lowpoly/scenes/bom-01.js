@@ -27,7 +27,7 @@ function stall(ctx, { x, z, rot = 0, cloth = '#a8452e' }) {
 export default {
   title: '1 Nephi 1: Lehi prophesies in Jerusalem',
   seed: 101,
-  fov: 62,
+  fov: 46,
   exposure: 1.0,
 
   sun: { direction: [-0.55, 0.62, 0.35], color: '#ffe2b0', intensity: 2.8 },
@@ -40,7 +40,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.35, shadowTint: '#3a3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, -10], radius: 70 },
 
-  player: { start: [0, 13], yaw: 0, pitch: 0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [0, 12.6], yaw: 0, pitch: 0.0, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -107,8 +107,8 @@ export default {
     box(ctx, { x: 0, z: -21, y: 7.2, w: 19, h: 0.6, d: 7, color: '#c7b28a' });
     for (const cx of [-6, -2, 2, 6]) ctx.builders.column(ctx, { x: cx, z: -17.3, h: 6.8, radius: 0.38, color: '#e9dcbc', broken: false });
     box(ctx, { x: 0, z: -16.8, y: 6.7, w: 15, h: 0.6, d: 1.4, color: '#d2bf98', collide: false });
-    box(ctx, { x: LEHI[0], z: LEHI[1] - 3.5, y: -0.2, w: 9, h: 1.3, d: 5, color: '#cdb994' });
-    for (let i = 0; i < 3; i++) box(ctx, { x: LEHI[0], z: LEHI[1] - 0.6 + i * 0.45, y: -0.2, w: 4.5, h: 1.1 - i * 0.4, d: 0.46, color: '#d6c39c' });
+    box(ctx, { x: LEHI[0], z: LEHI[1] - 3.5, y: -0.2, w: 9, h: 2.4, d: 5, color: '#cdb994' });
+    for (let i = 0; i < 5; i++) box(ctx, { x: LEHI[0], z: LEHI[1] - 0.6 + i * 0.45, y: -0.2, w: 4.5, h: 2.2 - i * 0.42, d: 0.46, color: '#d6c39c' });
     // Steps the player starts on, at the south edge of the square.
     box(ctx, { x: 0, z: 14, y: -0.2, w: 5, h: 1.3, d: 4, color: '#cdb994' });
     for (let i = 0; i < 3; i++) box(ctx, { x: 0, z: 11.6 - i * 0.5, y: -0.2, w: 5, h: 1.0 - i * 0.35, d: 0.5, color: '#d6c39c' });
@@ -136,7 +136,7 @@ export default {
     cityWall(ctx, { path: [[-100, -175], [70, -178], [100, -60], [96, 98], [-98, 96], [-112, -60], [-100, -175]], h: 9, color: '#cbb994' });
 
     // Lehi on the porch steps, arms raised as he testifies.
-    person(ctx, { x: LEHI[0], z: LEHI[1] - 1.6, face: [0, 25], scale: 1.08, robe: '#e8dcc0', mantle: '#4a5a7a', skin: '#a8754f', arms: 'out' });
+    person(ctx, { x: LEHI[0], z: LEHI[1] - 1.6, face: [0, 25], scale: 1.15, robe: '#e8dcc0', mantle: '#4a5a7a', skin: '#a8754f', arms: 'out' });
     // Mockers in front, gesturing at him, and onlookers on the rooftops.
     for (const [x, z, robe, mantle] of [[-2.2, -5.2, '#7a3a3a', '#a34f32'], [2.6, -5.0, '#94704e', '#3f4d5e'], [-4.2, -3.2, '#6e5a44', '#c9b48e'], [4.4, -4.0, '#a0825c', '#8a2e2e']]) {
       person(ctx, { x, z, face: [LEHI[0], LEHI[1] - 2], robe, mantle, skin: '#9b6a46', arms: 'out' });

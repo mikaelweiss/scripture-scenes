@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2a60', highlightTint: '#ffe0b8' },
   shadow: { center: [0, -4], radius: 40 },
 
-  player: { start: [2.6, 5.2], yaw: 0.26, pitch: -0.2, eye: 1.65, speed: 4 },
+  player: { start: [1.2, 2.9], yaw: 0.1, pitch: -0.26, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000,
@@ -42,7 +42,7 @@ export default {
 
   custom(ctx) {
     const r = ctx.rand;
-    tent(ctx, { x: 0, z: -6, rot: 0, w: 6, d: 7, h: 3, color: '#3e2f26', stripe: '#6e5640', panels: 5 });
+    tent(ctx, { x: 0, z: -6, rot: 0, w: 6, d: 7, h: 3, color: '#644a36', stripe: '#a0805a', panels: 5 });
     const others = [
       [-10, -2, 0.7], [-13, -12, 1.1], [10, -10, -0.8], [-4, -18, 0.2], [8, -21, -0.3], [15, 0, -1.4], [-18, 4, 1.4],
     ];

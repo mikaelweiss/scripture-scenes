@@ -12,7 +12,7 @@ const LIFT = 11;
 const rodPoints = [];
 for (let z = 54; z > -40; z -= 1.5) rodPoints.push([0.3 + Math.sin(z * 0.05) * 0.25, z]);
 const pathX = (z) => Math.sin(z * 0.05) * 0.25;
-const rodHolders = rodPoints.filter((_, i) => i % 2 === 0 && i > 3).map(([x, z]) => [x - 0.5, z + 0.4]);
+const rodHolders = rodPoints.filter(([, z], i) => i % 2 === 0 && z < 28).map(([x, z]) => [x - 0.5, z + 0.4]);
 
 export default {
   title: "1 Nephi 8: Lehi's dream of the tree of life",
@@ -29,7 +29,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.55, shadowTint: '#1a1840', highlightTint: '#fff4d8' },
   shadow: { center: [0, -10], radius: 70 },
 
-  player: { start: [1.6, 30], yaw: 0.12, pitch: 0.08, eye: 1.65, speed: 4.5 },
+  player: { start: [1.4, 33], yaw: 0.06, pitch: 0.05, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 900,
@@ -127,7 +127,7 @@ export default {
     const light = new THREE.PointLight('#fff4d8', 70, 50, 1.3);
     light.position.set(TREE[0], ty + 6, TREE[1] + 9);
     ctx.scene.add(light);
-    ctx.effects.halo({ position: [TREE[0], ty + 10, TREE[1]], size: 30, opacity: 0.22, color: '#fff2d0' });
+    ctx.effects.halo({ position: [TREE[0], ty + 10, TREE[1]], size: 40, opacity: 0.32, color: '#fff2d0' });
     ctx.effects.halo({ position: [TREE[0], ty + 10, TREE[1]], size: 10, opacity: 0.2, color: '#ffffff' });
     ctx.effects.motes({ position: [TREE[0], ty, TREE[1]], radius: 9, height: 16, count: 160, color: '#fff6dc' });
     ctx.effects.ring({ position: [TREE[0], ty + 0.05, TREE[1]], radius: 14, width: 6, color: '#fff0c0', opacity: 0.25 });
@@ -167,7 +167,9 @@ export default {
     ctx.scene.add(glowUnder);
 
     // Mist of darkness over the middle stretch of the path.
-    mist(ctx, { x: 0, z: 6, w: 40, d: 22, count: 70, color: '#2a2632', opacity: 0.38, height: [-0.5, 1.6], size: [1.5, 3.5], seed: 3 });
-    mist(ctx, { x: 24, z: 0, w: 30, d: 50, count: 40, color: '#2a2632', opacity: 0.38, height: [-0.5, 2], size: [2, 4], seed: 5 });
+    mist(ctx, { x: 0, z: 6, w: 56, d: 30, count: 200, color: '#2a2634', opacity: 0.55, height: [-0.6, 1.2], size: [2.2, 4], seed: 3, drift: 0.5 });
+    mist(ctx, { x: 0, z: 6, w: 40, d: 26, count: 60, color: '#4c4660', opacity: 0.3, height: [1.2, 2.2], size: [2.5, 4.5], seed: 9, drift: 0.6 });
+    mist(ctx, { x: 30, z: -4, w: 34, d: 60, count: 70, color: '#2a2634', opacity: 0.45, height: [-0.6, 1.4], size: [3, 5], seed: 5 });
+    mist(ctx, { x: -30, z: 14, w: 26, d: 40, count: 40, color: '#2a2634', opacity: 0.4, height: [-0.6, 1.2], size: [3, 5], seed: 6 });
   },
 };

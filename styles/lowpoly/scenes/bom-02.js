@@ -3,7 +3,8 @@
 import * as THREE from 'three';
 import { tent, fire, river, water, channelFlats, camel, goat, jar, bundle, person, ridge, box } from './lib/bom-01-kit.js';
 
-const RIVER = [[-10, 220], [-14, 150], [-6, 90], [-14, 40], [-10, 0], [-16, -50], [-8, -100], [-12, -140]];
+const RIVER = [[-10, 220], [-14, 150], [-6, 90], [-14, 40], [-10, 0], [-14, -30], [-12, -60]];
+const SEA = { rect: [0, -270, 1100, 460] };
 const ALTAR = [-2, -14];
 const LEHI = [-3, 3];
 
@@ -25,7 +26,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.38, shadowTint: '#3a2a50', highlightTint: '#ffe2b8' },
   shadow: { center: [0, -6], radius: 60 },
 
-  player: { start: [7, 16], yaw: 0.3, pitch: -0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [9, 22.5], yaw: 0.06, pitch: -0.11, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -36,35 +37,34 @@ export default {
     flats: [
       { x: 0, z: 0, r: 60, falloff: 40, height: 0 },
       { x: 0, z: 120, r: 50, falloff: 40, height: 0.5 },
-      { x: 0, z: -80, r: 40, falloff: 30, height: -0.3 },
       ...sides(-112),
       ...sides(112),
-      { x: 0, z: -260, r: 150, falloff: 60, height: -4 },
       ...channelFlats(RIVER, { r: 3.2, falloff: 5, depth: 1.5, step: 4 }),
+      { x: 0, z: -240, r: 170, falloff: 45, height: -4 },
+      { x: 9, z: 23, r: 4, falloff: 12, height: 4 },
     ],
     colors: { ground: '#c49a6c', groundAlt: '#b08458', grass: '#8a8a4a', high: '#a86a4a', rock: '#8e5a42' },
     patches: [
       { x: 14, z: 0, r: 30, color: '#b89a74', strength: 0.5, rough: 0.4 },
       { x: -12, z: 30, r: 16, color: '#7a8a46', strength: 0.6, rough: 0.6 },
       { x: -14, z: -40, r: 14, color: '#7a8a46', strength: 0.6, rough: 0.6 },
-      { x: -10, z: -110, r: 18, color: '#7a8a46', strength: 0.5, rough: 0.6 },
-      { x: 0, z: -110, r: 50, color: '#dcc49a', strength: 0.8, rough: 0.4 },
+      { x: 0, z: -58, r: 60, color: '#dcc49a', strength: 0.7, rough: 0.4 },
     ],
   },
 
   scatter: [
-    { type: 'tree', count: 40, center: [-10, 0], ring: [5, 120], spacing: 4, seed: 19, avoid: [{ rect: [12, 4, 34, 40] }, { rect: [4, 10, 12, 16] }], props: { kind: 'broad', h: 1.3, leaf: '#6f7a3a' } },
-    { type: 'tree', count: 25, points: [[-22, 36], [-3, 28], [-24, 12], [-4, 55], [-26, -20], [-2, -36], [-26, -48], [-4, -70], [-22, -90], [0, -100], [-26, -130], [-2, -150], [-24, -165], [-4, 80], [-24, 100], [-2, 120], [-26, 70], [-30, -8], [-1, -125], [-28, 50], [4, -190], [-24, -200], [-30, 140], [2, 150], [-31, -110]], props: { kind: 'palm', h: 7.5, leaf: '#5d7a36' } },
-    { type: 'tree', count: 14, center: [0, -20], ring: [30, 110], spacing: 14, seed: 6, avoid: [{ rect: [-10, 0, 30, 400] }, { rect: [18, 4, 40, 50] }], props: { kind: 'broad', h: 3.2, leaf: '#7a7f42' } },
-    { type: 'rock', count: 50, center: [0, -20], ring: [35, 200], spacing: 10, seed: 7, avoid: [{ rect: [-10, 0, 30, 500] }], props: { color: '#9a6a4e' } },
-    { type: 'rubble', count: 16, center: [10, 0], ring: [10, 60], seed: 8, avoid: [{ rect: [-10, 0, 14, 500] }], props: { color: '#a07a5a', count: 5, radius: 2, size: [0.12, 0.35] } },
+    { type: 'tree', count: 40, center: [-10, 0], ring: [5, 120], spacing: 4, seed: 19, avoid: [{ rect: [12, 4, 34, 40] }, { rect: [4, 10, 12, 16] }, { rect: [9, 23, 10, 10] }, SEA], props: { kind: 'broad', h: 1.3, leaf: '#6f7a3a' } },
+    { type: 'tree', count: 15, points: [[-22, 36], [-3, 28], [-24, 12], [-4, 55], [-26, -20], [-2, -36], [-26, -48], [-4, 80], [-24, 100], [-2, 120], [-26, 70], [-30, -8], [-28, 50], [-30, 140], [2, 150]], props: { kind: 'palm', h: 7.5, leaf: '#5d7a36' } },
+    { type: 'tree', count: 14, center: [0, -20], ring: [30, 110], spacing: 14, seed: 6, avoid: [{ rect: [-10, 0, 30, 400] }, { rect: [18, 4, 40, 50] }, SEA], props: { kind: 'broad', h: 3.2, leaf: '#7a7f42' } },
+    { type: 'rock', count: 50, center: [0, -20], ring: [35, 200], spacing: 10, seed: 7, avoid: [{ rect: [-10, 0, 30, 500] }, { rect: [9, 26, 20, 20] }, SEA], props: { color: '#9a6a4e' } },
+    { type: 'rubble', count: 16, center: [10, 0], ring: [10, 60], seed: 8, avoid: [{ rect: [-10, 0, 14, 500] }, { rect: [9, 26, 20, 20] }], props: { color: '#a07a5a', count: 5, radius: 2, size: [0.12, 0.35] } },
   ],
 
   custom(ctx) {
     ridge(ctx, { path: [[-58, 210], [-60, 100], [-56, 0], [-62, -90]], size: [5, 10], color: '#94604a', step: 11 });
     ridge(ctx, { path: [[60, 210], [62, 100], [58, 0], [62, -90]], size: [5, 10], color: '#94604a', step: 11 });
     river(ctx, { path: RIVER, width: 7, y: -0.75, color: '#4f8a94' });
-    water(ctx, { x: 0, z: -300, w: 900, d: 300, y: -0.9, color: '#3a7a92', opacity: 0.95, amp: 0.18, seg: 6 });
+    water(ctx, { x: 0, z: -250, w: 900, d: 420, y: -0.9, color: '#3a7a92', opacity: 0.95, amp: 0.18, seg: 6 });
 
     // The camp: tents on the east bank, Lehi's in front.
     const tents = [

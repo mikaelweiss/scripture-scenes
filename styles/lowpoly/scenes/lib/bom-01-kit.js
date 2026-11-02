@@ -109,12 +109,14 @@ export function tent(ctx, s) {
     ctx.solid.add(geo, { position: [x, y, z], rotation: [0, rot, 0], color: col, jitter: 0.03 });
   };
   tri([[w / 2, 0, -d / 2], [-w / 2, 0, -d / 2], [0, h, -d / 2]], color);
-  tri([[-w / 2 + 0.3, 0, d / 2 - 0.5], [w / 2 - 0.3, 0, d / 2 - 0.5], [0, h - 0.4, d / 2 - 0.5]], inner);
+  tri([[-w / 2, 0, d / 2], [w / 2, 0, d / 2], [0, h, d / 2]], color);
+  const door = flap ? 0.2 : 0.3, top = h * (flap ? 0.74 : 0.82);
+  tri([[-w * door, 0, d / 2 + 0.02], [w * door, 0, d / 2 + 0.02], [0, top, d / 2 + 0.02]], inner);
   if (flap) {
-    tri([[-w / 2, 0, d / 2], [-w * 0.18, 0, d / 2 + 0.6], [-w * 0.12, h * 0.85, d / 2 - 0.1]], stripe);
-    tri([[w * 0.18, 0, d / 2 + 0.6], [w / 2, 0, d / 2], [w * 0.12, h * 0.85, d / 2 - 0.1]], stripe);
+    tri([[0, top + 0.04, d / 2 + 0.05], [-w * 0.36, 0, d / 2 + 0.2], [-w * door, 0, d / 2 + 0.05]], stripe);
+    tri([[0, top + 0.04, d / 2 + 0.05], [w * door, 0, d / 2 + 0.05], [w * 0.36, 0, d / 2 + 0.2]], stripe);
   }
-  for (const lz of [d / 2 + 0.15, -d / 2 - 0.15]) {
+  for (const lz of [d / 2 - 0.1, -d / 2 + 0.1]) {
     const [px, pz] = at(0, lz);
     ctx.solid.add(new THREE.CylinderGeometry(0.05, 0.06, h + 0.4, 5), { position: [px, y + (h + 0.4) / 2, pz], color: '#5b4330' });
   }
