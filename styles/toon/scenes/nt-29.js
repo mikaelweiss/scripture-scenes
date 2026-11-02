@@ -119,7 +119,7 @@ export default {
     facing: [0, -4],
     colors: PALETTE,
     aisles: [{ from: [3, 30], to: [1, -5], width: 3.2 }],
-    keepClear: [{ kind: 'circle', x: -0.4, z: -4, r: 3.6 }],
+    keepClear: [{ kind: 'circle', x: -0.4, z: -4, r: 3.6 }, { kind: 'circle', x: -3.4, z: -0.4, r: 2.4 }, { kind: 'circle', x: -6.2, z: 2.4, r: 2.8 }],
     groups: [
       { center: [-0.4, -4], radius: [4.5, 14], angle: [0.75, 1.65], count: 50, children: 0.1 },
       { center: [-0.4, -4], radius: [4.5, 14], angle: [-1.65, -0.75], count: 50, children: 0.1 },
@@ -130,8 +130,9 @@ export default {
   },
 
   player: {
-    start: [1.6, 1.2],
-    lookAt: [-0.8, -7],
+    start: [-3.2, -0.2],
+    lookAt: [2.4, -5.4],
+    fov: 44,
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

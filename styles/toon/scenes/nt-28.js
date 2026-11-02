@@ -155,8 +155,9 @@ export default {
   },
 
   player: {
-    start: [7.4, 11],
-    lookAt: [0, -11],
+    start: [6, 4.6],
+    lookAt: [-0.5, -12],
+    fov: 46,
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

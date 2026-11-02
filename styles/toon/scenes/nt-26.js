@@ -97,8 +97,8 @@ export default {
   },
 
   player: {
-    start: [3.5, 9],
-    lookAt: [-0.5, -3],
+    start: [-2.9, 3.5],
+    lookAt: [1.4, -1.8],
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

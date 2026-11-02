@@ -92,8 +92,9 @@ export default {
   },
 
   player: {
-    start: [1.5, 7],
-    lookAt: [0, -3.5],
+    start: [1.8, 0.6],
+    lookAt: [-0.7, -4.2],
+    fov: 46,
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

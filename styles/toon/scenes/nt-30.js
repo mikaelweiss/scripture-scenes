@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Batch, DAY_STYLE, angels, box, cityWall, frameAt, glow, olive, person, scatterRocks, xf } from './lib/nt-25-kit.js';
 
 const STEPHEN = [0, -5];
-const SAUL = [6.5, 1.5];
+const SAUL = [4.6, -1.4];
 const VISION = [0, 25, -80];
 
 const ACCUSERS = {
@@ -128,8 +128,9 @@ export default {
   },
 
   player: {
-    start: [2, 3],
-    lookAt: [0, -9],
+    start: [1.6, 0.6],
+    lookAt: [-0.4, -9],
+    fov: 48,
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
