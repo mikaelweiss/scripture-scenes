@@ -56,8 +56,8 @@ export default {
     const on = (colors, x, z, opts = {}) => figure(ctx, colors, [x, z], { y: 0, parent: b.inner, ...opts });
 
     // Christ in the stern, arms raised against the wind (Mark 4:39). A cushion lies where He slept (4:38).
-    on(CHRIST, -3.55, 0, { face: [10, 0], glow: 0.35, scale: 1.08, arms: [0.35, 2.55] });
-    glow(ctx, [-3.55, 1.5, 0], 4.5, '#fff1cc', { opacity: 0.55, parent: b.inner });
+    on(CHRIST, -3.55, 0, { face: [10, 0], glow: 0.35, scale: 1.12, y: 0.3, arms: [0.35, 2.55] });
+    glow(ctx, [-3.55, 1.8, 0], 4.5, '#fff1cc', { opacity: 0.55, parent: b.inner });
     const pillow = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.5, 4, 8), ctx.kit.toon('#b5523b'));
     pillow.rotation.x = Math.PI / 2;
     pillow.position.set(-4.2, 0.95, 0);

@@ -3,8 +3,8 @@
 import * as THREE from 'three';
 import { CHRIST, DISCIPLES, boat, figure, flatColors, glow, groundMesh, moon, NO_PLAZA, rockBoat, sea, stars, toonStyle } from './lib/nt-13-kit.js';
 
-const JESUS = [2.6, -14];
-const PETER = [-2.4, -8];
+const JESUS = [2.2, -10.8];
+const PETER = [-4.4, -8.4];
 
 export default {
   title: 'Matthew 14:22-33: Walking on water',
@@ -51,7 +51,7 @@ export default {
     on(DISCIPLES[10], 3.7, -0.2, { face: JESUS, arms: [0.25, 1.6] });
 
     // Christ on the water, hand stretched out; Peter walking to Him on the waves (14:29).
-    figure(ctx, CHRIST, JESUS, { face: PETER, glow: 0.55, scale: 1.1, y: 0.05, arms: [0.25, 1.45], clear: 1.2 });
+    figure(ctx, CHRIST, JESUS, { face: PETER, glow: 0.55, scale: 1.15, y: 0.05, arms: [0.25, 1.45], clear: 1.2 });
     glow(ctx, [JESUS[0], 1.5, JESUS[1]], 7, '#e8f0ff', { opacity: 0.7 });
     const pool = new THREE.Mesh(new THREE.CircleGeometry(3.2, 40), new THREE.MeshBasicMaterial({ color: '#c8d8ff', transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }));
     pool.rotation.x = -Math.PI / 2;
@@ -68,6 +68,7 @@ export default {
   light: {
     pointLights: [
       { at: JESUS, lift: 2.2, color: '#dce6ff', intensity: 16, distance: 18 },
+      { at: PETER, lift: 2.0, color: '#c8d8ff', intensity: 6, distance: 6 },
       { at: [-5, -1], lift: 1.6, color: '#ffb060', intensity: 4, distance: 7 },
     ],
     glows: [{ at: [-4.4, -0.2], lift: 1.6, size: 1.6, color: '#ffc070', opacity: 0.8 }],
@@ -75,7 +76,7 @@ export default {
 
   player: {
     start: [-1.2, 0.5],
-    lookAt: [0.2, -11],
+    lookAt: [0.3, -8.6],
     colors: DISCIPLES[11],
   },
 };

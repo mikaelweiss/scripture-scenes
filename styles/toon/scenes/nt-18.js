@@ -39,8 +39,8 @@ export default {
     const face = [], dark = [], hill = [], cut = [];
     face.push(box(14, 7, 4, TOMB[0], 3.2, TOMB[1] - 1.5));
     ctx.addCollider({ x: TOMB[0], z: TOMB[1] - 1.5, hx: 7, hz: 2, rot: 0, top: 6.7 });
-    dark.push(box(1.7, 2.3, 0.6, TOMB[0], 1.15, TOMB[1] + 0.25));
-    cut.push(box(2.5, 0.35, 0.5, TOMB[0], 2.45, TOMB[1] + 0.35), box(0.4, 2.4, 0.5, TOMB[0] - 1.05, 1.2, TOMB[1] + 0.35), box(0.4, 2.4, 0.5, TOMB[0] + 1.05, 1.2, TOMB[1] + 0.35));
+    dark.push(box(2.0, 2.6, 0.6, TOMB[0], 1.3, TOMB[1] + 0.25));
+    cut.push(box(2.9, 0.4, 0.5, TOMB[0], 2.8, TOMB[1] + 0.35), box(0.45, 2.7, 0.5, TOMB[0] - 1.22, 1.35, TOMB[1] + 0.35), box(0.45, 2.7, 0.5, TOMB[0] + 1.22, 1.35, TOMB[1] + 0.35));
     cut.push(box(3.2, 0.3, 1.6, TOMB[0], 0.1, TOMB[1] + 1.1));
     for (let i = 0; i < 22; i++) {
       const x = -34 + (i / 21) * 68 + (rng() - 0.5) * 3;
@@ -63,7 +63,8 @@ export default {
     addMesh(scene, face, kit.toon(rock));
     addMesh(scene, hill, kit.toon('#b89c74'));
     addMesh(scene, cut, kit.stoneMat('#d8c49c'));
-    addMesh(scene, dark, kit.toon('#1e140e'), { cast: false });
+    // Unlit so the open tomb reads as black depth behind Lazarus.
+    addMesh(scene, dark, kit.basic('#0b0705'), { cast: false });
 
     // The rolling stone, taken away and leaning against the rock beside the door (11:41).
     const wheel = cyl(1.45, 1.45, 0.5, 0, 0, 0, { rx: Math.PI / 2 }, 20);
@@ -74,7 +75,7 @@ export default {
 
     // Lazarus at the door, bound hand and foot with graveclothes, his face bound with a napkin (11:44).
     const wrap = { robe: '#f2ede0', mantle: '#e9e2d0', skin: '#efe8d8', hair: '#e6dfcc' };
-    const laz = figure(ctx, wrap, LAZARUS, { face: JESUS, clear: 1.2, y: 0.1 });
+    const laz = figure(ctx, wrap, LAZARUS, { face: JESUS, clear: 1.2, y: 0.1, scale: 1.12 });
     const bands = [];
     for (const h of [0.25, 0.55, 0.85, 1.12, 1.36]) {
       const r = h < 1 ? 0.27 - h * 0.05 : 0.23;
@@ -84,11 +85,10 @@ export default {
       bands.push(t);
     }
     addMesh(laz, bands, kit.toon('#cfc4aa'), { cast: false });
-    glow(ctx, [LAZARUS[0], 1.3, LAZARUS[1] + 0.3], 3.2, '#fff6dc', { opacity: 0.35 });
 
     // Christ calls him forth; Martha and Mary beside Him (11:39-43).
     figure(ctx, CHRIST, JESUS, { face: LAZARUS, glow: 0.35, scale: 1.1, arms: [0.25, 2.3], clear: 1.4 });
-    glow(ctx, [JESUS[0], 1.5, JESUS[1]], 5, '#fff3d0', { opacity: 0.55 });
+    glow(ctx, [JESUS[0], 1.3, JESUS[1] + 0.2], 2.6, '#fff3d0', { opacity: 0.4 });
     figure(ctx, { robe: '#4f7f80', mantle: '#d9c7a3', skin: '#b5825a', hair: '#d9c7a3', arms: [0.2, 1.4] }, [-1.9, -4.2], { face: LAZARUS, clear: 0.9 });
     figure(ctx, { robe: '#b5523b', mantle: '#e6d8b8', skin: '#b5825a', hair: '#e6d8b8', arms: [0.25, 2.0] }, [2.3, -4.9], { face: LAZARUS, pose: 'kneel', clear: 0.9 });
     figure(ctx, DISCIPLES[0], [-3.4, -2.4], { face: LAZARUS, clear: 0.9 });
@@ -124,7 +124,7 @@ export default {
   },
 
   player: {
-    start: [-0.8, 3],
+    start: [-0.9, 0.6],
     lookAt: TOMB,
     colors: DISCIPLES[11],
   },

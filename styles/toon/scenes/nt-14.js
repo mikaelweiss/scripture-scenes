@@ -8,8 +8,8 @@ const POOL = { hx: 14, hz: 5.5, cz: 8 };
 const LEDGE = 1.6;
 const DEPTH = 5;
 const COL_H = 4;
-const MAN = [-4, 14.35];
-const JESUS = [-4, 16.3];
+const MAN = [-4.8, 13.95];
+const JESUS = [-3.0, 14.75];
 
 const stone = '#e8dcc0';
 const column = '#f1e8d2';
@@ -177,8 +177,8 @@ export default {
   },
 
   player: {
-    start: [1.2, 3.0],
-    lookAt: [-4, 15.6],
+    start: [1.8, 13.8],
+    lookAt: [-4.4, 15.6],
     colors: PLAYER,
   },
 };

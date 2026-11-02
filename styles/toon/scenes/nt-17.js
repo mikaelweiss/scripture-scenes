@@ -47,24 +47,30 @@ export default {
     const ranges = scene.children.find((o) => o.isInstancedMesh && o.geometry.type === 'ConeGeometry');
     if (ranges) ranges.position.y = -95;
 
-    // A ring of crags around the summit edge holds walkers on the plateau.
+    // Low crags sit just past the summit edge. A waist-high wall inside them holds walkers, and each crag
+    // carries a collider as tall as itself so the chase camera pulls in instead of passing through rock.
     const rocks = [];
-    const n = 28;
+    const n = 34;
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
-      const r = R - 0.5 + rng() * 1.5;
+      const wx = Math.sin(a) * (R - 1.2), wz = Math.cos(a) * (R - 1.2);
+      ctx.addCollider({ x: wx, z: wz, hx: (Math.PI * (R - 1.2)) / n + 0.3, hz: 0.4, rot: a, top: 1.2 });
+      const r = R + 0.4 + rng() * 1.4;
       const x = Math.sin(a) * r, z = Math.cos(a) * r;
-      const s = 1.6 + rng() * 1.6;
-      rocks.push(boulder(rng, s, x, ctx.terrainHeight(x, z) + s * 0.25, z, { squash: 0.8 }));
-      ctx.addCollider({ x, z, hx: (Math.PI * R) / n + 0.6, hz: 0.8, rot: a, top: 4 });
+      const s = 0.8 + rng() * 1.0;
+      const y = ctx.terrainHeight(x, z);
+      rocks.push(boulder(rng, s, x, y + s * 0.2, z, { squash: 0.75 }));
+      ctx.addCollider({ x, z, hx: s * 1.15, hz: s * 1.15, rot: a, top: y + s * 1.3 });
     }
     for (let i = 0; i < 20; i++) {
       const a = rng() * Math.PI * 2, r = 6 + rng() * (R - 9);
       const x = Math.sin(a) * r, z = Math.cos(a) * r;
       if (Math.hypot(x - JESUS[0], z - JESUS[1]) < 7 || Math.abs(x) < 2.5) continue;
       const s = 0.5 + rng() * 0.9;
-      rocks.push(boulder(rng, s, x, ctx.terrainHeight(x, z) + s * 0.2, z));
+      const y = ctx.terrainHeight(x, z);
+      rocks.push(boulder(rng, s, x, y + s * 0.2, z));
       ctx.exclude({ kind: 'circle', x, z, r: s + 0.3 });
+      ctx.addCollider({ x, z, hx: s * 0.9, hz: s * 0.9, rot: 0, top: y + s * 1.1 });
     }
     // Cliffs falling away under the rim.
     for (let i = 0; i < 40; i++) {
@@ -89,9 +95,9 @@ export default {
     glow(ctx, [ELIAS[0], 1.3, ELIAS[1]], 4, '#fff4d8', { opacity: 0.45 });
 
     // Peter, James and John fallen on their faces, sore afraid (17:6).
-    figure(ctx, DISCIPLES[0], [-1.9, -1.8], { face: JESUS, pose: 'bow', clear: 1 });
-    figure(ctx, DISCIPLES[1], [0.1, -1.2], { face: JESUS, pose: 'bow', clear: 1 });
-    figure(ctx, DISCIPLES[2], [2.0, -1.9], { face: JESUS, pose: 'bow', clear: 1 });
+    figure(ctx, DISCIPLES[0], [-2.7, -1.9], { face: JESUS, pose: 'bow', clear: 1 });
+    figure(ctx, DISCIPLES[1], [-1.0, -1.1], { face: JESUS, pose: 'bow', clear: 1 });
+    figure(ctx, DISCIPLES[2], [2.3, -1.6], { face: JESUS, pose: 'bow', clear: 1 });
   },
 
   clouds: {
@@ -110,7 +116,7 @@ export default {
   },
 
   player: {
-    start: [0.8, 4],
+    start: [0.5, 1.8],
     lookAt: JESUS,
     colors: DISCIPLES[11],
   },

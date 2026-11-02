@@ -112,7 +112,7 @@ export default {
   },
 
   player: {
-    start: [0, 3],
+    start: [0.6, -7.2],
     lookAt: JESUS,
     colors: { robe: '#a87b4f', mantle: '#4f7f80', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
