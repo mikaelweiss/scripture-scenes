@@ -3,9 +3,19 @@
 // stones for light. The walker stands on the deck of one barge in the storm.
 import { water, waveHeight } from './lib/bom-43-kit.js';
 
-const AMP = 1.15;
-const SPEED = 1.5;
+const AMP = 1;
+const SPEED = 1.1;
 const DECK = 2.3;
+// Long storm swells with shorter chop riding on them.
+const STORM = [
+  [0.07, 0.045, 1.0, 2.0],
+  [-0.06, 0.1, 1.3, 1.3],
+  [0.16, -0.11, 2.0, 0.6],
+  [0.26, 0.2, 2.7, 0.35],
+  [-0.36, 0.3, 3.4, 0.2],
+];
+const SHARP = 1.8;
+const sea = (x, z, t) => waveHeight(x, z, t, AMP, SPEED, STORM, SHARP);
 
 const others = [
   [-11, -26, 1.2], [10, -40, -0.9], [-26, -52, 1.4], [22, -16, -1.3], [2, -70, 0.8], [-34, -20, 1.0], [30, -58, -1.1],
@@ -48,8 +58,8 @@ export default {
   fov: 62,
   exposure: 1.05,
 
-  sun: { direction: [-0.35, 0.5, 0.8], color: '#a8b8cc', intensity: 2.4 },
-  light: { sky: '#8a9ab0', ground: '#2e3a40', hemi: 2.0 },
+  sun: { direction: [-0.85, 0.32, -0.3], color: '#b8c8da', intensity: 3.0 },
+  light: { sky: '#8a9ab0', ground: '#2e3a40', hemi: 1.5 },
   sky: { top: '#1e2632', horizon: '#56646e', ground: '#1a2228', sunColor: '#5a6a7a', glow: 0.3 },
   fog: { color: '#46545e', near: 30, far: 260 },
   clouds: { count: 140, shadow: '#20262e', lit: '#4a5662', rim: '#6a7a88', distance: [120, 700], altitude: [50, 140], hole: 0, seed: 3 },
@@ -57,7 +67,7 @@ export default {
   grade: { saturation: 0.85, contrast: 1.12, vignette: 0.6, shadowTint: '#102030', highlightTint: '#d0e0f0' },
   shadow: { center: [0, -10], radius: 50 },
 
-  player: { start: [0.3, 5], yaw: 0.12, pitch: -0.02, eye: 1.65, speed: 3 },
+  player: { start: [0.3, 3], yaw: 0.12, pitch: -0.08, eye: 1.65, speed: 3 },
 
   terrain: {
     size: 900, segments: 60, seed: 49, hills: 0, bumps: 0,
@@ -68,7 +78,7 @@ export default {
   custom(ctx) {
     const { THREE } = ctx;
     const r = ctx.rand;
-    water(ctx, { y: 0, size: 520, segments: 230, color: '#3a6874', opacity: 1, amp: AMP, speed: SPEED });
+    water(ctx, { y: 0, size: 560, segments: 250, color: '#2f5c68', opacity: 1, amp: AMP, speed: SPEED, waves: STORM, sharp: SHARP, crest: { from: 1.2, to: 2.6, color: '#dfe8ea' }, still: [0, 0, 7, 14, 0.5] });
 
     // The walker's barge holds still; the deck and its edges are colliders.
     const mine = makeBarge(THREE, r);
@@ -90,9 +100,9 @@ export default {
     });
     ctx.onFrame((t) => {
       for (const f of fleet) {
-        const h = waveHeight(f.x, f.z, t, AMP, SPEED);
-        const ahead = waveHeight(f.x, f.z - 6, t, AMP, SPEED), behind = waveHeight(f.x, f.z + 6, t, AMP, SPEED);
-        const side = waveHeight(f.x + 2, f.z, t, AMP, SPEED) - waveHeight(f.x - 2, f.z, t, AMP, SPEED);
+        const h = sea(f.x, f.z, t);
+        const ahead = sea(f.x, f.z - 6, t), behind = sea(f.x, f.z + 6, t);
+        const side = sea(f.x + 2, f.z, t) - sea(f.x - 2, f.z, t);
         const under = Math.max(0, Math.sin(t * 0.35 + f.ph)) ** 3 * 3.2 * f.dive;
         f.b.position.set(f.x, h - 0.6 - under, f.z);
         f.b.rotation.set(Math.atan2(ahead - behind, 12) * 1.4, f.rot, Math.atan2(side, 4) * 1.2);
@@ -143,24 +153,69 @@ export default {
       bolt.visible = on;
     });
 
-    // Foam flecks riding the swell.
-    const foamN = 260;
-    const foam = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 5).rotateX(-Math.PI / 2), new THREE.MeshLambertMaterial({ color: '#c8d4d8', transparent: true, opacity: 0.6, depthWrite: false }), foamN);
+    // Whitecap foam that gathers on the swell crests.
+    const foamN = 320;
+    const foam = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 5).rotateX(-Math.PI / 2), new THREE.MeshLambertMaterial({ color: '#e4ecee', transparent: true, opacity: 0.75, depthWrite: false }), foamN);
     foam.frustumCulled = false;
-    const fseeds = Array.from({ length: foamN }, () => [r.range(-90, 90), r.range(-140, 40), r.range(0.25, 0.8), r() * 6]);
+    const fseeds = [];
+    while (fseeds.length < foamN) {
+      const fx = r.range(-110, 110), fz = r.range(-160, 50);
+      if (Math.hypot(fx, fz) > 18) fseeds.push([fx, fz, r.range(0.8, 2.2), r() * 6]);
+    }
     ctx.scene.add(foam);
     const flat = new THREE.Quaternion();
     ctx.onFrame((t) => {
       for (let i = 0; i < foamN; i++) {
         const [fx, fz, size, ph] = fseeds[i];
         const x = fx + ((t * 1.5 + ph * 10) % 20) - 10;
-        const y = waveHeight(x, fz, t, AMP, SPEED) + 0.08;
-        const k = Math.max(0.05, Math.sin(t * 0.6 + ph)) * size;
-        p.set(x, y, fz);
-        foam.setMatrixAt(i, m.compose(p, flat, s.set(k, 1, k)));
+        const y = sea(x, fz, t);
+        const k = Math.max(0.01, Math.min(1, (y - 0.8) / 1.4)) * size;
+        p.set(x, y + 0.12, fz);
+        foam.setMatrixAt(i, m.compose(p, flat, s.set(k * 1.6, 1, k)));
       }
       s.set(1, 1, 1);
       foam.instanceMatrix.needsUpdate = true;
+    });
+
+    // Spray: green water breaking over the walker's bow, and bursts off the other barges' bows.
+    const sprayN = 700;
+    const spray = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshLambertMaterial({ color: '#e8f0f2', emissive: '#4a5a64', transparent: true, opacity: 0.6, depthWrite: false }), sprayN);
+    spray.frustumCulled = false;
+    ctx.scene.add(spray);
+    const PERIOD = 3.2, LIFE = 2.3, G = 9;
+    const bowLocal = new THREE.Vector3(0, 1.6, -8.4);
+    const bows = fleet.map(() => new THREE.Vector3());
+    const parts = Array.from({ length: sprayN }, (_, i) => {
+      const mineBow = i < 420;
+      return {
+        e: mineBow ? -1 : i % fleet.length,
+        ph: mineBow ? r() * 0.35 : r() * 0.5 + (i % fleet.length) * 0.9,
+        x: r.range(-1.6, 1.6), vx: r.range(-2.2, 2.2),
+        vy: mineBow ? r.range(5, 9) : r.range(6, 11),
+        vz: mineBow ? r.range(3.5, 8.5) : r.range(-2, 3),
+        size: r.range(0.03, 0.1),
+      };
+    });
+    const tumble = new THREE.Quaternion();
+    ctx.onFrame((t) => {
+      fleet.forEach((f, i) => bows[i].copy(bowLocal).applyMatrix4(f.b.matrixWorld));
+      for (let i = 0; i < sprayN; i++) {
+        const sp = parts[i];
+        const age = (t + sp.ph) % PERIOD;
+        if (age > LIFE) {
+          spray.setMatrixAt(i, m.compose(p.set(0, -50, 0), tumble, s.set(0.001, 0.001, 0.001)));
+          continue;
+        }
+        const o = sp.e < 0 ? p.set(sp.x, DECK + 0.3, -7.2) : p.copy(bows[sp.e]);
+        o.x += sp.vx * age;
+        o.y += sp.vy * age - 0.5 * G * age * age;
+        o.z += sp.vz * age;
+        if (sp.e < 0) o.y = Math.max(o.y, DECK + 0.05);
+        const k = sp.size * (1 + age * 1.2) * (1 - (age / LIFE) ** 2);
+        spray.setMatrixAt(i, m.compose(o, tumble, s.set(k, k, k)));
+      }
+      s.set(1, 1, 1);
+      spray.instanceMatrix.needsUpdate = true;
     });
   },
 };

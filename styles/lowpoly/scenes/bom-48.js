@@ -1,6 +1,6 @@
 // Ether 3:1-6: on the summit of mount Shelem, above the clouds, the brother of Jared kneels before
 // sixteen small stones, white and clear as glass. The Lord touches them one by one with his finger
-// and they shine. The finger is shown only as a slender ray of light from a bright cloud.
+// and they shine. The Lord stays hidden in a bright cloud, and only a white arm and finger reach out.
 import { person } from './lib/bom-43-kit.js';
 
 const PEAK = 140;
@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.06, vignette: 0.4, shadowTint: '#28305e', highlightTint: '#fff4e0' },
   shadow: { center: [0, -2], radius: 30 },
 
-  player: { start: [2.5, 3.6], yaw: 0.36, pitch: 0.12, eye: 1.65, speed: 3.5 },
+  player: { start: [2.6, 2.4], yaw: 0.45, pitch: 0.14, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 1100, segments: 260, seed: 48, hills: 60, bumps: 0.3,
@@ -71,32 +71,52 @@ export default {
       return { m, mat, halo };
     });
 
-    // The bright cloud the Lord speaks from, close above the summit.
+    // The bright cloud the Lord speaks from: a dense glowing core wrapped in thinner, wider veils.
     const cloud = new THREE.Group();
-    const cloudMat = new THREE.MeshLambertMaterial({ color: '#f4efe6', emissive: '#d8d0c0', transparent: true, opacity: 0.9, flatShading: true });
-    for (let i = 0; i < 14; i++) {
-      const puff = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), cloudMat);
-      puff.position.set(r.range(-3.5, 3.5), r.range(-0.3, 0.8), r.range(-2.5, 2.5));
-      puff.scale.set(r.range(1.4, 2.6), r.range(0.7, 1.1), r.range(1.4, 2.4));
-      cloud.add(puff);
-    }
-    cloud.position.set(ALTAR[0], top + 5.6, ALTAR[1] - 1.5);
-    ctx.scene.add(cloud);
-    ctx.effects.halo({ position: [ALTAR[0], top + 5, ALTAR[1] - 1.5], size: 7, opacity: 0.22, color: '#fff4dc' });
-    const veilLight = new THREE.PointLight('#fff4dc', 40, 22, 1.4);
-    veilLight.position.set(ALTAR[0], top + 5, ALTAR[1]);
-    ctx.scene.add(veilLight);
-
-    // The finger of light: a slender ray reaching down from the cloud to one stone at a time.
-    const rayLen = 5;
-    const rayMat = (opacity) => new THREE.MeshBasicMaterial({ color: '#ffd890', transparent: true, opacity, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, fog: false });
-    const rayParts = [
-      new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.025, rayLen, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color('#ffe8b0').multiplyScalar(3), fog: false })),
-      new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.09, rayLen, 12), rayMat(0.35)),
-      new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.16, rayLen, 12), rayMat(0.1)),
+    const CLOUD = [ALTAR[0] + 2.4, top + 3.3, ALTAR[1] - 1.6];
+    const layers = [
+      { n: 9, spread: [1.3, 0.25, 0.9], size: [0.6, 1.0], opacity: 0.85, color: '#fffaf0', emissive: '#d8ccb6' },
+      { n: 14, spread: [2.2, 0.4, 1.5], size: [0.6, 1.1], opacity: 0.4, color: '#fbf6ec', emissive: '#c8c0b2' },
+      { n: 18, spread: [3.2, 0.6, 2.2], size: [0.8, 1.4], opacity: 0.16, color: '#f6f2ea', emissive: '#bab4aa' },
     ];
-    for (const part of rayParts) ctx.scene.add(part);
-    const touch = ctx.effects.halo({ position: [0, top, 0], size: 1.4, opacity: 0.9, color: '#ffffff' });
+    const puffGeo1 = new THREE.IcosahedronGeometry(1, 1);
+    for (const L of layers) {
+      const mat = new THREE.MeshLambertMaterial({ color: L.color, emissive: L.emissive, transparent: true, opacity: L.opacity, depthWrite: false, flatShading: true });
+      for (let i = 0; i < L.n; i++) {
+        const puff = new THREE.Mesh(puffGeo1, mat);
+        const a = r() * Math.PI * 2, d = Math.sqrt(r());
+        puff.position.set(Math.cos(a) * d * L.spread[0], r.range(-1, 1) * L.spread[1], Math.sin(a) * d * L.spread[2]);
+        const k = r.range(L.size[0], L.size[1]);
+        puff.scale.set(k * 1.3, k * 0.55, k);
+        puff.rotation.y = r() * 3;
+        cloud.add(puff);
+      }
+    }
+    cloud.position.set(...CLOUD);
+    ctx.scene.add(cloud);
+    ctx.effects.halo({ position: [CLOUD[0], CLOUD[1] - 0.2, CLOUD[2]], size: 5, opacity: 0.16, color: '#fff4dc' });
+    const veilLight = new THREE.PointLight('#fff4dc', 10, 10, 1.4);
+    veilLight.position.set(ALTAR[0], top + 1.4, ALTAR[1] + 1.4);
+    ctx.scene.add(veilLight);
+    ctx.onFrame((t) => (cloud.rotation.y = t * 0.03));
+
+    // The finger of the Lord: a white, softly glowing arm reaching from the cloud to one stone at a time.
+    const white = new THREE.MeshLambertMaterial({ color: '#e8e2d8', emissive: '#f4ead8', emissiveIntensity: 0.3, flatShading: true });
+    const sleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.2, 1, 7).rotateX(Math.PI / 2).translate(0, 0, 0.5), white);
+    const sheath = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.42, 1, 10, 1, true).rotateX(Math.PI / 2).translate(0, 0, 0.5), new THREE.MeshBasicMaterial({ color: '#fff0c8', transparent: true, opacity: 0.05, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, fog: false, side: THREE.DoubleSide }));
+    const sleeveArm = new THREE.Group();
+    sleeveArm.add(sleeve, sheath);
+    const hand = new THREE.Group();
+    hand.add(
+      new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.07, 0.16).translate(0, 0, -0.1), white),
+      new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.06, 0.06).translate(0, -0.04, -0.03), white),
+      new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.022, 0.16, 5).rotateX(Math.PI / 2).translate(0, 0, 0.0), white),
+    );
+    ctx.scene.add(sleeveArm, hand);
+    const shoulder = new THREE.Vector3(CLOUD[0] - 0.4, CLOUD[1] - 0.2, CLOUD[2] + 0.4);
+    const touch = ctx.effects.halo({ position: [0, top, 0], size: 1.2, opacity: 0.9, color: '#ffffff' });
+    const aim = new THREE.Vector3(), tip = new THREE.Vector3(), dir = new THREE.Vector3();
+    const HAND = 0.26;
 
     const STEP = 1.6, HOLD = 4;
     ctx.onFrame((t) => {
@@ -114,14 +134,23 @@ export default {
       });
       const next = stones[Math.min(15, current + 1)].m.position;
       const glide = current < 15 ? Math.max(0, (local - 0.8) / 0.2) : 0;
-      const p = stones[current].m.position.clone().lerp(next, glide * glide * (3 - 2 * glide));
+      const p = aim.copy(stones[current].m.position).lerp(next, glide * glide * (3 - 2 * glide));
+      p.y += 0.07;
+      const lift = Math.sin(Math.min(1, glide * 1.2) * Math.PI) * 0.12;
       const reach = done ? 0 : current === 0 ? Math.min(1, local / 0.2) : current === 15 ? Math.min(1, (1 - local) / 0.2) : 1;
-      for (const part of rayParts) {
-        part.visible = reach > 0.02;
-        part.scale.set(1, Math.max(reach, 0.01), 1);
-        part.position.set(p.x, p.y + 0.06 + rayLen * (1 - reach / 2), p.z);
-      }
-      touch.position.set(p.x, p.y + 0.05, p.z);
+      p.y += lift;
+      const shown = reach > 0.02;
+      sleeveArm.visible = hand.visible = shown;
+      dir.subVectors(p, shoulder);
+      const full = dir.length();
+      dir.divideScalar(full);
+      tip.copy(shoulder).addScaledVector(dir, full * reach);
+      sleeveArm.position.copy(shoulder);
+      sleeveArm.lookAt(p);
+      sleeveArm.scale.set(1, 1, Math.max(0.01, full * reach - HAND));
+      hand.position.copy(tip).addScaledVector(dir, -0.08);
+      hand.lookAt(p);
+      touch.position.set(p.x, p.y - 0.02, p.z);
       touch.material.opacity = reach > 0.95 && glide === 0 ? 0.9 : 0;
     });
 

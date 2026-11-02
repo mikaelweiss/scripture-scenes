@@ -43,7 +43,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.4, shadowTint: '#30285e', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -10], radius: 60 },
 
-  player: { start: [0.4, 9], yaw: 0, pitch: -0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [0.2, -2.5], yaw: 0, pitch: 0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100, segments: 200, seed: 12, hills: 24, bumps: 0.3,
@@ -83,7 +83,7 @@ export default {
     groups: [
       {
         count: 1700, center: CHRIST, ring: [8, 52], arc: [-0.35, Math.PI + 0.35], spacing: 0.95, face: CHRIST, children: 0.22, kneel: 0.85, seed: 31,
-        avoid: [{ rect: [0, 14, 3.2, 44] }, { rect: [CHRIST[0], CHRIST[1] + 1.2, 13, 10] }, { rect: [-30, -24, 3, 44] }, { rect: [30, -24, 3, 44] }, ...keepClear],
+        avoid: [{ rect: [0, 11, 3.8, 50] }, { rect: [CHRIST[0], CHRIST[1] + 1.2, 13, 10] }, { rect: [-30, -24, 3, 44] }, { rect: [30, -24, 3, 44] }, ...keepClear],
       },
       { count: 160, center: CHRIST, ring: [52, 62], arc: [-0.2, Math.PI + 0.2], spacing: 1.3, face: CHRIST, children: 0.15, seed: 32, avoid: [{ rect: [0, 50, 3.2, 30] }] },
     ],
@@ -92,13 +92,13 @@ export default {
   figures: [
     {
       x: CHRIST[0], z: CHRIST[1] + 2, face: [0, 40], scale: 1.1, robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', arms: 'out', emissive: 0.12,
-      light: { color: '#fff0cf', intensity: 18, distance: 20 },
-      halo: { size: 3.2, opacity: 0.28, color: '#fff3d6' },
+      light: { color: '#fff0cf', intensity: 9, distance: 16 },
+      halo: { size: 3, opacity: 0.16, color: '#fff3d6' },
     },
   ],
 
   effects: [
-    { type: 'beam', at: [CHRIST[0], CHRIST[1] + 2], height: 200, radiusBottom: 2.4, radiusTop: 9, color: '#fff1cf', opacity: 0.2 },
+    { type: 'beam', at: [CHRIST[0], CHRIST[1] + 2], height: 200, radiusBottom: 2.4, radiusTop: 9, color: '#fff1cf', opacity: 0.12 },
     { type: 'motes', at: [CHRIST[0], CHRIST[1] + 2], radius: 4, height: 24, count: 120 },
     { type: 'sunShafts', center: [-40, -120], count: 6, spread: 90, length: 500, width: [10, 24], opacity: 0.06 },
   ],

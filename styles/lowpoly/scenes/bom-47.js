@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 0.95, contrast: 1.08, vignette: 0.6, shadowTint: '#1a1a40', highlightTint: '#ffd0a0' },
   shadow: { center: [0, -4], radius: 40 },
 
-  player: { start: [-3.4, 0.2], yaw: -0.6, pitch: -0.2, eye: 1.65, speed: 4 },
+  player: { start: [-2.5, -8.8], yaw: -2.6, pitch: -0.27, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 560, segments: 280, seed: 47, hills: 18, bumps: 0.3,
@@ -59,7 +59,7 @@ export default {
     ctx.solid.box(1.5, 0.45, 0.14, { position: [bx, by + 0.37, bz + 0.5], color: stone });
     ctx.solid.box(0.14, 0.55, 1.1, { position: [bx - 0.7, by + 0.42, bz], color: stone });
     ctx.solid.box(0.14, 0.55, 1.1, { position: [bx + 0.7, by + 0.42, bz], color: stone });
-    ctx.solid.box(1.7, 0.18, 1.3, { position: [bx + 1.3, by + 0.7, bz - 0.5], rotation: [0.15, 0.3, 1.1], color: '#7e786c' });
+    ctx.solid.box(1.7, 0.16, 1.2, { position: [bx + 0.1, by + 0.6, bz - 0.95], rotation: [1.15, 0.05, 0], color: '#7e786c' });
     ctx.colliders.add({ x: bx, z: bz, w: 1.6, d: 1.2, bottom: by, top: by + 0.8 });
     // Small stones that propped it, and earth dug from the slope.
     for (let i = 0; i < 10; i++) ctx.solid.add(new THREE.DodecahedronGeometry(r.range(0.1, 0.22), 0), { position: [bx + r.range(-1.2, 1.2), by + 0.1, bz + r.range(-1, 1)], color: '#6e685c' });

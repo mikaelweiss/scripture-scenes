@@ -13,25 +13,37 @@ const WAVES = [
 ];
 
 // Height of the animated sea surface, matching the shader in `water`.
-export function waveHeight(x, z, t, amp = 1, speed = 1) {
+// `sharp` above 1 narrows the crests and widens the troughs.
+export function waveHeight(x, z, t, amp = 1, speed = 1, waves = WAVES, sharp = 1) {
   let h = 0;
-  for (const [kx, kz, w, a] of WAVES) h += Math.sin(x * kx + z * kz + t * w * speed) * a;
+  for (const [kx, kz, w, a] of waves) h += (((Math.sin(x * kx + z * kz + t * w * speed) + 1) / 2) ** sharp * 2 - 1) * a;
   return h * amp;
 }
 
-// Flat-shaded animated water plane. Returns the mesh.
-export function water(ctx, { y = 0, size = 700, segments = 140, center = [0, 0], color = '#3f7480', opacity = 0.92, amp = 0.15, speed = 1, emissive = '#000000' }) {
+// Flat-shaded animated water plane. `crest` whitens the surface above a height,
+// `still` [x, z, radius, falloff, floor] damps the swell around a point. Returns the mesh.
+export function water(ctx, { y = 0, size = 700, segments = 140, center = [0, 0], color = '#3f7480', opacity = 0.92, amp = 0.15, speed = 1, emissive = '#000000', waves = WAVES, sharp = 1, crest = null, still = null }) {
   const geo = new THREE.PlaneGeometry(size, size, segments, segments).rotateX(-Math.PI / 2);
   const mat = new THREE.MeshLambertMaterial({ color, flatShading: true, transparent: opacity < 1, opacity, emissive });
   const uTime = { value: 0 };
+  const f = (v) => v.toFixed(3);
   mat.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = uTime;
-    const terms = WAVES.map(([kx, kz, w, a]) => `sin(wp.x * ${kx.toFixed(3)} + wp.z * ${kz.toFixed(3)} + uTime * ${(w * speed).toFixed(3)}) * ${a.toFixed(3)}`).join(' + ');
+    const terms = waves.map(([kx, kz, w, a]) => `(pow(sin(wp.x * ${f(kx)} + wp.z * ${f(kz)} + uTime * ${f(w * speed)}) * 0.5 + 0.5, ${f(sharp)}) * 2.0 - 1.0) * ${f(a)}`).join(' + ');
+    const damp = still ? `* mix(${f(still[4])}, 1.0, smoothstep(${f(still[2])}, ${f(still[2] + still[3])}, distance(wp.xz, vec2(${f(still[0])}, ${f(still[1])}))))` : '';
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform float uTime;')
+      .replace('#include <common>', '#include <common>\nuniform float uTime;\nvarying float vWave;')
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         vec3 wp = (modelMatrix * vec4(position, 1.0)).xyz;
-        transformed.y += (${terms}) * ${amp.toFixed(3)};`);
+        vWave = (${terms}) ${damp};
+        transformed.y += vWave * ${f(amp)};`);
+    if (crest) {
+      const c = new THREE.Color(crest.color ?? '#e8f0f2');
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vWave;')
+        .replace('#include <color_fragment>', `#include <color_fragment>
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(${f(c.r)}, ${f(c.g)}, ${f(c.b)}), smoothstep(${f(crest.from)}, ${f(crest.to)}, vWave));`);
+    }
   };
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(center[0], y, center[1]);

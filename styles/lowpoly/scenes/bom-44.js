@@ -17,13 +17,13 @@ const bodies = Array.from({ length: 12 }, (_, i) => {
 });
 
 const angels = [
-  [-14, 4, 9], [-6, 2, 13], [3, 3, 10], [11, 5, 14], [18, 3, 8.5], [-20, 6, 15], [7, 0, 18], [-2, 6, 7.5],
+  [-14, 4, 5.5], [-6, 2, 8], [3, 3, 6], [11, 5, 8.5], [17, 4, 5], [-19, 5, 8], [7, 1, 10.5], [-1, 5, 4.2],
 ];
 
 export default {
   title: '3 Nephi 19:4-14: The Twelve encircled by fire',
   seed: 44,
-  fov: 60,
+  fov: 64,
   exposure: 1.02,
 
   sun: { direction: [-0.55, 0.42, 0.72], color: '#ffe0b0', intensity: 2.8 },
@@ -36,7 +36,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.35, shadowTint: '#2c3460', highlightTint: '#fff0d0' },
   shadow: { center: [0, 20], radius: 70 },
 
-  player: { start: [-31, 17], yaw: -1.42, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: [-3.2, 27], yaw: -0.16, pitch: 0.07, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100, segments: 220, seed: 19, hills: 22, bumps: 0.25,

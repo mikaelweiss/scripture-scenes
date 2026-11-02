@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.06, contrast: 1.05, vignette: 0.3, shadowTint: '#2a3a5e', highlightTint: '#fff4dc' },
   shadow: { center: [0, -14], radius: 70 },
 
-  player: { start: [0, 60], yaw: 0, pitch: -0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [2.2, 10], yaw: 0.12, pitch: -0.01, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100, segments: 200, seed: 45, hills: 26, bumps: 0.2,
@@ -159,9 +159,21 @@ export default {
     }
 
     // A family sharing a meal at a mat beside the street.
-    const my = ctx.heightAt(-8, 24);
-    ctx.solid.box(3, 0.05, 2, { position: [-8, my + 0.03, 24], color: '#b8543a', jitter: 0 });
-    breadBasket(ctx, { x: -8, z: 24, y: my + 0.05 });
-    person(ctx, { x: 7, z: 24, face: [0, 34], robe: '#e8dcc4', mantle: '#4f7aa0', arms: 'out' });
+    const MEAL = [-1.8, 2.5];
+    const my = ctx.heightAt(...MEAL);
+    ctx.solid.box(3, 0.05, 2, { position: [MEAL[0], my + 0.03, MEAL[1]], color: '#b8543a', jitter: 0 });
+    breadBasket(ctx, { x: MEAL[0] - 0.5, z: MEAL[1], y: my + 0.05 });
+    breadBasket(ctx, { x: MEAL[0] + 0.6, z: MEAL[1] + 0.3, y: my + 0.05, size: 0.8 });
+    const family = [
+      { dx: -1.9, dz: 0, robe: '#e8dcc4', mantle: '#4f7aa0', arms: 'out' },
+      { dx: 1.9, dz: 0.2, robe: '#c46a4a', mantle: '#f0e6d0', arms: 'down' },
+      { dx: 0.2, dz: -1.5, robe: '#8fa3b8', mantle: '#d8a84a', arms: 'out' },
+      { dx: -0.6, dz: 1.5, robe: '#d9c39a', arms: 'down', scale: 0.7 },
+      { dx: 0.9, dz: 1.4, robe: '#7f9a6a', arms: 'out', scale: 0.62 },
+    ];
+    for (const f of family) {
+      const x = MEAL[0] + f.dx, z = MEAL[1] + f.dz;
+      person(ctx, { x, z, face: MEAL, robe: f.robe, mantle: f.mantle, arms: f.arms, scale: f.scale ?? 1, kneel: !f.scale, skin: '#9b6a46' });
+    }
   },
 };

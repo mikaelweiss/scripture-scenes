@@ -43,7 +43,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.1, vignette: 0.5, shadowTint: '#2a1e3a', highlightTint: '#ffd0a0' },
   shadow: { center: [0, 50], radius: 110 },
 
-  player: { start: [-3, 19], yaw: Math.PI + 0.05, pitch: -0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [-1.2, 18.2], yaw: Math.PI + 0.14, pitch: -0.15, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100, segments: 220, seed: 46, hills: 12, bumps: 0.3,
@@ -114,7 +114,7 @@ export default {
     // Mormon and a few of his captains on the brow of the hill, looking out over the plain.
     const brow = [[2, 24], [-7, 23], [8, 22], [-3, 27], [12, 19]];
     brow.forEach(([x, z], i) => person(ctx, {
-      x, z, face: [x * 2, 120],
+      x, z, face: i === 0 ? [x - 50, 120] : [x * 2, 120],
       robe: i === 0 ? '#e0d6c0' : '#c4b490', mantle: i === 0 ? '#7a2a20' : '#3f5a7a', skin: i === 0 ? '#c8a080' : '#b5835e',
       arms: i === 0 ? 'out' : 'down', scale: i === 0 ? 1.04 : 1,
     }));
