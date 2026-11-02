@@ -124,7 +124,7 @@ export default {
     people(ctx, maidens, MAIDENS, { seed: 9 });
 
     // Ruth gathering ears among the sheaves, a bundle of gleanings beside her.
-    figure(ctx, { pos: RUTH, facing: BOAZ, pose: 'kneel', lean: 0.12, scale: 1.0, colors: { robe: '#3e5a8a', mantle: '#d9c7a3', skin: '#b5825a', hair: '#e6d8b8', sash: '#b5523b' }, clear: 1.4 });
+    figure(ctx, { pos: RUTH, facing: BOAZ, pose: 'kneel', lean: 0.12, scale: 1.1, colors: { robe: '#3e5a8a', mantle: '#d9c7a3', skin: '#b5825a', hair: '#e6d8b8', sash: '#b5523b' }, clear: 1.4 });
     const ry = ctx.terrainHeight(RUTH[0] + 0.9, RUTH[1] + 0.4);
     merged(ctx, [new THREE.CylinderGeometry(0.18, 0.12, 0.7, 7).rotateZ(1.3).translate(RUTH[0] + 0.9, ry + 0.16, RUTH[1] + 0.5)], '#e2c370');
     const gleanings = [];
@@ -173,8 +173,8 @@ export default {
 
 
   player: {
-    start: [-5, 12],
-    lookAt: [1, 1],
+    start: [-4.5, 7.5],
+    lookAt: [1.5, 2],
     colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

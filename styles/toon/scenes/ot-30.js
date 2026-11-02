@@ -175,7 +175,7 @@ export default {
     // Solomon on the brasen scaffold, spreading forth his hands toward heaven.
     boxes(ctx, [{ size: [2.8, 1.5, 2.8], pos: SCAFFOLD, y: y0, color: C.bronze }]);
     const solY = y0 + 1.5;
-    const sol = figure(ctx, { pos: SCAFFOLD, y: solY, yaw: Math.PI, scale: 1.1, pose: 'raise', clear: 0,
+    const sol = figure(ctx, { pos: SCAFFOLD, y: solY, yaw: Math.PI, scale: 1.35, pose: 'raise', clear: 0,
       colors: { robe: '#5e2a6a', mantle: '#e0b040', skin: '#b5825a', hair: '#3a2418', sash: '#e0b040', arms: [0.75, 2.5] } });
     const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.14, 0.12, 10, 1, true), ctx.kit.toon(C.gold, { side: THREE.DoubleSide }));
     crown.position.y = 1.72;
@@ -200,8 +200,8 @@ export default {
 
     // The cloud of glory filling the house and billowing out of the porch.
     puffs(ctx, { center: [0, y0 + TERRACE + 1.2, PORCH_Z + 0.8], radius: [2.6, 0.8, 0.8], count: 9, size: [0.6, 1.2], color: '#fffaf0', emissive: '#d8ccb0', drift: 0.18, seed: 21 });
-    puffs(ctx, { center: [0, y0 + TERRACE + 19, -36], radius: [8, 2.5, 16], count: 30, size: [3, 5.5], color: '#fffaf0', emissive: '#d8ccb0', drift: 0.12, seed: 22 });
-    puffs(ctx, { center: [0, y0 + TERRACE + 24, PORCH_Z - 4], radius: [6, 2.5, 3], count: 10, size: [2.4, 4], color: '#fffaf0', emissive: '#d8ccb0', drift: 0.15, seed: 23 });
+    puffs(ctx, { center: [0, y0 + TERRACE + 17.5, -36], radius: [8, 2.5, 16], count: 30, size: [3, 5.5], color: '#fffaf0', emissive: '#d8ccb0', drift: 0.12, seed: 22 });
+    puffs(ctx, { center: [0, y0 + TERRACE + 18, PORCH_Z - 4], radius: [6, 2, 3], count: 10, size: [2.4, 4], color: '#fffaf0', emissive: '#d8ccb0', drift: 0.15, seed: 23 });
     glowSprite(ctx, { pos: [0, y0 + TERRACE + 4.5, PORCH_Z + 0.5], size: 12, color: '#fff2c8', opacity: 0.7, pulse: 0.05 });
     glowSprite(ctx, { pos: [0, y0 + 20, -32], size: 60, color: '#fff2c8', opacity: 0.4, pulse: 0.03 });
     shaft(ctx, { from: [0, 180, -40], to: [0, y0 + 16, -34], width: [10, 16], color: '#fff2c9', opacity: 0.12 });
@@ -232,6 +232,7 @@ export default {
   player: {
     start: [0, 27],
     lookAt: [0, -10],
+    fov: 58,
     colors: { robe: '#4f7f80', mantle: '#8c5a3c', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

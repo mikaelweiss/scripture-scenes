@@ -5,7 +5,8 @@ import { ISRAEL, NO_PLAZA, camels, campfires, figure, flames, longTents, merged,
 import { makeRng } from '../engine/util.js';
 
 const CAMP = [0, 0];
-const START = [-24, 41];
+const START = [-6, 47];
+const GIDEON = [-2.5, 42.6];
 
 const MIDIAN = {
   robes: ['#5a3a5a', '#3e2e4a', '#6b3a2a', '#2e3a4a', '#7a5a3a', '#4a2a2a', '#8a6a4a'],
@@ -50,9 +51,9 @@ export default {
 
   sun: {
     dir: [0.5, 0.7, -0.6],
-    color: '#8ea2e0',
-    intensity: 1.1,
-    hemi: { sky: '#3a4a86', ground: '#1e1a2a', intensity: 0.75 },
+    color: '#9eb2ee',
+    intensity: 1.3,
+    hemi: { sky: '#4c5ea6', ground: '#3a2e3a', intensity: 1.05 },
     shadowSize: 70,
   },
 
@@ -64,7 +65,7 @@ export default {
     undulation: 0.3,
     plaza: NO_PLAZA,
     colors: {
-      sand: '#4a4660', dirt: '#3e3a52', grass: '#32424e', grassDark: '#26343e', plaza: '#4a4660', plazaLine: '#4a4660',
+      sand: '#5a5470', dirt: '#4a4460', grass: '#3a4a58', grassDark: '#2e3c48', plaza: '#5a5470', plazaLine: '#5a5470',
       scorch: '#1a1620', scorchEdge: '#2a2430', hill: '#2c3a4c',
     },
   },
@@ -84,7 +85,7 @@ export default {
     const tentList = [], longList = [], camelList = [], fires = [];
     for (let i = 0; i < 9; i++) {
       const a = (i / 9) * Math.PI * 2 + 0.3, r = 14 + (i % 3) * 7;
-      fires.push({ pos: [Math.sin(a) * r, Math.cos(a) * r], size: 0.9, light: i % 2 === 0 ? 14 : 0, lightDistance: 16 });
+      fires.push({ pos: [Math.sin(a) * r, Math.cos(a) * r], size: 1.1, light: 20, lightDistance: 24 });
     }
     for (let i = 0; i < 70; i++) {
       const a = rng() * Math.PI * 2, r = 6 + Math.sqrt(rng()) * 32;
@@ -149,9 +150,9 @@ export default {
     }
 
     // Gideon at the front of his company, crying "The sword of the Lord, and of Gideon."
-    figure(ctx, { pos: [1.5, 46.5], facing: CAMP, pose: 'raise', colors: { robe: '#8c5a3c', mantle: '#5e4632', skin: '#a87650', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 2.7] } });
-    flames(ctx, [{ pos: [1.5 + 0.55, ctx.terrainHeight(1.5, 46.5) + 3.0, 46.5 - 0.2], size: 0.7 }], { glowSize: 3.5 });
-    pointLight(ctx, [1.5, 4, 46], { color: '#ffaa55', intensity: 14, distance: 14 });
+    figure(ctx, { pos: GIDEON, facing: CAMP, scale: 1.05, pose: 'raise', colors: { robe: '#8c5a3c', mantle: '#5e4632', skin: '#a87650', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 2.7] } });
+    flames(ctx, [{ pos: [GIDEON[0] + 0.55, ctx.terrainHeight(...GIDEON) + 3.1, GIDEON[1] - 0.2], size: 0.7 }], { glowSize: 3.5 });
+    pointLight(ctx, [GIDEON[0] + 0.5, 3.6, GIDEON[1] + 0.6], { color: '#ffaa55', intensity: 18, distance: 14 });
   },
 
   crowd: {
@@ -168,7 +169,7 @@ export default {
 
   player: {
     start: START,
-    lookAt: [6, -4],
+    lookAt: [4, 0],
     colors: { robe: '#7a6a52', mantle: '#3a2a22', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

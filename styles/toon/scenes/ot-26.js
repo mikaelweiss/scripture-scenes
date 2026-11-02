@@ -1,7 +1,7 @@
 // Judges 16: Samson stands between the two middle pillars of the house of Dagon in Gaza and bows himself.
 // x is east, z is south. The temple hall opens south onto a paved court. Samson faces the court.
 import * as THREE from 'three';
-import { NO_PLAZA, PHILISTINES, boxes, figure, merged, people, puffs, scatter, toonStyle } from './lib/ot-25-kit.js';
+import { NO_PLAZA, PHILISTINES, boxes, figure, merged, people, pointLight, puffs, scatter, toonStyle } from './lib/ot-25-kit.js';
 import { makeRng } from '../engine/util.js';
 
 const SAMSON = [0, -7.6];
@@ -172,8 +172,9 @@ export default {
     boxes(ctx, Array.from({ length: 10 }, (_, i) => ({ size: [0.4 + rng() * 0.5, 0.3 + rng() * 0.3, 0.4 + rng() * 0.4], pos: [(rng() - 0.5) * 7, SAMSON[1] + (rng() - 0.5) * 4], y: top, rot: rng() * 3, color: C.stoneDark, collide: false, exclude: false })), { stone: true });
 
     // Samson between the pillars, arms out to them, bowing with all his might.
-    figure(ctx, { pos: SAMSON, y: top, facing: [0, 30], scale: 1.12, pose: 'spread', lean: 0.18,
+    figure(ctx, { pos: SAMSON, y: top, facing: [0, 30], scale: 1.3, pose: 'spread', lean: 0.18,
       colors: { robe: '#7a6a52', mantle: '#5e4a36', skin: '#a8724a', hair: '#1f140e', sash: '#4a3a2a', arms: [1.32, 0.12] }, clear: 1.6 });
+    pointLight(ctx, [0, top + 3.2, -4.6], { color: '#fff0d0', intensity: 15, distance: 12 });
     figure(ctx, { pos: [3.4, -5.6], y: top, facing: SAMSON, scale: 0.7, colors: { robe: '#c8a97a', mantle: '#8c5a3c', skin: '#b5825a', hair: '#3a2418' }, clear: 0.8 });
 
     // Lords of the Philistines seated along the hall.
@@ -210,8 +211,8 @@ export default {
   },
 
   player: {
-    start: [0, 12],
-    lookAt: [0, -6],
+    start: [0, 7],
+    lookAt: [0, -7.6],
     colors: { robe: '#4f7f80', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

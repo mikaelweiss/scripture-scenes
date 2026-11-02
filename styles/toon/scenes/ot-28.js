@@ -7,8 +7,8 @@ import { makeRng } from '../engine/util.js';
 const TENT = { x: [-5.5, 5.5], z: [-15, 4], h: 5.6 };
 const VEIL_Z = -9.5;
 const LAMP = [-3.3, -4.5];
-const SAMUEL = [-0.4, -1.8];
-const PRESENCE = [1.6, -3.4];
+const SAMUEL = [-2.3, -1.2];
+const PRESENCE = [0.6, -4.0];
 const ELI = [12, -5];
 
 const C = {
@@ -163,12 +163,12 @@ export default {
 
     // Samuel lying on his mat, and the Lord standing near, a still light with no form to see.
     boxes(ctx, [{ size: [1.0, 0.12, 2.2], pos: [SAMUEL[0], SAMUEL[1] - 0.4], y: y0 + 0.22, color: '#8c5a3c', collide: false, exclude: false }]);
-    figure(ctx, { pos: SAMUEL, y: y0 + 0.3, yaw: Math.PI, pose: 'lie', roll: 0.35, scale: 0.82, colors: { robe: '#e6d8b8', mantle: '#d9c7a3', skin: '#c08f66', hair: '#3a2418', sash: '#4f7f80' }, clear: 1.4 });
+    figure(ctx, { pos: SAMUEL, y: y0 + 0.3, yaw: Math.PI, pose: 'lie', roll: 0.35, scale: 0.95, colors: { robe: '#e6d8b8', mantle: '#d9c7a3', skin: '#c08f66', hair: '#3a2418', sash: '#4f7f80' }, clear: 1.4 });
     const py = y0 + 0.2;
     shaft(ctx, { from: [PRESENCE[0], py + H + 0.4, PRESENCE[1]], to: [PRESENCE[0], py, PRESENCE[1]], width: [0.5, 0.9], color: '#fff4dc', opacity: 0.18 });
     glowSprite(ctx, { pos: [PRESENCE[0], py + 1.3, PRESENCE[1]], size: 3.4, color: '#fff4dc', opacity: 0.9, pulse: 0.05 });
     glowSprite(ctx, { pos: [PRESENCE[0], py + 1.2, PRESENCE[1]], size: 7, color: '#d8e4ff', opacity: 0.35, pulse: 0.03 });
-    pointLight(ctx, [PRESENCE[0], py + 1.8, PRESENCE[1]], { color: '#e8eeff', intensity: 10, distance: 9 });
+    pointLight(ctx, [PRESENCE[0], py + 1.8, PRESENCE[1]], { color: '#e8eeff', intensity: 16, distance: 10 });
     ctx.exclude({ kind: 'circle', x: PRESENCE[0], z: PRESENCE[1], r: 1 });
 
     // The altar of burnt offering, its fire banked low, and the laver.
@@ -212,8 +212,8 @@ export default {
   },
 
   player: {
-    start: [0.9, 7.5],
-    lookAt: [0.4, -3],
+    start: [0.4, 2.0],
+    lookAt: [-0.8, -5],
     colors: { robe: '#6f8a6a', mantle: '#4a3a30', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -146,8 +146,8 @@ export default {
   },
 
   player: {
-    start: [3.4, 5],
-    lookAt: [0, -12],
+    start: [4.5, -1.5],
+    lookAt: [-1, -12],
     colors: { robe: '#7a6a52', mantle: '#2f4f6e', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
