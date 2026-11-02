@@ -8,24 +8,24 @@ const LAKE = { x: -78, z: -30, r: 34 };
 
 function lightning(ctx, rng) {
   const bolts = [];
-  for (let b = 0; b < 3; b++) {
-    const pts = [];
-    let x = between(rng, [-120, 120]), y = 160, z = between(rng, [-260, -160]);
-    while (y > 0) {
-      pts.push(x, y, z);
-      x += between(rng, [-10, 10]);
-      y -= between(rng, [12, 22]);
-      z += between(rng, [-4, 4]);
+  const mat = new THREE.MeshBasicMaterial({ color: '#f4ecff', fog: false, transparent: true, depthWrite: false });
+  for (let b = 0; b < 4; b++) {
+    const path = new THREE.CurvePath();
+    let p = new THREE.Vector3((b - 1.5) * 55 + between(rng, [-15, 15]), 150, between(rng, [-200, -130]));
+    const base = p.clone();
+    while (p.y > 0) {
+      const next = p.clone().add(new THREE.Vector3(between(rng, [-9, 9]), -between(rng, [10, 20]), between(rng, [-4, 4])));
+      next.y = Math.max(0, next.y);
+      path.add(new THREE.LineCurve3(p, next));
+      p = next;
     }
-    pts.push(x, 0, z);
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: '#f4ecff', fog: false, transparent: true }));
-    line.layers.set(FX_LAYER);
-    line.frustumCulled = false;
-    line.visible = false;
-    ctx.scene.add(line);
-    bolts.push({ line, phase: b * 2.3 + rng() * 2 });
+    const mesh = new THREE.Mesh(new THREE.TubeGeometry(path, path.curves.length * 2, 0.7, 4, false), mat);
+    mesh.layers.set(FX_LAYER);
+    mesh.frustumCulled = false;
+    mesh.visible = false;
+    ctx.scene.add(mesh);
+    const halo = glow(ctx, [base.x, base.y - 20, base.z], 120, '#b9a8ff', 0, 0);
+    bolts.push({ mesh, halo, phase: b * 1.1 + rng() * 0.6 });
   }
   const flash = new THREE.DirectionalLight('#c9c0ff', 0);
   flash.position.set(0, 200, -150);
@@ -33,9 +33,10 @@ function lightning(ctx, rng) {
   ctx.onFrame((t) => {
     let lit = 0;
     for (const b of bolts) {
-      const u = (t + b.phase) % 6.5;
+      const u = (t + b.phase) % 4.4;
       const on = u < 0.12 || (u > 0.22 && u < 0.3);
-      b.line.visible = on;
+      b.mesh.visible = on;
+      b.halo.material.opacity = on ? 0.55 : Math.max(0, 0.3 - u) * 0.8;
       if (on) lit = 1;
     }
     flash.intensity = lit * 1.6;
@@ -110,7 +111,7 @@ export default {
 
   sky: { zenith: '#0c0a10', mid: '#1c171e', horizon: '#3a2228', ground: '#140f12', glowColor: '#7a3420', glowDir: [0, 0.08, -1] },
 
-  sun: { dir: [0.2, 0.7, -0.7], color: '#b08070', intensity: 1.1, hemi: { sky: '#6a5a6a', ground: '#3a261c', intensity: 1.25 }, shadowSize: 70 },
+  sun: { dir: [0.2, 0.7, -0.7], color: '#b08070', intensity: 1.1, hemi: { sky: '#7a6070', ground: '#5a3424', intensity: 1.45 }, shadowSize: 70 },
 
   ground: {
     size: 1200, segments: 240, flatRadius: 130, hillHeight: 40, undulation: 0.45,
@@ -180,15 +181,16 @@ export default {
     colors: MOURNER_ROBES,
     aisles: [{ from: [0, 40], to: [0, 10], width: 3 }],
     groups: [
-      { center: [-8, 22], radius: [0, 5], count: 34, kneel: 0.7, children: 0.15, facing: [0, -60], facingJitter: 1.2, lean: 0.4 },
-      { center: [12, 26], radius: [0, 4], count: 14, kneel: 0.6, children: 0.1, facing: [10, -60], facingJitter: 1.2, lean: 0.4 },
-      { center: [-26, 8], radius: [0, 6], count: 44, kneel: 0.6, children: 0.15, facing: [-20, -60], facingJitter: 1.5, lean: 0.4 },
-      { center: [30, 12], radius: [0, 5], count: 36, kneel: 0.6, children: 0.15, facing: [30, -60], facingJitter: 1.5, lean: 0.4 },
+      { center: [-5, -3], radius: [0, 4], count: 30, kneel: 0.7, children: 0.15, facing: [0, -60], facingJitter: 0.8, lean: 0.4 },
+      { center: [7, -5], radius: [0, 3.5], count: 22, kneel: 0.6, children: 0.1, facing: [10, -60], facingJitter: 0.8, lean: 0.4 },
+      { center: [-8, 22], radius: [0, 5], count: 24, kneel: 0.7, children: 0.15, facing: [0, -60], facingJitter: 1.2, lean: 0.4 },
+      { center: [-26, 8], radius: [0, 6], count: 34, kneel: 0.6, children: 0.15, facing: [-20, -60], facingJitter: 1.5, lean: 0.4 },
+      { center: [30, 12], radius: [0, 5], count: 30, kneel: 0.6, children: 0.15, facing: [30, -60], facingJitter: 1.5, lean: 0.4 },
     ],
   },
 
   player: {
-    start: [0, 30],
+    start: [0, 6],
     lookAt: [0, -55],
     colors: { robe: '#5e4632', mantle: '#3a2f2a', skin: '#a8724a', hair: '#2b1a12', sash: '#7a6a52' },
   },

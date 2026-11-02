@@ -4,7 +4,7 @@ import { BASE_STYLE, GROUND_COLORS, MOUNTAINS, ROBES, banners, cityWall, figure,
 const WALL_Z = -22;
 const SAMUEL = [0, WALL_Z];
 const SAMUEL_COLORS = { robe: '#8e2b2b', mantle: '#e6d8b8', skin: '#5e3b26', hair: '#1f140e', sash: '#c8912e' };
-const SHOOTER = { robe: '#7a6a52', mantle: '#5e4632', skin: '#a87650', hair: '#2b1a12' };
+const SHOOTER = { robe: '#4a3a2e', mantle: '#2b211c', skin: '#a87650', hair: '#1f140e', sash: '#8e2b2b' };
 
 export default {
   title: 'Helaman 13-16: Samuel the Lamanite on the wall',
@@ -36,15 +36,15 @@ export default {
     for (const x of [-60, 60]) cityWall(ctx, { from: [x * 1.83, WALL_Z], to: [x * 1.83, 120], height: 7.5, thickness: 3.2, color: '#d2ba8f', cap: '#b89a70' });
     banners(ctx, [-30, -14, 14, 30].map((x, i) => ({ x, z: WALL_Z, y: wall.top, height: 3.5, color: i % 2 ? '#b5523b' : '#2f8f8a' })));
 
-    const samuel = figure(ctx, SAMUEL_COLORS, [SAMUEL[0], SAMUEL[1] + 0.9], { y: wall.top, facing: [0, 20], scale: 1.5, clear: 0 });
+    const samuel = figure(ctx, SAMUEL_COLORS, [SAMUEL[0], SAMUEL[1] + 0.9], { y: wall.top, facing: [0, 20], scale: 1.9, clear: 0 });
     raiseArm(ctx, samuel, SAMUEL_COLORS, 1, 2.6);
     raiseArm(ctx, samuel, SAMUEL_COLORS, -1, 1.1, 0.6);
 
     const rng = makeRng(37);
     const from = [];
     for (let i = 0; i < 12; i++) {
-      const x = (rng() < 0.5 ? -1 : 1) * between(rng, [3, 22]), z = between(rng, [-14, -4]);
-      const f = figure(ctx, SHOOTER, [x, z], { facing: [SAMUEL[0], SAMUEL[1]], clear: 0.7 });
+      const x = (rng() < 0.5 ? -1 : 1) * between(rng, [3, 16]), z = between(rng, [-17, -12]);
+      const f = figure(ctx, SHOOTER, [x, z], { facing: [SAMUEL[0], SAMUEL[1]], clear: 1.1, scale: 1.08 });
       raiseArm(ctx, f, SHOOTER, rng() < 0.5 ? 1 : -1, 2.4, 0.5);
       from.push([x, ctx.terrainHeight(x, z) + 2.1, z]);
     }
@@ -82,12 +82,12 @@ export default {
     colors: ROBES,
     aisles: [{ from: [0, 30], to: [0, -6], width: 3.4 }],
     groups: [
-      { center: [0, WALL_Z], radius: [9, 42], angle: [-1.3, 1.3], count: 900, kneel: 0.02, children: 0.08 },
+      { center: [0, WALL_Z], radius: [11, 42], angle: [-1.3, 1.3], count: 900, kneel: 0.02, children: 0.08 },
           ],
   },
 
   player: {
-    start: [0, -1],
+    start: [0, -5],
     lookAt: [0, WALL_Z],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

@@ -427,15 +427,35 @@ export function animals(ctx, items) {
   }
 }
 
+const translucentCache = new Map();
+function translucent(mat, opacity) {
+  const key = `${mat.uuid}|${opacity}`;
+  if (!translucentCache.has(key)) {
+    const m = mat.clone();
+    m.transparent = true;
+    m.opacity = opacity;
+    m.depthWrite = false;
+    translucentCache.set(key, m);
+  }
+  return translucentCache.get(key);
+}
+
 // A faceless figure in white light, hovering, with a soft glow and a gentle drift.
-export function angel(ctx, [x, y, z], { facing = [0, 0], scale = 1.05, colors, drift = 0.25, phase = 0, glowSize = 5 } = {}) {
+export function angel(ctx, [x, y, z], { facing = [0, 0], scale = 1.05, colors, drift = 0.25, phase = 0, glowSize = 5, glowColor = '#fff3d0', glowAmount = 0.55, opacity = 1 } = {}) {
   const c = colors ?? { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#f6e7cf', hair: '#f6edd8', sash: '#efe0b8', arms: [0.5, 0.45] };
-  const fig = makeFigure(c, ctx.kit, { glow: 0.55 });
+  const fig = makeFigure(c, ctx.kit, { glow: glowAmount });
+  if (opacity < 1) {
+    fig.traverse((m) => {
+      if (!m.isMesh) return;
+      m.material = translucent(m.material, opacity);
+      m.castShadow = false;
+    });
+  }
   fig.position.set(x, y, z);
   fig.scale.setScalar(scale);
   fig.rotation.y = Math.atan2(facing[0] - x, facing[1] - z);
   ctx.scene.add(fig);
-  const g = glow(ctx, [x, y + 1.0 * scale, z], glowSize, '#fff3d0', 0.75);
+  const g = glow(ctx, [x, y + 1.0 * scale, z], glowSize, glowColor, 0.75);
   ctx.onFrame((t) => {
     const dy = Math.sin(t * 0.8 + phase) * drift;
     fig.position.y = y + dy;

@@ -4,7 +4,7 @@ import { BASE_STYLE, GROUND_COLORS, MOUNTAINS, ROBES, figure, kneeling, newStar,
 const NEPHI = [0, -10];
 const NEPHI_COLORS = { robe: '#efe3c2', mantle: '#3e6e8e', skin: '#a8724a', hair: '#3a2418', sash: '#c8912e' };
 const SUNSET = [-0.18, 0.075, -1];
-const STAR = [0.16, 0.3, -1];
+const STAR = [0.07, 0.2, -1];
 
 export default {
   title: '3 Nephi 1:4-21: The night without darkness',
@@ -33,14 +33,14 @@ export default {
   custom(ctx) {
     skyDisc(ctx, SUNSET, { size: 150, color: '#ffbe5c', opacity: 1 });
     skyDisc(ctx, SUNSET, { size: 420, color: '#ffd79a', opacity: 0.55 });
-    newStar(ctx, STAR, { size: 70, color: '#fffbe8' });
+    newStar(ctx, STAR, { size: 80, color: '#fffbe8' });
 
-    kneeling(ctx, NEPHI_COLORS, NEPHI, { facing: [0, -40], bow: 0.75, scale: 1.05 });
+    kneeling(ctx, NEPHI_COLORS, NEPHI, { facing: [0, -40], bow: 0.75, scale: 1.3 });
 
     const rng = makeRng(38);
     for (let i = 0; i < 18; i++) {
-      const x = between(rng, [-24, 24]), z = between(rng, [-2, 14]);
-      if (Math.abs(x) < 3) continue;
+      const x = between(rng, [-15, 15]), z = between(rng, [-7, 2]);
+      if (Math.abs(x) < 3.2) continue;
       const c = { robe: pick(rng, ROBES.robes), mantle: pick(rng, ROBES.mantles), skin: pick(rng, ROBES.skins), hair: pick(rng, ROBES.hair) };
       const f = figure(ctx, c, [x, z], { facing: [x * 0.6, -60], clear: 0.7 });
       raiseArm(ctx, f, c, 1, 2.7, 0.15);
@@ -88,7 +88,7 @@ export default {
   },
 
   player: {
-    start: [0, 6],
+    start: [0, -1],
     lookAt: [0, -40],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

@@ -106,10 +106,13 @@ export default {
     for (const x of [-60, -18, 18, 60]) watchtower(ctx, [x, LINE_Z + 6]);
     banners(ctx, [-50, -36, -8, 8, 36, 50].map((x, i) => ({ x, z: LINE_Z + 4, height: 7, color: ['#b5523b', '#2f6f8a', '#c8912e'][i % 3] })));
 
-    const standY = ctx.terrainHeight(...GIDGIDDONI) + 1.6;
-    boxes(ctx, [{ pos: [GIDGIDDONI[0], standY - 0.8, GIDGIDDONI[1]], size: [4, 1.6, 3], color: '#957448' }]);
+    const gateY = ctx.terrainHeight(0, LINE_Z);
+    boxes(ctx, [-3, -1, 1, 3].map((x) => ({ pos: [x, gateY + 2.6, LINE_Z + 2.4], size: [1.9, 5.2, 0.35], color: '#5a3a22' })));
+    ctx.addCollider({ x: 0, z: LINE_Z + 2.4, hx: 4, hz: 0.3, rot: 0, top: gateY + 5.2 });
+    const standY = ctx.terrainHeight(...GIDGIDDONI) + 2.0;
+    boxes(ctx, [{ pos: [GIDGIDDONI[0], standY - 1.0, GIDGIDDONI[1]], size: [4, 2.0, 3], color: '#957448' }]);
     ctx.addCollider({ x: GIDGIDDONI[0], z: GIDGIDDONI[1], hx: 2, hz: 1.5, rot: 0, top: standY });
-    const gid = figure(ctx, CAPTAIN, GIDGIDDONI, { y: standY, facing: [0, 0], scale: 1.1, clear: 2.5 });
+    const gid = figure(ctx, CAPTAIN, GIDGIDDONI, { y: standY, facing: [0, 0], scale: 1.5, clear: 2.5 });
     raiseArm(ctx, gid, CAPTAIN, 1, 2.5);
 
     const herd = [
@@ -169,7 +172,7 @@ export default {
   },
 
   player: {
-    start: [0, 22],
+    start: [0, -12],
     lookAt: [0, LINE_Z],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
