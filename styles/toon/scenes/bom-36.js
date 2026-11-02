@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { baseStyle, box, figure, groundSpec, house, jars, merge, NEPHITE, put, solid, trees, cyl, drapeRect } from './lib/bom-31-kit.js';
 
 const TOWER = [-12, -9];
-const TOWER_H = 7.5;
+const TOWER_H = 4.8;
 
 function stoneTower(ctx, [x, z]) {
   const y = ctx.terrainHeight(x, z) - 0.2;
@@ -67,7 +67,7 @@ export default {
     const top = stoneTower(ctx, TOWER);
 
     // Nephi bowed in prayer on the tower top.
-    figure(ctx, { robe: '#efe3c2', mantle: '#b5523b', skin: '#a8724a', hair: '#d9c7a3', sash: '#c8912e', arms: [0.45, 2.2] }, TOWER[0], TOWER[1] + 1.4, { y: top, yaw: 0.35, kneel: true, scale: 1.45, clear: 0 });
+    figure(ctx, { robe: '#efe3c2', mantle: '#b5523b', skin: '#a8724a', hair: '#d9c7a3', sash: '#c8912e', arms: [0.45, 2.2] }, TOWER[0] + 0.3, TOWER[1] + 1.5, { y: top, yaw: 0.7, kneel: true, scale: 1.9, clear: 0 });
 
     // The garden: fruit trees in rows, beds and a path.
     const orchard = [];
@@ -116,8 +116,9 @@ export default {
     facing: TOWER,
     colors: NEPHITE,
     aisles: [{ from: [-12, -3], to: [-12, -20], width: 2.4 }],
+    keepClear: [{ kind: 'circle', x: 1, z: 4, r: 4 }],
     groups: [
-      { shape: 'rect', center: [-12, 1], size: [34, 8], count: 230, children: 0.15, facingJitter: 0.4 },
+      { shape: 'rect', center: [-14, 1], size: [30, 8], count: 230, children: 0.15, facingJitter: 0.4 },
       { shape: 'rect', center: [-12, -1], size: [10, 6], count: 30, kneel: 0.3, facingJitter: 0.3 },
       { shape: 'rect', center: [74, 0], size: [30, 22], count: 110, children: 0.15, facingJitter: 3, facing: [74, 0] },
       { shape: 'rect', center: [25, 0], size: [40, 7], count: 45, facingJitter: 1.0 },
@@ -125,8 +126,8 @@ export default {
   },
 
   player: {
-    start: [12, 4],
-    lookAt: TOWER,
+    start: [0, 4],
+    lookAt: [-13, -8],
     colors: { robe: '#c8a97a', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#3e6e66' },
   },
 };

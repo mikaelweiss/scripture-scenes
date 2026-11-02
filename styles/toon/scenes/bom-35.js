@@ -51,8 +51,8 @@ export default {
     put(ctx, merge(bars), '#4a3426', 0, 0, { y: ctx.terrainHeight(0, -26) });
 
     // The brothers, faces shining, in the midst of the fire.
-    figure(ctx, { robe: '#efe3c2', mantle: '#c8912e', skin: '#c9905f', hair: '#3a2418', sash: '#b5523b', arms: [0.5, 1.2] }, -0.8, BROTHERS[1], { yaw: 0.3, glow: 0.6, clear: 0, scale: 1.2 });
-    figure(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#c9905f', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 1.2] }, 0.8, BROTHERS[1] - 0.2, { yaw: -0.3, glow: 0.6, clear: 0, scale: 1.2 });
+    figure(ctx, { robe: '#efe3c2', mantle: '#c8912e', skin: '#c9905f', hair: '#3a2418', sash: '#b5523b', arms: [0.5, 1.2] }, -0.8, BROTHERS[1], { yaw: 0.3, glow: 0.6, clear: 0, scale: 1.35 });
+    figure(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#c9905f', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 1.2] }, 0.8, BROTHERS[1] - 0.2, { yaw: -0.3, glow: 0.6, clear: 0, scale: 1.35 });
     ctx.exclude({ kind: 'circle', x: BROTHERS[0], z: BROTHERS[1], r: FIRE_R + 1.6 });
     ctx.addCollider({ x: BROTHERS[0], z: BROTHERS[1], hx: FIRE_R, hz: FIRE_R, rot: 0, top: ctx.terrainHeight(...BROTHERS) + 3 });
 
@@ -76,7 +76,7 @@ export default {
   },
 
   light: {
-    beams: [{ from: [0, 60, -12], to: { pos: [BROTHERS[0], 0.5, BROTHERS[1]] }, width: [6, 4.5], color: '#ffe0a0', intensity: 0.45, layers: 2, stripes: 22, fadeLow: 0.05 }],
+    beams: [{ from: [0, 60, -12], to: { pos: [BROTHERS[0], 0.5, BROTHERS[1]] }, width: [4.6, 4], color: '#ffd890', intensity: 0.32, layers: 2, stripes: 22, fadeLow: 0.05 }],
     rings: [{ pos: [BROTHERS[0], 0.02, BROTHERS[1]], radius: FIRE_R, width: 0.45, height: 2.6, color: '#ffb050', intensity: 0.9, wallIntensity: 0.4 }],
     pointLights: [
       { pos: [BROTHERS[0], 2.2, BROTHERS[1]], color: '#ffb868', intensity: 16, distance: 30, decay: 1.3 },
@@ -89,13 +89,13 @@ export default {
     minSpacing: 0.7,
     facing: BROTHERS,
     colors: LAMANITE,
-    aisles: [{ from: [0, 8], to: [0, -6], width: 3 }],
+    aisles: [{ from: [0, 8], to: [0, -6], width: 3.6 }],
     keepClear: [{ kind: 'circle', x: BROTHERS[0], z: BROTHERS[1], r: FIRE_R + 1.6 }],
     groups: [{ center: BROTHERS, radius: [FIRE_R + 1.8, 17], count: 300, kneel: 0.6, facingJitter: 0.4, lean: 0.25 }],
   },
 
   player: {
-    start: [0, -0.5],
+    start: [0, -3],
     lookAt: BROTHERS,
     colors: { robe: '#5e3020', mantle: '#8c6a3c', skin: '#8a5a3b', hair: '#1f140e', sash: '#c8912e' },
   },

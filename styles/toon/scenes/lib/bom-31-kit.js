@@ -225,7 +225,8 @@ export function army(ctx, o) {
     const sp = o.spacing ?? 1.1;
     for (let r = 0; r < o.rows; r++) for (let c = 0; c < o.cols; c++) {
       const lx = (c - (o.cols - 1) / 2) * sp + (rng() - 0.5) * (o.jitter ?? 0.25);
-      const lz = (r - (o.rows - 1) / 2) * sp + (rng() - 0.5) * (o.jitter ?? 0.25);
+      const block = o.rankGroup ? Math.floor(r / o.rankGroup) - Math.floor((o.rows - 1) / o.rankGroup) / 2 : 0;
+      const lz = (r - (o.rows - 1) / 2) * sp + block * (o.rankGap ?? 0) + (rng() - 0.5) * (o.jitter ?? 0.25);
       tryAdd(o.center[0] + lx * c0 + lz * s0, o.center[1] - lx * s0 + lz * c0);
     }
   } else {
@@ -297,13 +298,13 @@ export function army(ctx, o) {
   return n;
 }
 
-export function banner(ctx, x, z, { h = 5, color = '#b5523b', trim = '#efe3c2', w = 1.6, fh = 1.1, wave = true } = {}) {
+export function banner(ctx, x, z, { h = 5, color = '#b5523b', trim = '#efe3c2', w = 1.6, fh = 1.1, wave = true, rot = 0 } = {}) {
   const y = ctx.terrainHeight(x, z);
   put(ctx, cyl(0.06, 0.07, h, 0, h / 2, 0, 6), '#5e4632', x, z, { y });
   const geo = new THREE.PlaneGeometry(w, fh, 8, 1);
   geo.translate(w / 2 + 0.05, h - fh / 2 - 0.15, 0);
-  const flag = put(ctx, geo, color, x, z, { y, side: THREE.DoubleSide, cast: false, mat: ctx.kit.toon(color, { side: THREE.DoubleSide }) });
-  put(ctx, box(w, 0.12, 0.05, w / 2 + 0.05, h - fh - 0.15, 0), trim, x, z, { y, cast: false });
+  const flag = put(ctx, geo, color, x, z, { y, rot, side: THREE.DoubleSide, cast: false, mat: ctx.kit.toon(color, { side: THREE.DoubleSide }) });
+  put(ctx, box(w, 0.12, 0.05, w / 2 + 0.05, h - fh - 0.15, 0), trim, x, z, { y, rot, cast: false });
   if (wave) {
     const pos = geo.attributes.position;
     const base = Float32Array.from(pos.array);

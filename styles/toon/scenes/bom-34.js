@@ -91,7 +91,7 @@ export default {
     put(ctx, box(9.6, 0.25, 7.6, 0, 3.75, 0, { rz: 0.08 }), '#c8a97a', 18, 22);
 
     // Hagoth, overseeing the launch.
-    figure(ctx, { robe: '#3e6e66', mantle: '#c8912e', skin: '#a8724a', hair: '#d9c7a3', sash: '#efe3c2', arms: [0.45, 0.6] }, SHORE + 4, PIER_Z, { face: [SHORE - 30, PIER_Z - 10], scale: 1.1 });
+    figure(ctx, { robe: '#efe3c2', mantle: '#2f8f8a', skin: '#a8724a', hair: '#d9c7a3', sash: '#c8912e', arms: [0.45, 1.6] }, SHORE + 18.5, PIER_Z - 4, { face: [SHORE - 30, PIER_Z - 6], scale: 1.25, clear: 2.5 });
 
     // The shipbuilders' village inland.
     const homes = [[30, -30, 0.3], [42, -12, -0.2], [36, 12, 0.5], [50, 30, 0.1], [26, -50, -0.4], [58, -36, 0.2]];
@@ -105,6 +105,7 @@ export default {
     facing: [SHORE - 12, PIER_Z],
     colors: NEPHITE,
     aisles: [{ from: [SHORE + 16, PIER_Z], to: [SHORE - 1, PIER_Z], width: 3.2 }],
+    keepClear: [{ kind: 'circle', x: 9, z: -6, r: 7 }],
     groups: [
       { shape: 'rect', center: [SHORE + 9, PIER_Z + 1], size: [10, 16], count: 90, children: 0.25, facingJitter: 0.6 },
       { shape: 'rect', center: [-4, 23], size: [26, 4], count: 30, kneel: 0.2, facingJitter: 2.5, facing: [-4, 16] },
@@ -115,8 +116,8 @@ export default {
   },
 
   player: {
-    start: [14, -6],
-    lookAt: [-34, 4],
+    start: [5, -5],
+    lookAt: [-34, 2],
     colors: { robe: '#c8a97a', mantle: '#4f7f80', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },
 };

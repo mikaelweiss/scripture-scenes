@@ -3,7 +3,7 @@
 import { army, arm, baseStyle, campfire, figure, glow, groundSpec, hills, LAMANITE, moon, sea, stars, tent } from './lib/bom-31-kit.js';
 
 const TENT = [8, -22];
-const TEANCUM = [6.2, -15.8];
+const TEANCUM = [7.2, -15.2];
 
 export default {
   title: 'Alma 51:33-34: Teancum slays Amalickiah',
@@ -54,15 +54,17 @@ export default {
     tents.forEach(([x, z, rot], i) => tent(ctx, x, z, { rot, w: 3 + (i % 2), d: 4, h: 2.2 + (i % 3) * 0.2, color: ['#a87b4f', '#8c5a3c', '#7a6a52', '#9c6b4e'][i % 4] }));
     const fires = [[-8, -6], [18, -14], [-22, -28], [16, -38], [-2, 14], [32, -24], [-34, 0], [28, 14]];
     fires.forEach(([x, z], i) => campfire(ctx, x, z, { size: 0.9, light: i < 4 ? 9 : 0, glowSize: 6 }));
-    fires.forEach(([x, z], i) => army(ctx, { center: [x, z], radius: [2.2, 6], count: 14, lie: true, weapons: false, helmets: false, colors: LAMANITE, seed: 20 + i, jitterYaw: 6 }));
+    fires.forEach(([x, z], i) => army(ctx, { center: [x, z], radius: [2.4, 5.5], count: 12, kneel: 1, lean: 0.9, weapons: false, helmets: false, colors: LAMANITE, seed: 20 + i, facing: [x, z], jitterYaw: 0.8 }));
 
     // Guards by the tent, overcome with sleep.
-    army(ctx, { center: [TENT[0] - 5, TENT[1] + 1], radius: [0, 1.5], count: 3, lie: true, helmets: false, colors: LAMANITE, seed: 7, jitterYaw: 6 });
-    army(ctx, { center: [TENT[0] + 5.5, TENT[1] - 1], radius: [0, 1.5], count: 2, lie: true, helmets: false, colors: LAMANITE, seed: 8, jitterYaw: 6 });
+    army(ctx, { center: [TENT[0] - 5, TENT[1] + 1], radius: [0, 1.5], count: 3, kneel: 1, lean: 1, helmets: false, colors: LAMANITE, seed: 7, jitterYaw: 6 });
+    army(ctx, { center: [TENT[0] + 5.5, TENT[1] - 1], radius: [0, 1.5], count: 2, kneel: 1, lean: 1, helmets: false, colors: LAMANITE, seed: 8, jitterYaw: 6 });
 
     // Teancum at the tent door, javelin in hand.
-    const t = figure(ctx, { robe: '#3e4a5e', mantle: '#2b2a3a', skin: '#9c6a45', hair: '#1f140e', sash: '#7a6a52', arms: [0.3, 0.7] }, TEANCUM[0], TEANCUM[1], { face: TENT, scale: 1.05 });
-    arm(t, ctx, { shield: '#3a3a48', rim: '#1f140e', spear: '#4a3426' });
+    const t = figure(ctx, { robe: '#6a7a9a', mantle: '#3e4a6a', skin: '#a8724a', hair: '#1f140e', sash: '#c8912e', arms: [0.3, 1.1] }, TEANCUM[0], TEANCUM[1], { face: [TENT[0] + 0.6, TENT[1] + 3], scale: 1.15 });
+    arm(t, ctx, { shield: '#5a6a8a', rim: '#c8912e', spear: '#6b4a33' });
+    // His servant keeping watch behind him.
+    figure(ctx, { robe: '#5a6680', mantle: '#34405a', skin: '#9c6a45', hair: '#1f140e', sash: '#7a6a52', arms: [0.25, 0.3] }, TEANCUM[0] - 2.2, TEANCUM[1] + 1.6, { face: [0, 0], scale: 1.0 });
   },
 
   crowd: {
@@ -82,7 +84,7 @@ export default {
   },
 
   player: {
-    start: [0, -1],
+    start: [3, -5],
     lookAt: [TENT[0] + 2, TENT[1]],
     colors: { robe: '#3a4458', mantle: '#2b2a3a', skin: '#a8724a', hair: '#1f140e', sash: '#5e4632' },
   },

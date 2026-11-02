@@ -1,10 +1,11 @@
 // Alma 48-50: Moroni rings the Nephite cities with ridges of earth, timber pickets and towers.
 // x is east, z is south. The city lies north of the start, its gate facing the player.
 import * as THREE from 'three';
-import { army, banner, baseStyle, cyl, drapeRect, drapeRing, figure, groundSpec, house, arm, merge, NEPHITE, put, tower, trees } from './lib/bom-31-kit.js';
+import { army, banner, baseStyle, cyl, drapeRect, drapeRing, figure, groundSpec, house, arm, knoll, merge, NEPHITE, put, tower, trees } from './lib/bom-31-kit.js';
 
 const CITY = [0, -62];
 const R = 44;
+const RISE = [-6, 12];
 
 // Earth ridge ring with pickets on its crest; a gap at angle `gate` (0 is south).
 function fortify(ctx, [cx, cz], r, { gate = 0, gap = 0.1, towers = 8, collide = true, ridgeH = 3.2, base = 7 } = {}) {
@@ -58,8 +59,9 @@ function fortify(ctx, [cx, cz], r, { gate = 0, gap = 0.1, towers = 8, collide = 
   // The ditch dug outside the ridge, the earth thrown up to make it.
   const ditchArcs = [[gate + gap, gate + Math.PI * 2 - gap]];
   for (const arc of ditchArcs) {
-    drapeRing(ctx, cx, cz, r + base / 2 + 0.5, r + base / 2 + 5, '#6e4a30', { arc, seg: 160 });
-    drapeRing(ctx, cx, cz, r + base / 2 + 1.5, r + base / 2 + 4, '#4f3424', { arc, seg: 160, lift: 0.06 });
+    drapeRing(ctx, cx, cz, r + base / 2, r + base / 2 + 7, '#6e4a30', { arc, seg: 160 });
+    drapeRing(ctx, cx, cz, r + base / 2 + 1.2, r + base / 2 + 5.4, '#3a2418', { arc, seg: 160, lift: 0.1 });
+    drapeRing(ctx, cx, cz, r + base / 2 + 7, r + base / 2 + 8.2, '#e8cc94', { arc, seg: 160, lift: 0.1, rings: 1 });
   }
   const tops = [];
   for (let t = 0; t < towers; t++) {
@@ -101,12 +103,16 @@ export default {
   ],
 
   custom(ctx) {
+    // A low rise south of the gate, for a view over the ditch.
+    knoll(ctx, RISE[0], RISE[1], { r: 9, top: 4, h: 3 });
+    ctx.exclude({ kind: 'circle', x: RISE[0], z: RISE[1], r: 10 });
+
     const tops = fortify(ctx, CITY, R);
     // A sister city on the far plain, fortified the same way.
     fortify(ctx, [210, -330], 34, { gate: 2.6, towers: 6, collide: false });
 
     // Timber bridge over the ditch at the gate, and the road in.
-    drapeRect(ctx, 0, -12, 5, 9, '#9a7048', { lift: 0.12 });
+    drapeRect(ctx, 0, -11, 5, 12, '#9a7048', { lift: 0.16 });
     drapeRect(ctx, 0, 6, 4.5, 30, '#c9a46e', { lift: 0.05 });
 
     // Houses inside the walls.
@@ -118,9 +124,9 @@ export default {
     trees(ctx, [[-36, -64, 6], [36, -48, 6], [-4, -44, 5], [8, -76, 5], [-38, -80, 6]]);
 
     // Moroni at the gate with the title of liberty on its pole.
-    const moroni = figure(ctx, { robe: '#8c2f22', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#efe3c2', arms: [0.4, 0.5] }, 4.5, -8, { face: [0, 40], scale: 1.1 });
+    const moroni = figure(ctx, { robe: '#8c2f22', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#efe3c2', arms: [0.4, 0.5] }, 2.6, -1, { face: [-6, 20], scale: 1.25 });
     arm(moroni, ctx, { shield: '#c8912e', rim: '#8c2f22' });
-    banner(ctx, 6.2, -8.5, { h: 6, color: '#efe3c2', trim: '#8c2f22', w: 1.4, fh: 1.8 });
+    banner(ctx, 4.2, -1.6, { h: 6, color: '#efe3c2', trim: '#8c2f22', w: 1.4, fh: 1.8 });
 
     // Watchmen on every tower.
     for (const t of tops) {
@@ -141,16 +147,16 @@ export default {
     colors: NEPHITE,
     aisles: [{ from: [0, 30], to: [0, -14], width: 5 }],
     groups: [
-      { center: CITY, radius: [R + 7, R + 14], angle: [0.25, 1.6], count: 70, kneel: 0.45, facingJitter: 1.2 },
-      { center: CITY, radius: [R + 7, R + 14], angle: [-1.6, -0.25], count: 70, kneel: 0.45, facingJitter: 1.2 },
-      { shape: 'rect', center: [-14, 14], size: [12, 10], count: 25, kneel: 0.2, facingJitter: 1.5 },
+      { center: CITY, radius: [R + 13, R + 19], angle: [0.25, 1.6], count: 70, kneel: 0.45, facingJitter: 1.2 },
+      { center: CITY, radius: [R + 13, R + 19], angle: [-1.6, -0.25], count: 70, kneel: 0.45, facingJitter: 1.2 },
+      { shape: 'rect', center: [-22, 14], size: [10, 10], count: 25, kneel: 0.2, facingJitter: 1.5 },
       { shape: 'rect', center: [16, 18], size: [10, 10], count: 20, kneel: 0.3, facingJitter: 1.5 },
       { center: CITY, radius: [4, 30], count: 90, children: 0.2, facingJitter: 3 },
     ],
   },
 
   player: {
-    start: [-5, 22],
+    start: [-6, 12],
     lookAt: [0, -40],
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
