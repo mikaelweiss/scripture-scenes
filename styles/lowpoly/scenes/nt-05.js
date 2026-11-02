@@ -106,7 +106,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.38, shadowTint: '#3a3460', highlightTint: '#fff2dc' },
   shadow: { center: [0, -30], radius: 80 },
 
-  player: { start: [1.2, 5.6], yaw: 0.1, pitch: 0.08, eye: 1.65, speed: 4.5 },
+  player: { start: [3.4, 4.0], yaw: 0.5, pitch: -0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 800,
@@ -149,9 +149,9 @@ export default {
   },
 
   figures: [
-    { x: BOY[0], z: BOY[1] - 0.15, y: 0.1, face: [1.2, 5.6], scale: 0.72, robe: '#f2ead8', mantle: '#d8c9a8', skin: '#b07a55', arms: 'out', emissive: 0.12, halo: { size: 2.4, opacity: 0.22, color: '#fff3d6' } },
-    { x: 5.6, z: 3.2, face: BOY, scale: 0.98, robe: '#c9b48c', mantle: '#4c6c9c', skin: '#a8754f', arms: 'out', hood: true },
-    { x: 6.6, z: 3.9, face: BOY, scale: 1.04, robe: '#7a5a3e', mantle: '#a0825c', skin: '#9b6a46', arms: 'down', hood: true },
+    { x: BOY[0], z: BOY[1] - 0.15, y: 0.1, face: [3.4, 4.0], scale: 0.82, robe: '#f2ead8', mantle: '#d8c9a8', skin: '#b07a55', arms: 'out', emissive: 0.2, halo: { size: 2.6, opacity: 0.3, color: '#fff3d6' } },
+    { x: 1.1, z: 1.9, face: BOY, scale: 0.98, robe: '#c9b48c', mantle: '#4c6c9c', skin: '#a8754f', arms: 'out', hood: true },
+    { x: 3.1, z: 1.3, face: BOY, scale: 1.04, robe: '#7a5a3e', mantle: '#a0825c', skin: '#9b6a46', arms: 'down', hood: true },
   ],
 
   custom(ctx) {

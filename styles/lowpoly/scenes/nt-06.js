@@ -49,7 +49,7 @@ function banks(ctx) {
     const z = r.range(-160, 160);
     const side = r.sign();
     const x = meander(z) + side * r.range(6, 10);
-    if (Math.hypot(x - 11, z - 3.6) < 3) continue;
+    if (Math.hypot(x - 11, z - 3.6) < 3 || Math.hypot(x - 8, z - 2.6) < 3.5) continue;
     const h = r.range(0.9, 2);
     ctx.solid.add(reedGeo, { position: [x, ctx.heightAt(x, z) + h / 2, z], rotation: [r.range(-0.2, 0.2), 0, r.range(-0.2, 0.2)], scale: [1, h, 1], color: r.pick(['#7f8a48', '#8f9650', '#6e7a3c', '#a8a060']), jitter: 0.08 });
   }
@@ -122,7 +122,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#30306a', highlightTint: '#fff0d0' },
   shadow: { center: [4, 0], radius: 40 },
 
-  player: { start: [11, 3.6], yaw: Math.PI / 2 - 0.22, pitch: 0.1, eye: 1.65, speed: 4.2 },
+  player: { start: [7.6, 2.5], yaw: 1.3, pitch: 0.05, eye: 1.65, speed: 4.2 },
 
   terrain: {
     size: 800,
@@ -161,9 +161,9 @@ export default {
 
   figures: [
     {
-      x: JESUS[0], z: JESUS[1], y: WATER - 0.55, face: [11, 3.6], scale: 1.08, robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', arms: 'down', emissive: 0.3,
-      light: { color: '#fff0cf', intensity: 14, distance: 14 },
-      halo: { size: 3, opacity: 0.35, color: '#fff3d6' },
+      x: JESUS[0], z: JESUS[1], y: WATER - 0.55, face: [7.6, 2.5], scale: 1.08, robe: '#f2eadb', mantle: '#e4d9c3', skin: '#a8754f', arms: 'down', emissive: 0.16,
+      light: { color: '#fff0cf', intensity: 8, distance: 12 },
+      halo: { size: 3, opacity: 0.22, color: '#fff3d6' },
     },
     { x: JESUS[0] - 1.0, z: JESUS[1] - 0.75, y: WATER - 0.5, face: JESUS, scale: 1.06, robe: '#8a6a42', mantle: '#6e5232', skin: '#8a5a3c', arms: 'out', hood: false },
   ],

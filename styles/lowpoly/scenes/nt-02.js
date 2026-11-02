@@ -59,7 +59,7 @@ function stable(ctx) {
   ctx.colliders.add({ x: mx, z: mz, w: 1.4, d: 0.7, bottom: 0, top: 0.95 });
   sprite(ctx, { position: [mx, 1.05, mz], size: 2.4, color: '#ffe9c0', opacity: 0.55 });
   ctx.effects.ring({ position: [mx, 0.08, mz], radius: 1.3, width: 0.7, color: '#ffdca0', opacity: 0.45 });
-  const glow = new THREE.PointLight('#ffe2b0', 10, 9, 1.4);
+  const glow = new THREE.PointLight('#ffe2b0', 12, 10, 1.3);
   glow.position.set(mx, 1.6, mz + 0.4);
   ctx.scene.add(glow);
   // Hanging lantern, animals, feed and jars.
@@ -119,7 +119,7 @@ export default {
   exposure: 1.0,
 
   sun: { direction: [-0.85, 0.27, 0.32], color: '#ff9c5a', intensity: 2.2 },
-  light: { sky: '#7a7fb8', ground: '#4e3a30', hemi: 1.05 },
+  light: { sky: '#9a94c8', ground: '#7a5a44', hemi: 1.45 },
   sky: { top: '#2c3466', horizon: '#f39a62', ground: '#a07060', sunColor: '#ffc080', glow: 1.3 },
   fog: { color: '#a8786a', near: 50, far: 420 },
   clouds: { count: 40, shadow: '#4a3e58', lit: '#ff9a62', rim: '#ffd0a0', distance: [260, 900], altitude: [90, 200], hole: 0.15 },
@@ -128,7 +128,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.45, shadowTint: '#2c2450', highlightTint: '#ffd8b0' },
   shadow: { center: [0, -10], radius: 40 },
 
-  player: { start: [0.5, -7.2], yaw: 0.02, pitch: -0.02, eye: 1.65, speed: 4 },
+  player: { start: [0.3, -11.4], yaw: 0.0, pitch: -0.05, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 700,

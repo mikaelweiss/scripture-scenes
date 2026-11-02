@@ -45,16 +45,16 @@ export default {
   exposure: 1.0,
 
   sun: { direction: [0.55, 0.32, 0.6], color: '#9fb4ea', intensity: 0.55 },
-  light: { sky: '#3a4a80', ground: '#16141c', hemi: 0.7 },
+  light: { sky: '#5a6aa8', ground: '#2a2630', hemi: 0.95 },
   sky: { top: '#050a1e', horizon: '#1d2a50', ground: '#0e1220', sunColor: '#cfdcff', glow: 0.6 },
   fog: { color: '#121a34', near: 50, far: 460 },
   clouds: { count: 22, shadow: '#141a30', lit: '#3c4a78', rim: '#8090c0', distance: [320, 900], altitude: [120, 220], hole: 0.2 },
   mountains: { count: 40, color: '#1c2238', radius: [420, 650], height: [20, 70], haze: 0.45 },
-  bloom: { strength: 0.85, radius: 0.6, threshold: 0.62 },
+  bloom: { strength: 0.85, radius: 0.6, threshold: 0.7 },
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.5, shadowTint: '#141c48', highlightTint: '#fff0d0' },
   shadow: { center: [0, -4], radius: 40 },
 
-  player: { start: [3.5, 15], yaw: 0.05, pitch: 0.2, eye: 1.65, speed: 4.2 },
+  player: { start: [6.4, 8], yaw: 0.36, pitch: 0.12, eye: 1.65, speed: 4.2 },
 
   terrain: {
     size: 800,
@@ -100,8 +100,8 @@ export default {
     starfield(ctx, { count: 1800, seed: 4 });
     fold(ctx);
     town(ctx);
-    fire(ctx, { x: FIRE[0], z: FIRE[1], size: 0.9, light: 25 });
-    flock(ctx, { center: [6, -4], radius: 14, count: 48, seed: 8, lying: 0.5, avoid: [[FIRE[0], FIRE[1], 4], [3.5, 15, 3]] });
+    fire(ctx, { x: FIRE[0], z: FIRE[1], size: 0.9, light: 25, smoke: false });
+    flock(ctx, { center: [6, -4], radius: 14, count: 48, seed: 8, lying: 0.5, avoid: [[FIRE[0], FIRE[1], 4], [6.4, 8, 5.5]] });
     flock(ctx, { center: [-6, -14], radius: 9, count: 20, seed: 9, lying: 0.5 });
     // Shepherds' crooks and bedrolls.
     for (const [x, z, tilt] of [[-2.9, 2.2, 0.15], [5.1, 2.6, -0.12], [2.1, 5.8, 0.1]]) {
@@ -112,7 +112,7 @@ export default {
     // The angel of the Lord and the glory shining round about.
     angel(ctx, { x: ANGEL[0], y: ANGEL[1], z: ANGEL[2], face: [FIRE[0], FIRE[1]], scale: 2.1, light: 0, halo: 5, glow: 0.35 });
     groundGlow(ctx, { x: 0, z: -6, radius: 22, color: '#ffe6b0', opacity: 0.35 });
-    const glory = new THREE.PointLight('#fff0d0', 90, 50, 1.3);
+    const glory = new THREE.PointLight('#fff0d0', 55, 45, 1.3);
     glory.position.set(0, 1.2, -4);
     ctx.scene.add(glory);
     // The heavenly host.

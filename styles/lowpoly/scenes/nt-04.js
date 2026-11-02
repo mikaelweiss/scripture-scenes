@@ -5,7 +5,7 @@ import { animal, house, lamp, olive, cypress, shrub, sprite, starfield } from '.
 import { rng } from '../engine/util.js';
 
 const HOUSE = [0, -12];
-const STAR = [0, 27, -24];
+const STAR = [0, 17, -26];
 
 function star(ctx) {
   ctx.glow.add(new THREE.OctahedronGeometry(0.9, 0), { position: STAR, scale: [1, 1.5, 1], color: '#ffffff', jitter: 0 });
@@ -35,7 +35,7 @@ function star(ctx) {
   const beam = ctx.effects.beam({ position: base.toArray(), height: dir.length() * 1.6, radiusBottom: 2.8, radiusTop: 0.6, color: '#e6ecff', opacity: 0.32 });
   beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
   const light = new THREE.PointLight('#dfe6ff', 30, 40, 1.2);
-  light.position.set(HOUSE[0], 9, HOUSE[1] + 3);
+  light.position.set(HOUSE[0], 8, HOUSE[1] + 7);
   ctx.scene.add(light);
 }
 
@@ -104,7 +104,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.07, vignette: 0.48, shadowTint: '#141c48', highlightTint: '#fff0d8' },
   shadow: { center: [2, -8], radius: 30 },
 
-  player: { start: [1.6, 2.5], yaw: 0.04, pitch: 0.26, eye: 1.65, speed: 4 },
+  player: { start: [-2.2, -1.5], yaw: -0.3, pitch: 0.2, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 700,
@@ -139,9 +139,9 @@ export default {
     { x: -0.2, z: -8.95, y: -0.5, face: [0, 0], scale: 1, robe: '#c9b48c', mantle: '#4c6c9c', skin: '#a8754f', arms: 'out', hood: true },
     { x: 0.55, z: -8.75, face: [0, -6], scale: 0.52, robe: '#f6f0e2', skin: '#b07a55', arms: 'out', emissive: 0.25 },
     { x: -1.6, z: -8.3, face: [0, -6], scale: 1.04, robe: '#7a5a3e', mantle: '#a0825c', skin: '#9b6a46', arms: 'down', hood: true },
-    { x: -1.6, z: -6.2, y: -0.48, face: [-0.3, -9], scale: 1.05, robe: '#5a2f6e', mantle: '#c9a040', skin: '#8a5a3c', arms: 'out', hood: true },
-    { x: 0.1, z: -5.8, y: -0.48, face: [0, -9], scale: 1.08, robe: '#8a1f2a', mantle: '#2f4a7a', skin: '#a87652', arms: 'out', hood: true },
-    { x: 1.8, z: -6.2, y: -0.48, face: [0.3, -9], scale: 1.02, robe: '#2f5a4a', mantle: '#d8c8a0', skin: '#7a4c31', arms: 'out', hood: true },
+    { x: -2.0, z: -6.3, y: -0.48, face: [-0.4, -9], scale: 1.05, robe: '#5a2f6e', mantle: '#c9a040', skin: '#8a5a3c', arms: 'out', hood: true },
+    { x: 0.75, z: -5.8, y: -0.48, face: [0.2, -9], scale: 1.08, robe: '#8a1f2a', mantle: '#2f4a7a', skin: '#a87652', arms: 'out', hood: true },
+    { x: 2.5, z: -6.4, y: -0.48, face: [0.6, -9], scale: 1.02, robe: '#2f5a4a', mantle: '#d8c8a0', skin: '#7a4c31', arms: 'out', hood: true },
   ],
 
   effects: [

@@ -125,7 +125,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.4, shadowTint: '#3a3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, 4], radius: 40 },
 
-  player: { start: [-2.95, 0.35], yaw: -Math.PI / 2 + 0.12, pitch: -0.04, eye: 1.6, speed: 3.2 },
+  player: { start: [-1.45, 2.05], yaw: -0.88, pitch: -0.14, eye: 1.6, speed: 3.2 },
 
   terrain: {
     size: 700,
