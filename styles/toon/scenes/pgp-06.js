@@ -5,7 +5,7 @@ import { BASE_STYLE, DIVINE, between, figure, glow, makeRng, motes, stars } from
 const SEAT = [0, -34];
 const FATHER = [-1.4, -36];
 const SON = [1.4, -35.4];
-const ABRAHAM = [-3, -16.5];
+const ABRAHAM = [-3.4, -25.6];
 
 const SPIRITS = {
   robes: ['#fbf7ee', '#f3eddf', '#efe6f4', '#e8eef8', '#f6eedc', '#eef4ee', '#f8f0e8'],
@@ -20,22 +20,22 @@ export default {
   subtitle: 'Among all these there were many of the noble and great ones',
   seed: 106,
 
-  style: { ...BASE_STYLE, ink: '#3a3050', fog: { color: '#cbbcd8', near: 120, far: 700 } },
+  style: { ...BASE_STYLE, ink: '#3a3050', fog: { color: '#5a5a98', near: 90, far: 520 } },
 
   sky: {
     zenith: '#1a1e4a',
     mid: '#38387a',
-    horizon: '#c8a8c0',
-    ground: '#efe6f4',
-    glowColor: '#f8dcb0',
+    horizon: '#6a5a9a',
+    ground: '#4a4a88',
+    glowColor: '#c8a0a8',
     glowDir: [0, 0.35, -1],
   },
 
   sun: {
     dir: [0.2, 0.9, 0.4],
     color: '#fff6e8',
-    intensity: 2.2,
-    hemi: { sky: '#e8e4ff', ground: '#e8d8c8', intensity: 1.4 },
+    intensity: 1.6,
+    hemi: { sky: '#b8b8ff', ground: '#8878b0', intensity: 1.0 },
     shadowSize: 70,
   },
 
@@ -47,15 +47,15 @@ export default {
     undulation: 0.5,
     plaza: { center: [0, -34], size: [26, 26] },
     colors: {
-      sand: '#dcd4ec',
-      dirt: '#d4cce6',
-      grass: '#e4dcec',
-      grassDark: '#e0d8ec',
+      sand: '#8a86c4',
+      dirt: '#827ebc',
+      grass: '#8e8ac8',
+      grassDark: '#8682c0',
       plaza: '#fff8e8',
       plazaLine: '#f0e2c4',
       scorch: '#3a2a22',
       scorchEdge: '#6e4630',
-      hill: '#dcd4ec',
+      hill: '#7a76b8',
     },
   },
 
@@ -77,11 +77,13 @@ export default {
   custom(ctx) {
     stars(ctx, { count: 1600, size: 2, minY: 0.12, seed: 21 });
     stars(ctx, { count: 200, size: 3.2, minY: 0.2, color: '#fff2c8', seed: 6 });
-    figure(ctx, DIVINE, FATHER, { facing: [0, 20], scale: 1.3, glow: 0.55, clear: 1.2 });
-    figure(ctx, { ...DIVINE, arms: [0.35, 0.5] }, SON, { facing: [0, 20], scale: 1.22, glow: 0.5, clear: 1.2 });
+    figure(ctx, DIVINE, FATHER, { facing: [0, 20], scale: 1.55, glow: 0.6, clear: 1.2 });
+    figure(ctx, { ...DIVINE, arms: [0.35, 0.5] }, SON, { facing: [0, 20], scale: 1.45, glow: 0.55, clear: 1.2 });
     const y = ctx.groundHeight(...FATHER);
-    glow(ctx, [0, y + 1.6, -35.6], 12, '#ffd890', 0.9);
-    glow(ctx, [0, y + 2.2, -35.6], 30, '#ffc870', 0.45, 0.02);
+    glow(ctx, [FATHER[0], y + 2.9, FATHER[1] - 0.4], 6, '#fff2c8', 0.9);
+    glow(ctx, [SON[0], y + 2.7, SON[1] - 0.4], 6, '#fff2c8', 0.9);
+    glow(ctx, [0, y + 1.6, -36.4], 9, '#ffc870', 0.7);
+    glow(ctx, [0, y + 2.4, -36.6], 26, '#ffb860', 0.3, 0.02);
     figure(ctx, { robe: '#f6eedc', mantle: '#e8d6a8', skin: '#e0ccb8', hair: '#f3eddf', sash: '#c8a860' }, ABRAHAM, { facing: SEAT, scale: 1.02, glow: 0.2, clear: 0.9 });
 
     const rng = makeRng(9);
@@ -96,14 +98,14 @@ export default {
   clouds: {
     puffs: [5, 9],
     layers: [
-      { count: 50, center: SEAT, distance: [95, 170], height: [-7, -3], size: [9, 16], color: '#fbf7ff', shade: '#b8acd8', drift: 0.002 },
-      { count: 40, center: SEAT, distance: [300, 600], height: [-30, -10], size: [40, 70], color: '#fff6ea', shade: '#a89cc8', drift: -0.001 },
+      { count: 50, center: SEAT, distance: [95, 170], height: [-7, -3], size: [9, 16], color: '#c8c4f0', shade: '#5a5098', drift: 0.002 },
+      { count: 40, center: SEAT, distance: [300, 600], height: [-30, -10], size: [40, 70], color: '#a8a4e0', shade: '#4a4488', drift: -0.001 },
       { count: 20, center: SEAT, distance: [30, 70], height: [70, 110], size: [20, 34], color: '#fffaf0', shade: '#a8a0c8', drift: 0.004 },
     ],
   },
 
   light: {
-    beams: [{ from: [0, 220, -35.6], to: { at: SEAT, lift: 2.4 }, width: [22, 8], color: '#fff2c9', intensity: 0.2, layers: 3, stripes: 28, fadeLow: 0.04 }],
+    beams: [{ from: [0, 220, -35.6], to: { at: SEAT, lift: 2.4 }, width: [22, 8], color: '#fff2c9', intensity: 0.12, layers: 3, stripes: 28, fadeLow: 0.04 }],
     rayFans: [{ source: [0, 260, -40], sourceJitter: 60, target: [0, -10], groundY: 0, spread: [10, 50], count: 9, width: [[4, 8], [8, 14]], color: '#fff0c4', intensity: 0.14, stripes: 9, fadeLow: 0.3 }],
     rings: [{ at: SEAT, lift: 2.4, radius: 4.2, width: 0.3, height: 3, color: '#ffe0a0', intensity: 0.7, wallIntensity: 0.35 }],
     pointLights: [{ at: SEAT, lift: 3, color: '#fff0c8', intensity: 16, distance: 26 }],
@@ -123,7 +125,7 @@ export default {
   },
 
   player: {
-    start: [1.2, -11],
+    start: [0.6, -24],
     lookAt: SEAT,
     colors: { robe: '#fbf7ee', mantle: '#e8dcc0', skin: '#e0ccb8', hair: '#d8ccb8', sash: '#c8a860' },
   },

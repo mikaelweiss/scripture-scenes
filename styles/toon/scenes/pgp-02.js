@@ -149,10 +149,10 @@ export default {
     const fire = [];
     for (let i = 0; i < 6; i++) fire.push({ x: ALTAR[0] + (i / 5 - 0.5) * 2, y: top, z: ALTAR[1] + (i % 2 ? 0.45 : -0.45), h: 0.9, r: 0.8 });
     flames(ctx, fire);
-    smokeColumn(ctx, [ALTAR[0], top + 1, ALTAR[1]], { count: 14, rise: 18, size: 0.6, drift: [5, -2] });
+    smokeColumn(ctx, [ALTAR[0], top + 1, ALTAR[1]], { count: 34, rise: 14, size: 0.85, drift: [5, -2] });
     glow(ctx, [ALTAR[0], top + 0.4, ALTAR[1]], 5, '#ffb050', 0.5);
 
-    angel(ctx, ANGEL, { facing: ADAM, scale: 1.2, glowSize: 6, arms: [0.3, 0.6] });
+    angel(ctx, ANGEL, { facing: ADAM, scale: 1.35, glowSize: 6, arms: [0.3, 0.6] });
     family(ctx);
     hut(ctx);
     field(ctx);
@@ -174,7 +174,7 @@ export default {
 
 
   player: {
-    start: [3.5, 3],
+    start: [2.2, 1.4],
     lookAt: [-2.5, -9],
     colors: { robe: '#c8a97a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },

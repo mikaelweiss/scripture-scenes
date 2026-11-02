@@ -130,7 +130,7 @@ export default {
     hill(ctx);
     camp(ctx);
 
-    figure(ctx, { robe: '#e6d8b8', mantle: '#6b4a33', skin: '#a8724a', hair: '#d8d0c4', sash: '#8c5a3c', arms: [0.35, 1.25] }, ABRAHAM, { facing: [0, -400], scale: 1.05 });
+    figure(ctx, { robe: '#e6d8b8', mantle: '#6b4a33', skin: '#a8724a', hair: '#d8d0c4', sash: '#8c5a3c', arms: [0.35, 1.25] }, ABRAHAM, { facing: [0, -400], scale: 1.2 });
     const y = ctx.terrainHeight(...ABRAHAM);
     for (const side of [-1, 1]) {
       glow(ctx, [ABRAHAM[0] + side * 0.3, y + 1.8, ABRAHAM[1] - 0.4], 1.4, '#c8f0ff', 0.95, 0.12);
@@ -144,7 +144,7 @@ export default {
   },
 
   player: {
-    start: [2, 1.5],
+    start: [2.6, -1.2],
     lookAt: [0, -400],
     colors: { robe: '#c8a97a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },

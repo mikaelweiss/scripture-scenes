@@ -140,7 +140,7 @@ export default {
     const y = lionCouch(ctx);
     idols(ctx, y);
     priests(ctx);
-    angel(ctx, [ALTAR[0] - 0.8, ALTAR[1] + 0.2], { facing: [0, 20], scale: 1.25, lift: 3.6, glowSize: 8, arms: [0.6, 0.7] });
+    angel(ctx, [ALTAR[0] - 0.6, ALTAR[1] + 0.4], { facing: [0, 20], scale: 1.6, lift: 2.6, glowSize: 8, arms: [0.6, 0.7] });
     palms(ctx, [[-30, -4, 9], [-36, 10, 8], [-26, 22, 10], [32, -6, 9], [38, 12, 8], [28, 26, 10], [-50, -40, 11], [52, -36, 10], [-60, 30, 9], [64, 28, 9], [-20, -60, 9], [24, -64, 10]]);
   },
 
@@ -176,7 +176,7 @@ export default {
   },
 
   player: {
-    start: [0, 5],
+    start: [0, -6.5],
     lookAt: ALTAR,
     colors: { robe: '#c8a97a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },

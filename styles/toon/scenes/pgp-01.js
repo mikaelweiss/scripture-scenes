@@ -160,7 +160,7 @@ export default {
     summit(ctx);
     lowlands(ctx);
     visionEarth(ctx);
-    figure(ctx, { robe: '#b8a07a', mantle: '#6b4a33', skin: '#a8724a', hair: '#e8e2d6', sash: '#8c5a3c', arms: [0.9, 0.9] }, MOSES, { facing: [EARTH[0], EARTH[2]], scale: 1.05 });
+    figure(ctx, { robe: '#b8a07a', mantle: '#6b4a33', skin: '#a8724a', hair: '#e8e2d6', sash: '#8c5a3c', arms: [0.9, 0.9] }, MOSES, { facing: [EARTH[0], EARTH[2]], scale: 1.2 });
     glow(ctx, [MOSES[0], 1.6, MOSES[1]], 4, '#fff0c0', 0.45);
     const rng = makeRng(3);
     const pts = [];
@@ -188,7 +188,7 @@ export default {
   },
 
   player: {
-    start: [2, 5],
+    start: [1.6, 1.6],
     lookAt: [0, -330],
     colors: { robe: '#c8a97a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },
