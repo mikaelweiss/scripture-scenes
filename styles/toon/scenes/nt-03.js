@@ -80,7 +80,7 @@ export default {
     crack: '#1a1420', ember: '#c8502c', emberHot: '#ffb347', flameOuter: '#f08a2c', flameInner: '#ffe08a', charred: '#2a1e1a', smoke: '#555060', smokeShade: '#1a1622',
   },
   sky: { zenith: '#070b20', mid: '#141e44', horizon: '#3a4470', ground: '#141826', glowColor: '#8a8aa8', glowDir: [0, 0.35, -1] },
-  sun: { dir: [-0.3, 0.8, 0.5], color: '#a8b8e8', intensity: 1.0, hemi: { sky: '#5060a0', ground: '#2a2232', intensity: 0.8 }, shadowSize: 55 },
+  sun: { dir: [-0.3, 0.8, 0.5], color: '#a8b8e8', intensity: 1.0, hemi: { sky: '#5868a8', ground: '#3a2e34', intensity: 1.05 }, shadowSize: 55 },
   ground: {
     size: 1400, segments: 240, flatRadius: 75, hillHeight: 36, undulation: 0.5,
     plaza: { center: [9999, 9999], size: [0, 0] },
@@ -94,8 +94,8 @@ export default {
     glows: [{ at: FIRE, lift: 1.5, size: 16, color: '#ffe8b0', opacity: 0.2 }],
   },
   player: {
-    start: [0, 9],
-    lookAt: [0, -20],
+    start: [1.2, 5.6],
+    lookAt: [-0.4, -20],
     colors: { robe: '#7a6a52', mantle: '#c8a97a', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },
 };

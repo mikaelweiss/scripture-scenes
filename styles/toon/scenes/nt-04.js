@@ -26,6 +26,13 @@ function custom(ctx) {
   lamp(b, ctx, { pos: [4, HOUSE[1] - 3], y: fy + 1.2, light: null });
   b.add('#8a7a62', box(0.6, 1.2, 0.6, [4, fy + 0.6, HOUSE[1] - 3]));
 
+  b.add('#8a2a3a', box(6, 0.04, 3.6, [0.4, fy + 0.02, -15.6]), { cast: false });
+  b.add('#c8912e', box(5.5, 0.05, 3.1, [0.4, fy + 0.03, -15.6]), { cast: false });
+  b.add('#7a2f5a', box(5, 0.06, 2.6, [0.4, fy + 0.04, -15.6]), { cast: false });
+  const fill = new THREE.PointLight('#ffc27a', 9, 14, 1.2);
+  fill.position.set(0.4, fy + 2.4, HOUSE[1] + 2.4);
+  ctx.scene.add(fill);
+
   // The gifts: gold, frankincense, myrrh.
   b.add('#e0b040', box(0.5, 0.35, 0.35, [-0.9, fy + 0.18, -14.9]), { emissive: '#6a4a10' });
   b.add('#8a5a2c', box(0.56, 0.08, 0.4, [-0.9, fy + 0.4, -14.9]));
@@ -116,8 +123,8 @@ export default {
     groups: [{ shape: 'rect', center: [0, 30], size: [9, 40], count: 10, facingJitter: 1.5, children: 0.3 }],
   },
   player: {
-    start: [0, -5],
-    lookAt: [0, -15],
+    start: [1, -7.6],
+    lookAt: [0.2, -16],
     colors: { robe: '#6b5a4a', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

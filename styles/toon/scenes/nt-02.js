@@ -22,7 +22,7 @@ function custom(ctx) {
     const r = 8 + rng() * 10;
     const x = STABLE[0] + Math.cos(a) * r * 1.3, z = STABLE[1] - 4 + Math.sin(a) * r * 0.6;
     const s = 2.5 + rng() * 3.5;
-    b.add(rng() < 0.5 ? '#8a7a62' : '#9a8668', ball(s, [x, ctx.terrainHeight(x, z) + s * 0.2, z], [1.3, 0.8 + rng() * 0.5, 1], 7));
+    b.add(rng() < 0.5 ? '#9a8064' : '#a88c6a', ball(s, [x, ctx.terrainHeight(x, z) + s * 0.2, z], [1.3, 0.8 + rng() * 0.5, 1], 7));
     ctx.addCollider({ x, z, hx: s, hz: s * 0.8, rot: 0, top: s });
   }
   const mp = manger(b, ctx, { pos: MANGER, y: fy });
@@ -30,7 +30,15 @@ function custom(ctx) {
   const babyLight = new THREE.PointLight('#ffe6b0', 6, 8, 1.2);
   babyLight.position.set(mp[0], mp[1] + 1.2, mp[2] + 0.6);
   ctx.scene.add(babyLight);
-  lamp(b, ctx, { pos: [-4.4, STABLE[1] - 2.6], y: fy + 1.2, light: { color: '#ffb060', intensity: 5, distance: 10 } });
+  const fill = new THREE.PointLight('#ffc27a', 10, 16, 1.2);
+  fill.position.set(0, fy + 2.4, STABLE[1] + 2.5);
+  ctx.scene.add(fill);
+  const hang = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), ctx.kit.basic('#ffd890'));
+  hang.position.set(0, fy + 2.5, STABLE[1] + 2.5);
+  ctx.scene.add(hang);
+  glow(ctx, { pos: [0, fy + 2.5, STABLE[1] + 2.5], size: 1.6, color: '#ffc070', opacity: 0.7 });
+  b.add('#5a3e28', box(0.04, 0.6, 0.04, [0, fy + 2.85, STABLE[1] + 2.5]));
+  lamp(b, ctx, { pos: [-4.4, STABLE[1] - 2.6], y: fy + 1.2, light: { color: '#ffb060', intensity: 8, distance: 12 } });
   b.add('#8a7a62', box(0.6, 1.2, 0.6, [-4.4, fy + 0.6, STABLE[1] - 2.6]));
   animal(b, ctx, { kind: 'ox', pos: [3.4, -22.2], rot: -2.2, y: fy, color: '#8c6a4a', lying: true });
   animal(b, ctx, { kind: 'donkey', pos: [-3.3, -21.6], rot: 2.4, y: fy, color: '#7d7468' });
@@ -113,8 +121,8 @@ export default {
     ],
   },
   player: {
-    start: [0, -9],
-    lookAt: [0, -20],
+    start: [0.8, -13],
+    lookAt: [0, -21],
     colors: { robe: '#6b5a4a', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -1,6 +1,6 @@
 // Luke 2:41-50: Mary and Joseph find the twelve-year-old Jesus in the temple, among the teachers.
 // x is east, z is south. The sanctuary rises to the north beyond the inner court's terrace.
-import { Batch, DAY_STYLE, PALETTE, box, cyl, glow, makeRng, person, portico, xf } from './lib/nt-01-kit.js';
+import { Batch, DAY_STYLE, PALETTE, ball, box, cyl, glow, makeRng, person, portico, xf } from './lib/nt-01-kit.js';
 
 const BOY = [0, -12];
 const WHITE = '#f1e9d6';
@@ -24,9 +24,44 @@ function custom(ctx) {
   b.add(GOLD, box(43, 1.2, 7.6, [0, ty + 31.4, -80]), { emissive: '#4a3010' });
   b.add(GOLD, box(27, 1.2, 26.6, [0, ty + 24.2, -96]), { emissive: '#4a3010' });
   for (let i = 0; i < 20; i++) b.add(GOLD, xf(new THREE.ConeGeometry(0.25, 1.6, 6), { pos: [-20 + i * 2.1, ty + 32.8, -77] }), { emissive: '#4a3010' });
-  for (const h of [20.5, 26]) b.add('#e3d4b4', box(42.6, 0.7, 7.6, [0, ty + h, -80]));
-  for (let i = 0; i < 8; i++) if (Math.abs(i - 3.5) > 1) b.add('#d8c8a6', box(1.6, 19, 0.5, [-17.5 + i * 5, ty + 9.5, -76.4]));
+  for (const h of [20.5, 26]) b.add(GOLD, box(42.6, 0.7, 7.6, [0, ty + h, -80]), { emissive: '#4a3010' });
+  for (let i = 0; i < 10; i++) b.add('#5a4a3a', box(1.4, 3, 0.3, [-15.75 + i * 3.5, ty + 23.3, -76.4]), { cast: false });
+  for (let i = 0; i < 6; i++) b.add('#5a4a3a', box(1.6, 3.6, 0.3, [(i < 3 ? -18.5 : 9.5) + (i % 3) * 4.5, ty + 28.6, -76.4]), { cast: false });
+
+  // Porch columns with gold capitals, an entablature and the golden vine over the doorway.
+  for (const x of [-19.5, -15.5, -11.5, -7, 7, 11.5, 15.5, 19.5]) {
+    b.add('#f6efe0', cyl(0.85, 0.95, 16.5, [x, ty + 3 + 8.25, -75.4], [0, 0, 0], 14));
+    b.add(GOLD, box(2.4, 1, 2.4, [x, ty + 19.9, -75.4]), { emissive: '#4a3010' });
+    b.add('#e3d4b4', box(2.4, 0.6, 2.4, [x, ty + 3.3, -75.4]));
+  }
+  b.add('#f6efe0', box(42.6, 1.4, 2.6, [0, ty + 21.1, -75.6]));
+  b.add(GOLD, box(42.8, 0.4, 2.8, [0, ty + 21.9, -75.6]), { emissive: '#4a3010' });
+  for (let i = 0; i < 26; i++) {
+    const x = -4.6 + i * 0.37;
+    b.add(GOLD, ball(0.32 + (i % 3) * 0.06, [x, ty + 18.5 - Math.abs(Math.sin(i * 0.9)) * 0.7, -76.0], [1, 1.2, 0.7], 8), { emissive: '#5a3a10' });
+  }
   ctx.addCollider({ x: 0, z: -88, hx: 21, hz: 12, rot: 0, top: ty + 32 });
+
+  // Twelve steps up to the porch.
+  for (let i = 0; i < 12; i++) {
+    const h = 3 - i * 0.25, d = 2 + (i + 1) * 0.5;
+    b.add(i % 2 ? '#efe3c2' : '#e3d4b4', box(30 - i * 0.4, h, d, [0, ty + h / 2, -76.5 + d / 2]));
+    ctx.addCollider({ x: 0, z: -76.5 + d - 0.25, hx: 15 - i * 0.2, hz: 0.25, rot: 0, top: ty + h });
+  }
+  ctx.addCollider({ x: 0, z: -75.5, hx: 15, hz: 1, rot: 0, top: ty + 3 });
+
+  // A colonnade lines the inner court wall facing the outer court.
+  const cy = ctx.terrainHeight(0, -34);
+  for (const sx of [-1, 1]) {
+    for (let i = 0; i < 9; i++) {
+      const x = sx * (9.5 + i * 4.2);
+      b.add(WHITE, cyl(0.42, 0.5, 8.2, [x, cy + 4.1, -33.6], [0, 0, 0], 10));
+      b.add(GOLD, box(1.2, 0.45, 1.2, [x, cy + 8.3, -33.6]), { emissive: '#4a3010' });
+      ctx.addCollider({ x, z: -33.6, hx: 0.5, hz: 0.5, rot: 0, top: cy + 8.2 });
+    }
+    b.add('#c8a878', box(36, 0.9, 4.2, [sx * 26.3, cy + 8.9, -35.2]));
+    b.add(WHITE, box(36, 0.5, 4.4, [sx * 26.3, cy + 9.5, -35.2]));
+  }
   // Altar of sacrifice with its ramp, smoke rising.
   b.add('#e3d8c2', box(9, 4, 9, [-16, ty + 2, -58]));
   b.add('#d8ccb4', box(3, 4, 8, [-16, ty + 2, -50.5]));
@@ -39,11 +74,12 @@ function custom(ctx) {
     ctx.addCollider({ x: sx * 25, z: -36, hx: 18, hz: 0.8, rot: 0, top: ty + 5 });
   }
   for (const sx of [-1, 1]) {
-    b.add('#e8dcc2', box(3, 9, 3, [sx * 5, ty + 4.5, -36]));
-    ctx.addCollider({ x: sx * 5, z: -36, hx: 1.5, hz: 1.5, rot: 0, top: ty + 9 });
+    b.add('#e8dcc2', box(2.4, 6, 2.4, [sx * 5, ty + 3, -36]));
+    b.add(GOLD, box(2.7, 0.5, 2.7, [sx * 5, ty + 5.7, -36]), { emissive: '#4a3010' });
+    ctx.addCollider({ x: sx * 5, z: -36, hx: 1.2, hz: 1.2, rot: 0, top: ty + 6 });
   }
-  b.add('#e8dcc2', box(13, 1.6, 3, [0, ty + 8.6, -36]));
-  b.add(GOLD, box(7, 0.6, 3.2, [0, ty + 7.6, -36]), { emissive: '#4a3010' });
+  b.add('#e8dcc2', box(12.4, 1, 2.6, [0, ty + 6.5, -36]));
+  b.add('#b07a3a', box(7.6, 0.5, 2.8, [0, ty + 5.8, -36]), { emissive: '#3a2008' });
 
   const gy = ctx.terrainHeight(0, 0);
   portico(b, ctx, { from: [-46, -30], to: [-46, 40], depth: 7, height: 8, count: 12, color: WHITE, roof: '#c8a878', y: gy });
@@ -119,7 +155,7 @@ export default {
     ],
   },
   player: {
-    start: [1.8, -2.5],
+    start: [1.4, -3.6],
     lookAt: BOY,
     colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

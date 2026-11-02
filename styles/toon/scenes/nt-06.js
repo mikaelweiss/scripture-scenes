@@ -1,9 +1,10 @@
 // Matthew 3:13-17: John baptizes Jesus in the Jordan; the heavens open and the Spirit descends like a dove.
 // x is east, z is south. The river runs east-west in front of the player; the wilderness rises to the north.
-import { Batch, DAY_STYLE, PALETTE, dove, glow, makeRng, palm, person, reeds, river, bush } from './lib/nt-01-kit.js';
+import { Batch, DAY_STYLE, PALETTE, bush, dove, glow, makeRng, palm, person, reeds, river, xf } from './lib/nt-01-kit.js';
 
-const JESUS = [-0.6, -9.6];
-const JOHN = [0.9, -9.2];
+const JESUS = [-0.6, -6.6];
+const JOHN = [0.9, -6.2];
+const FORD_X = 16;
 const RIVER = [[-260, -2], [-150, -14], [-70, -6], [-20, -11], [20, -9], [70, -14], [150, -4], [260, -12]];
 
 function custom(ctx) {
@@ -11,7 +12,26 @@ function custom(ctx) {
   const b = new Batch(ctx);
   const rng = makeRng(606);
 
-  river(ctx, { points: RIVER, width: 15, color: '#4f9aa0', bank: '#b8a070', glint: '#e9f6f0', flow: 1.2, glints: 140 });
+  const pts = river(ctx, { points: RIVER, width: 15, color: '#4f9aa0', bank: '#b8a070', glint: '#e9f6f0', flow: 1.2, glints: 140 });
+
+  // The water is a surface over dry ground, so the player stays on the banks except at a stone ford.
+  pts.forEach(([x, z], i) => {
+    if (i === pts.length - 1 || Math.abs(x - FORD_X) < 2.2) return;
+    const [nx, nz] = pts[i + 1];
+    const half = 15 * (1 + 0.12 * Math.sin(i * 0.7)) * 0.5;
+    ctx.addCollider({ x: (x + nx) / 2, z: (z + nz) / 2, hx: Math.hypot(nx - x, nz - z) / 2 + 0.3, hz: half, rot: -Math.atan2(nz - z, nx - x), top: 99 });
+  });
+  const fz = -10 + (FORD_X + 20) / 40 * 2;
+  let fy = -Infinity;
+  for (let z = fz - 10; z <= fz + 10; z += 1) fy = Math.max(fy, ctx.terrainHeight(FORD_X, z));
+  fy += 0.26;
+  ctx.addCollider({ x: FORD_X, z: fz, hx: 1, hz: 9.5, rot: 0, top: fy });
+  for (let z = fz - 9.6; z <= fz + 9.6; z += 0.75) {
+    for (const s of [-1, 1]) {
+      const r = 0.42 + rng() * 0.18;
+      b.add(rng() < 0.5 ? '#b8ab98' : '#a89a86', xf(new THREE.CylinderGeometry(r, r * 1.15, 0.5, 7), { pos: [FORD_X + s * 0.5 + (rng() - 0.5) * 0.2, fy - 0.25, z + (rng() - 0.5) * 0.2], rot: [0, rng() * 3, 0] }));
+    }
+  }
   reeds(ctx, { points: RIVER, offset: 8, spread: 3, count: 900, seed: 6, skip: (x, z) => Math.abs(x) < 30 && z > -10 });
   for (let i = 0; i < RIVER.length - 1; i++) {
     const [ax, az] = RIVER[i], [bx, bz] = RIVER[i + 1];
@@ -66,7 +86,7 @@ export default {
     ],
   },
   light: {
-    beams: [{ from: [JESUS[0], 160, JESUS[1] - 6], to: { at: JESUS, lift: 1.2 }, width: [12, 3.5], color: '#fff2c9', intensity: 0.25, layers: 3, stripes: 22, fadeLow: 0.04 }],
+    beams: [{ from: [JESUS[0], 160, JESUS[1] - 6], to: { at: JESUS, lift: 1.2 }, width: [12, 3.5], color: '#fff2c9', intensity: 0.38, layers: 3, stripes: 22, fadeLow: 0.04 }],
     rayFans: [{ source: [0, 110, -20], sourceJitter: 30, target: JESUS, groundY: 0.5, spread: [10, 40], count: 8, width: [[3, 5], [5, 9]], color: '#fff0c4', intensity: 0.22, stripes: 9, fadeLow: 0.3 }],
     glows: [{ at: JESUS, lift: 1.1, size: 5, color: '#fff3d0', opacity: 0.6 }],
   },
@@ -83,8 +103,8 @@ export default {
     ],
   },
   player: {
-    start: [1.2, -0.5],
-    lookAt: JESUS,
+    start: [2.4, -0.6],
+    lookAt: [2.6, -7],
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
