@@ -33,6 +33,47 @@ function bush(ctx) {
   ctx.effects.motes({ position: [x, top, z], radius: 1.4, height: 9, count: 90, color: '#ffc870', size: 0.05, seed: 16 });
 }
 
+// Horeb as one ridged massif: each peak is a sharp cone, and taking the highest cone at every point leaves saddles and ridgelines between summits.
+function massif(ctx) {
+  const peaks = [
+    [-30, -230, 125, 115],
+    [-100, -250, 95, 80],
+    [40, -248, 100, 85],
+    [-175, -275, 72, 85],
+    [115, -285, 80, 95],
+    [-68, -190, 55, 55],
+    [4, -185, 48, 50],
+  ];
+  const base = ctx.heightAt(0, -200) - 8;
+  const geo = new THREE.PlaneGeometry(560, 300, 84, 44).rotateX(-Math.PI / 2).translate(-35, 0, -260).toNonIndexed();
+  const pos = geo.attributes.position;
+  const heightAt = (x, z) => {
+    let h = 0;
+    for (const [px, pz, ph, pr] of peaks) {
+      const k = Math.max(0, 1 - Math.hypot((x - px) * 0.85, z - pz) / pr);
+      h = Math.max(h, ph * Math.pow(k, 1.25));
+    }
+    const ridges = Math.abs(Math.sin(x * 0.07 + z * 0.03)) * 9 + Math.sin(x * 0.19 - z * 0.11) * 3;
+    return h + ridges * Math.min(1, h / 30);
+  };
+  for (let i = 0; i < pos.count; i++) pos.setY(i, base + heightAt(pos.getX(i), pos.getZ(i)));
+  geo.computeVertexNormals();
+  const col = new Float32Array(pos.count * 3);
+  const low = new THREE.Color('#7a5a4c'), mid = new THREE.Color('#9a6a56'), high = new THREE.Color('#b88470'), c = new THREE.Color();
+  const nrm = geo.attributes.normal;
+  for (let i = 0; i < pos.count; i += 3) {
+    const y = (pos.getY(i) + pos.getY(i + 1) + pos.getY(i + 2)) / 3 - base;
+    const steep = 1 - nrm.getY(i);
+    c.copy(low).lerp(mid, Math.min(1, y / 60)).lerp(high, Math.max(0, Math.min(1, (y - 60) / 60)));
+    c.multiplyScalar(1 - steep * 0.35 + (ctx.rand() - 0.5) * 0.08);
+    for (let k = 0; k < 3; k++) col.set([c.r, c.g, c.b], (i + k) * 3);
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
+  mesh.receiveShadow = true;
+  ctx.scene.add(mesh);
+}
+
 export default {
   title: 'Exodus 3:1-6: The burning bush',
   seed: 3,
@@ -44,18 +85,18 @@ export default {
   sky: { top: '#2a3060', horizon: '#e88a5a', ground: '#7a5a50', sunColor: '#ffb070', glow: 1.3 },
   fog: { color: '#8a6a6a', near: 60, far: 520 },
   clouds: { count: 40, shadow: '#3a3048', lit: '#f08a60', rim: '#ffd0a0', distance: [260, 900], altitude: [90, 220], hole: 0.15 },
-  mountains: { count: 50, color: '#4a4048', radius: [450, 700], height: [80, 200], haze: 0.45 },
+  mountains: { count: 50, color: '#4a3c48', radius: [500, 760], height: [40, 110], haze: 0.5 },
   bloom: { strength: 0.8, radius: 0.6, threshold: 0.8 },
   grade: { saturation: 1.12, contrast: 1.08, vignette: 0.5, shadowTint: '#2a2050', highlightTint: '#ffd6a8' },
   shadow: { center: [0, -8], radius: 45 },
 
-  player: { start: [3, 0], yaw: 0.12, pitch: 0.02, eye: 1.65, speed: 4 },
+  player: { start: [2.6, -3.6], yaw: 0.26, pitch: 0.1, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
     segments: 220,
     seed: 30,
-    hills: 70,
+    hills: 38,
     hillScale: 0.009,
     bumps: 0.6,
     flats: [{ x: 0, z: -4, r: 22, falloff: 40, height: 4 }],
@@ -70,14 +111,11 @@ export default {
 
   custom(ctx) {
     bush(ctx);
-    // Horeb's peak rising behind the bush.
-    for (const [x, z, r, h, c] of [[-10, -190, 70, 95, '#7a6460'], [50, -210, 60, 70, '#806a62'], [-80, -200, 55, 60, '#74605a'], [10, -170, 40, 45, '#86706a']]) {
-      ctx.solid.add(new THREE.DodecahedronGeometry(1, 0), { position: [x, ctx.heightAt(x, z) - h * 0.35, z], rotation: [0.15, ctx.rand() * 3, 0.1], scale: [r * 1.3, h, r], color: c, jitter: 0.1 });
-    }
+    massif(ctx);
 
     // Moses kneels with his face hidden, shoes off, staff laid beside him.
     const M = [-2.0, -10.2];
-    person(ctx, { x: M[0], z: M[1], face: BUSH, robe: '#8a6a48', mantle: '#5a4434', hood: true, skin: '#9b6a46', pose: 'kneel', arms: 'face' });
+    person(ctx, { x: M[0], z: M[1], face: BUSH, robe: '#a87e56', mantle: '#74563e', hood: true, skin: '#9b6a46', pose: 'kneel', arms: 'face' });
     const y = ctx.heightAt(M[0], M[1]);
     for (const dx of [1.0, 1.25]) ctx.solid.box(0.12, 0.05, 0.28, { position: [M[0] + dx, ctx.heightAt(M[0] + dx, M[1] + 1.2) + 0.03, M[1] + 1.2], rotation: [0, 0.3, 0], color: '#5a3a24' });
     ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.035, 1.9, 5), { position: [M[0] - 0.8, y + 0.06, M[1] + 0.3], rotation: [0, 0.4, Math.PI / 2], color: '#5a4030' });

@@ -35,7 +35,7 @@ function mainHouse(ctx) {
   const light = new THREE.PointLight('#ffb070', 22, 14, 1.3);
   light.position.set(x, y + 2.4, z - 0.8);
   ctx.scene.add(light);
-  const spill = new THREE.PointLight('#ffa860', 6, 7, 1.4);
+  const spill = new THREE.PointLight('#ffa860', 9, 9, 1.4);
   spill.position.set(x, y + 1.6, z + 4.6);
   ctx.scene.add(spill);
   // table with the roasted lamb, unleavened bread and bitter herbs
@@ -68,7 +68,7 @@ function mainHouse(ctx) {
   const [bx, bz] = [x + 1.6, z + 4.3];
   ctx.solid.add(new THREE.CylinderGeometry(0.35, 0.25, 0.25, 8), { position: [bx, y + 0.13, bz], color: '#8a6a4a' });
   ctx.solid.add(new THREE.CircleGeometry(0.3, 8).rotateX(-Math.PI / 2), { position: [bx, y + 0.26, bz], color: '#5a0a0c' });
-  ctx.solid.add(new THREE.CylinderGeometry(0.015, 0.015, 0.6, 4), { position: [bx + 0.15, y + 0.3, bz], rotation: [0, 0, 0.6], color: '#6a7a3a' });
+  ctx.solid.add(new THREE.CylinderGeometry(0.015, 0.015, 0.6, 4), { position: [bx + 0.15, y + 0.3, bz], rotation: [0, 0, -0.6], color: '#6a7a3a' });
   ctx.solid.add(new THREE.IcosahedronGeometry(0.1, 0), { position: [bx + 0.3, y + 0.55, bz], color: '#5a7a3a' });
 }
 
@@ -78,8 +78,8 @@ export default {
   fov: 62,
   exposure: 1.1,
 
-  sun: { direction: [0.35, 0.5, 0.8], color: '#6a84c8', intensity: 0.75 },
-  light: { sky: '#3a4a88', ground: '#2a2232', hemi: 0.95 },
+  sun: { direction: [0.35, 0.5, 0.8], color: '#7a94d8', intensity: 1.1 },
+  light: { sky: '#4a5a98', ground: '#3a3040', hemi: 1.15 },
   sky: { top: '#060a1e', horizon: '#1e2a4a', ground: '#141420', sunColor: '#8aa0d0', glow: 0.25 },
   fog: { color: '#141a30', near: 30, far: 200 },
   mountains: { count: 30, color: '#141828', radius: [420, 600], height: [20, 50], haze: 0.4 },
@@ -87,7 +87,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.1, vignette: 0.5, shadowTint: '#101830', highlightTint: '#ffd6a0' },
   shadow: { center: [0, -2], radius: 40 },
 
-  player: { start: [1.2, 4.2], yaw: 0.05, pitch: -0.02, eye: 1.65, speed: 3.5 },
+  player: { start: [0.9, 0.9], yaw: 0.06, pitch: 0.0, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 600,

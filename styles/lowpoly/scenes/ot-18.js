@@ -71,7 +71,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.5, shadowTint: '#101a38', highlightTint: '#ffcf98' },
   shadow: { center: [0, -60], radius: 70 },
 
-  player: { start: [-3, -120], yaw: Math.PI, pitch: -0.13, eye: 1.65, speed: 5 },
+  player: { start: [-3, -119], yaw: Math.PI, pitch: -0.06, eye: 1.65, speed: 5 },
 
   terrain: {
     size: 1000,
@@ -82,6 +82,7 @@ export default {
     flats: [...seaFlats, { x: -3, z: -124, r: 7, falloff: 16, height: 9 }],
     colors: { ground: '#7a6a54', groundAlt: '#6e5e4a', grass: '#5a5a3a', high: '#7a6a54', rock: '#5e5244' },
     patches: [
+      { x: -3, z: -121, r: 10, color: '#a08870', strength: 0.6, rough: 0.4 },
       { x: 0, z: -60, r: 14, color: '#5e5446', strength: 0.7, rough: 0.4 },
       { x: 0, z: -20, r: 14, color: '#5e5446', strength: 0.7, rough: 0.4 },
       { x: 0, z: 20, r: 14, color: '#5e5446', strength: 0.7, rough: 0.4 },

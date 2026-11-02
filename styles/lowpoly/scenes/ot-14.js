@@ -99,7 +99,7 @@ function shafts(ctx, sunDir) {
 export default {
   title: 'Genesis 45:1-15: Joseph reveals himself',
   seed: 45,
-  fov: 62,
+  fov: 54,
   exposure: 1.05,
 
   sun: { direction: [0.62, 0.72, 0.1], color: '#ffd8a0', intensity: 3.2 },
@@ -110,7 +110,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.45, shadowTint: '#3a2a40', highlightTint: '#ffe2b0' },
   shadow: { center: [0, (Z0 + Z1) / 2], radius: 30 },
 
-  player: { start: [0.5, 2.8], yaw: 0.02, pitch: -0.02, eye: 1.65, speed: 3.5 },
+  player: { start: [0.3, -0.2], yaw: 0.0, pitch: 0.02, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 400,
@@ -143,12 +143,12 @@ export default {
     const brothers = [
       [-2.6, -6.4, 'stand', 'face', '#8b6b4a', '#5a3d2b'],
       [-1.6, -4.4, 'kneel', 'down', '#a0825c', null],
-      [2.2, -5.0, 'bow', 'down', '#7a4e36', '#3f4d5e'],
+      [2.2, -5.0, 'kneel', 'forward', '#7a4e36', '#3f4d5e'],
       [3.2, -6.6, 'stand', 'face', '#6e5a44', '#8a7a5a'],
       [-4.4, -4.6, 'stand', 'down', '#94704e', '#556246'],
       [4.6, -3.6, 'kneel', 'down', '#5e4b3a', '#a34f32'],
       [-3.6, -2.4, 'stand', 'face', '#b59a72', '#6d3b2e'],
-      [-5.4, -6.8, 'bow', 'down', '#6b6f4a', null],
+      [-5.4, -6.8, 'kneel', 'face', '#6b6f4a', null],
       [3.4, -2.0, 'stand', 'open', '#9a4a34', '#5a3d2b'],
       [5.6, -6.0, 'stand', 'down', '#4f5a6b', '#8a7a5a'],
     ];

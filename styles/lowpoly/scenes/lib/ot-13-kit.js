@@ -1,5 +1,6 @@
 // Shared props for ot-13 through ot-18: people with poses, animals, water, fire, Egyptian buildings, night sky.
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { parts } from '../../engine/crowd.js';
 
 export function frame(x, z, rot = 0) {
@@ -31,6 +32,17 @@ function paint(geo, colorAt) {
   g.setAttribute('color', new THREE.BufferAttribute(col, 3));
   g.computeVertexNormals();
   return g;
+}
+
+// Straight-cut Egyptian bob: a crown dome whose front edge is the fringe, and a skirt cut level at the jaw.
+function bobWig(color) {
+  const faceGap = Math.PI * 0.62;
+  const dome = new THREE.SphereGeometry(0.168, 10, 4, 0, Math.PI * 2, 0, Math.PI / 2).scale(1.05, 0.9, 1.08).translate(0, 1.565, -0.005);
+  const skirt = new THREE.CylinderGeometry(0.176, 0.2, 0.24, 10, 1, true, faceGap / 2, Math.PI * 2 - faceGap).translate(0, 1.445, -0.012);
+  const hem = new THREE.RingGeometry(0.15, 0.2, 10, 1, Math.PI / 2 + faceGap / 2, Math.PI * 2 - faceGap).rotateX(Math.PI / 2).translate(0, 1.326, -0.012);
+  const shade = (y) => new THREE.Color(y < 1.45 ? 0.8 : 1, y < 1.45 ? 0.8 : 1, y < 1.45 ? 0.8 : 1);
+  const merged = mergeGeometries([dome, skirt, hem].map((g) => paint(g, shade)));
+  return new THREE.Mesh(merged, new THREE.MeshLambertMaterial({ color, vertexColors: true, flatShading: true, side: THREE.DoubleSide }));
 }
 
 const ARM_POSES = { down: [0.12, 0.05], out: [0.95, 0.35], up: [2.75, 0.2], forward: [0.18, 1.35], open: [0.7, 0.9], face: [0.5, 2.3] };
@@ -69,14 +81,7 @@ export function person(ctx, o) {
     if (ra === 'forward') s.rotation.x = 0.9;
     group.add(s);
   }
-  if (nemes) {
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, 0.3, 8, 1).translate(0, 1.62, -0.085), mat(nemes));
-    group.add(cap);
-    for (const side of [-1, 1]) {
-      const lap = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3, 0.06).translate(side * 0.15, 1.38, 0.06), mat(nemes));
-      group.add(lap);
-    }
-  }
+  if (nemes) group.add(bobWig(nemes));
   if (collar) group.add(new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.27, 0.07, 10).translate(0, 1.35, 0), mat(collar, 0.25)));
   if (belt) group.add(new THREE.Mesh(new THREE.CylinderGeometry(0.235, 0.24, 0.08, 7).translate(0, 0.86, 0), mat(belt, 0.1)));
 

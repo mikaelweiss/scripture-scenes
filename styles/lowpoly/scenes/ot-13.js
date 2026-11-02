@@ -72,7 +72,7 @@ function caravan(ctx) {
 export default {
   title: 'Genesis 37:23-28: Joseph sold into Egypt',
   seed: 37,
-  fov: 60,
+  fov: 50,
   exposure: 1.0,
 
   sun: { direction: [0.7, 0.45, 0.35], color: '#ffd29a', intensity: 3.0 },
@@ -85,7 +85,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.38, shadowTint: '#3a2e50', highlightTint: '#ffe6c0' },
   shadow: { center: [0, -12], radius: 60 },
 
-  player: { start: [2.5, 1.2], yaw: 0.1, pitch: -0.17, eye: 1.65, speed: 4.5 },
+  player: { start: [1.4, 1.0], yaw: 0.12, pitch: -0.13, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -143,13 +143,13 @@ export default {
     const brothers = [
       [-3.4, -6.5, robes.brown, '#7d5c3e', 'down'],
       [-4.2, -3.6, robes.olive, null, 'forward'],
-      [3.6, -5, robes.tan, '#5a3d2b', 'down'],
+      [4.0, -5.4, robes.tan, '#8a6a48', 'out'],
       [-4.6, -1.2, robes.grey, '#8a7a5a', 'down'],
-      [6.2, -4.6, robes.dark, null, 'down'],
+      [7.4, -6.8, robes.grey, '#7d5c3e', 'down'],
       [-5.5, -8.4, robes.tan, '#556246', 'down'],
       [5.4, -7.2, robes.brown, null, 'down'],
     ];
-    for (const [x, z, robe, mantle, arms] of brothers) person(ctx, { x, z, face: [1.5, -9.5], robe, mantle, skin: ctx.rand.pick(['#8a5a3c', '#9b6a46', '#a87652']), arms, staff: arms === 'down' && ctx.rand() < 0.5, hood: ctx.rand() < 0.3 });
+    for (const [x, z, robe, mantle, arms] of brothers) person(ctx, { x, z, face: [x > 0 ? 0.5 : -0.5, -8], robe, mantle, skin: ctx.rand.pick(['#8a5a3c', '#9b6a46', '#a87652']), arms, staff: arms === 'down' && ctx.rand() < 0.5, hood: ctx.rand() < 0.3 });
 
     // Their father's flock grazing on the hillside.
     for (let i = 0; i < 46; i++) {

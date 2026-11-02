@@ -30,7 +30,7 @@ function basket(ctx) {
   const cloth = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.08, 0.3), new THREE.MeshLambertMaterial({ color: '#efe8d8' }));
   cloth.position.set(0, 0.06, 0.25);
   g.add(cloth);
-  g.scale.setScalar(1.4);
+  g.scale.setScalar(1.8);
   g.position.set(BASKET[0], WATER_Y, BASKET[1]);
   g.rotation.y = 0.6;
   g.traverse((m) => (m.castShadow = true));
@@ -44,7 +44,7 @@ function basket(ctx) {
 export default {
   title: 'Exodus 2:1-10: Moses in the bulrushes',
   seed: 2,
-  fov: 60,
+  fov: 44,
   exposure: 1.0,
 
   sun: { direction: [0.8, 0.35, -0.3], color: '#ffd6a0', intensity: 3.0 },
@@ -57,7 +57,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.35, shadowTint: '#2a3a50', highlightTint: '#ffe8c4' },
   shadow: { center: [0, -6], radius: 40 },
 
-  player: { start: [0.8, 1.8], yaw: -0.02, pitch: -0.1, eye: 1.65, speed: 4 },
+  player: { start: [4.6, 3.2], yaw: 0.1, pitch: -0.04, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 640,
@@ -82,7 +82,7 @@ export default {
     ctx.scene.add(far);
 
     basket(ctx);
-    reeds(ctx, { x: 5.8, z: -10.5, r: 2.4, count: 70, papyrus: 0.5, minY: -0.9 });
+    reeds(ctx, { x: 7.0, z: -11.6, r: 2.0, count: 60, papyrus: 0.5, minY: -0.9 });
     reeds(ctx, { x: 1.0, z: -11.8, r: 1.8, count: 40, papyrus: 0.5, minY: -0.9 });
     reeds(ctx, { x: 4.0, z: -13.2, r: 2.2, count: 50, papyrus: 0.5, minY: -0.9 });
     reeds(ctx, { x: 9.5, z: -7.5, r: 2.6, count: 70, papyrus: 0.45, minY: -0.9 });
@@ -92,7 +92,7 @@ export default {
     }
     for (let x = -80; x < 80; x += 5 + ctx.rand() * 6) reeds(ctx, { x, z: RIVER_Z - 15 + ctx.rand.range(-2, 1), r: ctx.rand.range(1.5, 3), count: 25, papyrus: 0.5, minY: -0.9 });
 
-    palm(ctx, { x: -9, z: -3, h: 8 });
+    palm(ctx, { x: -13, z: -6.5, h: 8 });
     palm(ctx, { x: -11.5, z: 1, h: 6.5 });
     palm(ctx, { x: 14, z: -2, h: 7.5 });
     palm(ctx, { x: 17, z: 3, h: 9 });
@@ -103,18 +103,18 @@ export default {
 
     // Pharaoh's daughter at the water's edge, pointing to the ark.
     const linen = '#f4efe2';
-    person(ctx, { x: -1.2, z: -6.6, face: BASKET, robe: linen, skin: '#a87652', arms: ['down', 'forward'], collar: '#d6a83a', nemes: '#1e1712', belt: '#2f6aa0', scale: 1.02 });
+    person(ctx, { x: -1.2, z: -6.6, face: BASKET, robe: linen, skin: '#a87652', arms: ['down', 'forward'], collar: '#d6a83a', nemes: '#2e2620', belt: '#2f6aa0', scale: 1.02 });
     // Her maid wading out to fetch it.
-    person(ctx, { x: 2.2, z: -9.6, y: -0.95, face: BASKET, robe: '#e6dcc4', skin: '#9b6a46', arms: 'forward', nemes: '#1e1712' });
+    person(ctx, { x: 2.2, z: -9.6, y: -0.95, face: BASKET, robe: '#e6dcc4', skin: '#9b6a46', arms: 'forward', nemes: '#2e2620' });
     // Her maidens walking along the river's side.
     const maidens = [[-4.4, -5.2], [-5.8, -3.4], [-3.2, -3.2], [-7.2, -5.8]];
-    maidens.forEach(([x, z], i) => person(ctx, { x, z, face: [-1, -7], robe: i % 2 ? '#e8e0c8' : '#d8ccb0', skin: '#9b6a46', nemes: '#1e1712', collar: i === 0 ? '#3f8a8a' : null, arms: i === 2 ? 'face' : 'down' }));
+    maidens.forEach(([x, z], i) => person(ctx, { x, z, face: [-1, -7], robe: i % 2 ? '#e8e0c8' : '#d8ccb0', skin: '#9b6a46', nemes: '#2e2620', collar: i === 0 ? '#3f8a8a' : null, arms: i === 2 ? 'face' : 'down' }));
     // A parasol carried by one of them.
     ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 5), { position: [-5.6, 1.3, -3.1], color: '#6a4a2c' });
     ctx.solid.add(new THREE.ConeGeometry(1.1, 0.4, 8), { position: [-5.6, 2.7, -3.1], color: '#e8d8a8' });
     // Miriam, watching from the reeds.
-    person(ctx, { x: 10.4, z: -5.6, face: BASKET, robe: '#7a5a3c', mantle: '#a34f32', hood: true, skin: '#9b6a46', pose: 'kneel', scale: 0.8 });
-    reeds(ctx, { x: 11.2, z: -4.2, r: 1.4, count: 30, papyrus: 0.3 });
+    person(ctx, { x: 7.6, z: -4.6, face: BASKET, robe: '#7a5a3c', mantle: '#a34f32', hood: true, skin: '#9b6a46', pose: 'kneel', scale: 0.8 });
+    reeds(ctx, { x: 8.6, z: -3.6, r: 1.1, count: 22, papyrus: 0.3 });
 
     // washing jars and folded linen on the bank
     for (const [x, z, c] of [[-6.2, -1.6, '#b0603a'], [-6.7, -1.1, '#c0784a'], [-5.6, -0.9, '#a8583a']]) {
