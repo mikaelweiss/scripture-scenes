@@ -10,7 +10,7 @@ const ALMA = [-3, -24];
 const column = columnGroups(PATH, { width: 4, density: 1.6, spacing: 0.9, seed: 52, children: 0.28, skipNear: [[ALMA[0], ALMA[1], 1.5], [4, -46, 3], [8, -76, 3], [5, -110, 3]] });
 
 const guardPalette = {
-  robes: ['#7a3a28', '#6b4a32', '#5a3a2a', '#8a5a3a', '#4e3a2e'],
+  robes: ['#a8402a', '#b0703a', '#5a4a6a', '#8a8a5a', '#c89a5a', '#6a2a2a'],
   mantles: ['#2e2a26', '#5a2a1e', '#3e3a30', '#9a6a2a'],
   skins: ['#6a4228', '#7a4c31', '#5e3a24'],
 };
@@ -19,10 +19,10 @@ export default {
   title: "Mosiah 24:13-25: Alma's people made free",
   seed: 20,
   fov: 60,
-  exposure: 1.0,
+  exposure: 1.15,
 
   sun: { direction: [0.42, 0.22, -0.86], color: '#ffb87a', intensity: 3.0 },
-  light: { sky: '#a8b4e0', ground: '#7a6050', hemi: 1.5 },
+  light: { sky: '#b8c0e8', ground: '#9a7a5a', hemi: 1.9 },
   sky: { top: '#4b5d92', horizon: '#ffb88e', ground: '#d0a088', sunColor: '#ffd6a0', glow: 1.5 },
   fog: { color: '#d9ab94', near: 70, far: 520 },
   clouds: { count: 18, shadow: '#8a7a98', lit: '#ffb09a', rim: '#fff0d0', distance: [300, 900], altitude: [140, 280], hole: 0.25 },
@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2e60', highlightTint: '#ffe2c0' },
   shadow: { center: [-5, -15], radius: 70 },
 
-  player: { start: [13, -2], yaw: 0.36, pitch: 0.0, eye: 1.65, speed: 4.5 },
+  player: { start: [12.5, -5.5], yaw: 0.66, pitch: -0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -49,7 +49,7 @@ export default {
 
   scatter: [
     { type: 'tree', count: 70, center: [0, -40], ring: [55, 260], spacing: 8, seed: 8, avoid: [{ rect: [3, -120, 30, 220] }], props: { kind: 'broad', leaf: '#5a7038' } },
-    { type: 'tree', count: 10, center: [-40, 20], ring: [8, 40], spacing: 8, seed: 18, avoid: [{ r: 12, x: CAMP[0], z: CAMP[1] }, { r: 6, x: 13, z: 3 }], props: { kind: 'palm', leaf: '#5f7a3a' } },
+    { type: 'tree', count: 10, center: [-40, 20], ring: [8, 40], spacing: 8, seed: 18, avoid: [{ r: 12, x: CAMP[0], z: CAMP[1] }, { r: 6, x: 12.5, z: -5.5 }], props: { kind: 'palm', leaf: '#5f7a3a' } },
     { type: 'rock', count: 30, center: [0, -60], ring: [40, 220], spacing: 12, seed: 10, avoid: [{ rect: [3, -120, 30, 220] }], props: {} },
   ],
 

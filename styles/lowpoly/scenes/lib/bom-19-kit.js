@@ -33,23 +33,24 @@ function box(ctx, w, h, d, position, rot, color, { tilt = [0, 0], collide = fals
   if (collide) ctx.colliders.add({ x: position[0], z: position[2], w, d, rot, bottom: position[1] - h / 2, top: position[1] + h / 2 });
 }
 
-// A person lying on the ground, head toward local +z.
-export function sleeper(ctx, x, z, rot, { robe = '#7a4e36', skin = '#8a5a3c', mantle, scale = 1, y, side = 0 } = {}) {
-  const base = y ?? ctx.heightAt(x, z);
-  const at = frame(x, z, rot);
+// A person lying on the back, head toward local +z: robed legs with feet up, torso, head with hair, one arm under the head.
+export function sleeper(ctx, x, z, rot, { robe = '#7a4e36', skin = '#8a5a3c', mantle, scale = 1, y, side = 0, hair = '#2a1e16' } = {}) {
+  const base = (y ?? ctx.heightAt(x, z)) - 0.03;
   const s = scale;
-  const [bx, bz] = at(0, 0);
-  ctx.solid.add(new THREE.CylinderGeometry(0.17 * s, 0.27 * s, 1.3 * s, 7), { position: [bx, base + 0.2 * s, bz], rotation: [Math.PI / 2, rot, side], color: robe, shade: darkenBottom });
-  if (mantle) {
-    const [mx, mz] = at(0, 0.35 * s);
-    ctx.solid.add(new THREE.CylinderGeometry(0.21 * s, 0.3 * s, 0.6 * s, 7), { position: [mx, base + 0.22 * s, mz], rotation: [Math.PI / 2, rot, side], color: mantle, shade: darkenBottom });
-  }
-  const [hx, hz] = at(0, 0.8 * s);
-  ctx.solid.add(new THREE.IcosahedronGeometry(0.13 * s, 0), { position: [hx, base + 0.15 * s, hz], rotation: [0, rot, 0], scale: [1, 1, 1.1], color: skin });
-  for (const sd of [-1, 1]) {
-    const [ax, az] = at(sd * 0.3 * s, 0.25 * s);
-    ctx.solid.add(new THREE.CylinderGeometry(0.05 * s, 0.065 * s, 0.6 * s, 5), { position: [ax, base + 0.1 * s, az], rotation: [Math.PI / 2, rot + sd * 0.25, 0], color: mantle ?? robe });
-  }
+  const put = (geo, color, shade) => {
+    geo.rotateZ(side * 0.6).scale(s, s, s);
+    ctx.solid.add(geo, { position: [x, base, z], rotation: [0, rot, 0], color, shade });
+  };
+  put(new THREE.CylinderGeometry(0.19, 0.25, 0.8, 7).rotateX(Math.PI / 2).scale(1.1, 0.7, 1).translate(0, 0.17, -0.42), robe, darkenBottom);
+  for (const sd of [-1, 1]) put(new THREE.BoxGeometry(0.1, 0.16, 0.12).translate(sd * 0.1, 0.16, -0.86), skin);
+  put(new THREE.CylinderGeometry(0.21, 0.2, 0.5, 7).rotateX(Math.PI / 2).scale(1.2, 0.75, 1).translate(0, 0.18, 0.18), mantle ?? robe, darkenBottom);
+  put(new THREE.CylinderGeometry(0.06, 0.06, 0.06, 6).translate(0, 0.32, 0.47), skin);
+  put(new THREE.IcosahedronGeometry(0.14, 0).scale(1, 0.95, 1.1).translate(0, 0.2, 0.62), skin);
+  put(new THREE.IcosahedronGeometry(0.145, 0).scale(1.05, 0.8, 0.95).translate(0, 0.14, 0.67), hair);
+  put(new THREE.CylinderGeometry(0.055, 0.06, 0.5, 5).rotateX(Math.PI / 2 - 0.35).translate(0.24, 0.24, 0.58), mantle ?? robe);
+  put(new THREE.IcosahedronGeometry(0.055, 0).translate(0.14, 0.24, 0.84), skin);
+  put(new THREE.CylinderGeometry(0.055, 0.06, 0.48, 5).rotateZ(Math.PI / 2).rotateY(0.5).translate(-0.04, 0.33, 0.06), mantle ?? robe);
+  put(new THREE.IcosahedronGeometry(0.055, 0).translate(0.17, 0.33, -0.06), skin);
 }
 
 // Sheep, goat or cow facing local +z.
@@ -361,4 +362,68 @@ export function tufts(ctx, { x0, x1, z0, z1, count = 600, colors = ['#5a6a3a', '
       ctx.solid.add(new THREE.ConeGeometry(0.05, hh, 3), { position: [x + r.range(-0.15, 0.15), y + hh / 2 - 0.05, z + r.range(-0.15, 0.15)], rotation: [r.range(-0.4, 0.4), r() * 3, r.range(-0.4, 0.4)], color: col, jitter: 0.1 });
     }
   }
+}
+
+// Hand-held pole torch: wrapped head, flickering flame, small halo and a warm point light.
+export function torch(ctx, x, z, { y, h = 2.1, intensity = 14, distance = 11, color = '#ffa050', lean = 0.12, rot = 0 } = {}) {
+  const base = (y ?? ctx.heightAt(x, z)) + 0.55;
+  const top = frame(x, z, rot)(0, Math.sin(lean) * h);
+  ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.035, h, 5), { position: [(x + top[0]) / 2, base + h / 2, (z + top[1]) / 2], rotation: [lean, rot, 0], color: '#4a3424' });
+  const ty = base + h * Math.cos(lean);
+  ctx.solid.add(new THREE.CylinderGeometry(0.08, 0.06, 0.22, 6), { position: [top[0], ty, top[1]], color: '#3a2a1c' });
+  const flame = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.42, 5).translate(0, 0.21, 0), new THREE.MeshBasicMaterial({ color: '#ffb35a', toneMapped: false }));
+  flame.position.set(top[0], ty + 0.1, top[1]);
+  ctx.scene.add(flame);
+  ctx.effects.halo({ position: [top[0], ty + 0.3, top[1]], size: 2.4, color: '#ff9a40', opacity: 0.55 });
+  const light = new THREE.PointLight(color, intensity, distance, 1.4);
+  light.position.set(top[0], ty + 0.4, top[1]);
+  ctx.scene.add(light);
+  const ph = x * 0.7 + z;
+  ctx.onFrame((t) => {
+    flame.scale.y = 0.85 + 0.25 * Math.sin(t * 11 + ph) + 0.1 * Math.sin(t * 17 + ph);
+    light.intensity = intensity * (0.88 + 0.08 * Math.sin(t * 9 + ph) + 0.04 * Math.sin(t * 21));
+  });
+  return light;
+}
+
+let puffTexture;
+function getPuffTexture() {
+  if (puffTexture) return puffTexture;
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const g = canvas.getContext('2d');
+  const r = rng(77);
+  for (let i = 0; i < 7; i++) {
+    const cx = size / 2 + r.range(-0.18, 0.18) * size, cy = size / 2 + r.range(-0.15, 0.15) * size, rad = r.range(0.22, 0.34) * size;
+    const grad = g.createRadialGradient(cx, cy, 0, cx, cy, rad);
+    grad.addColorStop(0, 'rgba(255,255,255,0.5)');
+    grad.addColorStop(0.5, 'rgba(255,255,255,0.25)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, size, size);
+  }
+  puffTexture = new THREE.CanvasTexture(canvas);
+  puffTexture.colorSpace = THREE.SRGBColorSpace;
+  return puffTexture;
+}
+
+// Soft billowing dust or smoke: translucent sprites that rise, swell and fade on a loop.
+export function puffs(ctx, { position, count = 10, height = 8, size = 1.5, grow = 3, color = '#d8c4a4', opacity = 0.45, wind = [0.4, 0], speed = 0.06, spread = 1.5, seed = 5 } = {}) {
+  const r = rng(seed);
+  const list = Array.from({ length: count }, (_, i) => {
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: getPuffTexture(), color, transparent: true, depthWrite: false, opacity: 0 }));
+    sprite.material.rotation = r() * 6;
+    ctx.scene.add(sprite);
+    return { sprite, off: i / count, k: r.range(0.8, 1.2), jx: r.range(-1, 1) * spread, jz: r.range(-1, 1) * spread, spin: r.range(-0.3, 0.3) };
+  });
+  ctx.onFrame((t) => {
+    for (const p of list) {
+      const f = (p.off + t * speed * p.k) % 1;
+      p.sprite.position.set(position[0] + p.jx * (1 + f) + wind[0] * f * height, position[1] + f * height, position[2] + p.jz * (1 + f) + wind[1] * f * height);
+      p.sprite.scale.setScalar(size * (1 + f * grow));
+      p.sprite.material.opacity = opacity * Math.min(1, f * 5) * (1 - f) ** 0.8;
+      p.sprite.material.rotation += p.spin * 0.01;
+    }
+  });
 }

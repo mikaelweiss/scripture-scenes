@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.07, vignette: 0.42, shadowTint: '#32285a', highlightTint: '#ffe6c4' },
   shadow: { center: [0, -8], radius: 50 },
 
-  player: { start: [2.6, -28.6], yaw: Math.PI - 0.12, pitch: -0.07, eye: 1.65, speed: 4 },
+  player: { start: [3.2, -29.2], yaw: Math.PI - 0.3, pitch: -0.12, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000,
@@ -97,6 +97,10 @@ export default {
     ctx.solid.box(27, 0.5, 22.4, { position: [0, top + H + 0.25, -20], color: '#f0e0c0' });
     ctx.solid.box(27.6, 0.7, 23, { position: [0, top + H + 0.85, -20], color: paint, shade });
     ctx.solid.box(24, 0.6, 19, { position: [0, top + H + 1.5, -20], color: '#c8b08a', shade });
+    const ceiling = new ctx.THREE.Mesh(new ctx.THREE.PlaneGeometry(26.8, 22.2).rotateX(Math.PI / 2), new ctx.THREE.MeshLambertMaterial({ color: '#e8d6b4', emissive: '#7a6448', flatShading: true }));
+    ceiling.position.set(0, top + H - 0.01, -20);
+    ctx.scene.add(ceiling);
+    for (let i = 0; i < 9; i++) ctx.solid.box(0.32, 0.36, 22, { position: [-11 + i * 2.75, top + H - 0.18, -20], color: '#8a6440', jitter: 0.03 });
     for (let i = 0; i < 9; i++) ctx.solid.box(1.2, 0.5, 0.3, { position: [-10 + i * 2.5, top + H + 2, -10.4], color: '#e0cca8', shade });
 
     const floor = top + 0.02;

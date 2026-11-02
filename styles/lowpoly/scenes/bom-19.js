@@ -1,16 +1,18 @@
 // Mosiah 22:7-11: Limhi's people slip out through the back pass of the city wall by night,
 // with their flocks and herds, past Lamanite guards asleep with wine. -z is north, the city.
-import { sleeper, flock, tent, campfire, jar, spear, shield, house, wallLine, stars, columnGroups, rng, yawTo } from './lib/bom-19-kit.js';
+import { sleeper, flock, tent, campfire, jar, spear, shield, house, wallLine, stars, columnGroups, rng, yawTo, torch } from './lib/bom-19-kit.js';
 
 const GATE = [0, -30];
 const FIRE = [-12, -13];
 const PATH = [[0, -36], [1, -24], [7, -17], [20, -15], [38, -17], [58, -21], [80, -24], [104, -22], [130, -14], [160, -2]];
 
-const column = columnGroups(PATH, { width: 3.2, density: 1.25, spacing: 0.9, seed: 41, children: 0.25, skipNear: [[24, -15, 3], [62, -21, 3], [104, -22, 3]] });
+const TORCHES = [[3.2, -21], [14, -15.4], [24, -15.6], [40, -17.6], [62, -21.6], [104, -22.4]];
+
+const column = columnGroups(PATH, { width: 3.2, density: 1.25, spacing: 0.9, seed: 41, children: 0.25, skipNear: TORCHES.map(([x, z]) => [x, z, 1.4]) });
 const inGate = columnGroups([[0, -46], [0, -33]], { width: 2, density: 1.4, spacing: 0.9, seed: 47 });
 
 const guardPalette = {
-  robes: ['#7a3a28', '#6b4a32', '#5a3a2a', '#8a5a3a', '#4e3a2e'],
+  robes: ['#a8402a', '#b0703a', '#5a4a6a', '#8a8a5a', '#c89a5a', '#6a2a2a'],
   mantles: ['#2e2a26', '#5a2a1e', '#3e3a30'],
   skins: ['#6a4228', '#7a4c31', '#5e3a24'],
 };
@@ -19,10 +21,10 @@ export default {
   title: "Mosiah 22:7-11: Limhi's people escape",
   seed: 19,
   fov: 60,
-  exposure: 1.3,
+  exposure: 1.45,
 
-  sun: { direction: [0.45, 0.6, 0.55], color: '#b4c6f0', intensity: 2.6 },
-  light: { sky: '#6a82c4', ground: '#3a3440', hemi: 1.5 },
+  sun: { direction: [0.45, 0.6, 0.55], color: '#c4d4ff', intensity: 3.6 },
+  light: { sky: '#6a82c4', ground: '#3a3440', hemi: 1.9 },
   sky: { top: '#081028', horizon: '#2c3d68', ground: '#18203a', sunColor: '#c8d4ff', glow: 0.15 },
   fog: { color: '#22305a', near: 60, far: 460 },
   clouds: { count: 14, shadow: '#1c2440', lit: '#5a6a96', rim: '#c8d4ff', distance: [500, 1000], altitude: [160, 300], hole: 0.2 },
@@ -31,7 +33,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.08, vignette: 0.5, shadowTint: '#0e1638', highlightTint: '#e4ecff' },
   shadow: { center: [10, -5], radius: 70 },
 
-  player: { start: [-21, -1], yaw: -0.95, pitch: -0.04, eye: 1.65, speed: 4.5 },
+  player: { start: [33, -3.5], yaw: 0.98, pitch: -0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -52,9 +54,9 @@ export default {
   ],
 
   scatter: [
-    { type: 'tree', count: 60, center: [40, 40], ring: [40, 260], spacing: 7, seed: 8, avoid: [{ rect: [60, 0, 220, 40] }, { rect: [0, -60, 300, 70] }, { r: 5, x: -21, z: -1 }], props: { kind: 'broad', leaf: '#3c5230' } },
-    { type: 'rock', count: 50, center: [-10, 20], ring: [6, 60], spacing: 5, seed: 12, avoid: [{ r: 3, x: -21, z: -1 }, { rect: [60, -18, 200, 14] }], props: { size: 0.6, color: '#7a6e60' } },
-    { type: 'tree', count: 14, center: [-30, 10], ring: [10, 50], spacing: 6, seed: 14, avoid: [{ r: 5, x: -21, z: -1 }, { r: 9, x: FIRE[0], z: FIRE[1] }, { rect: [0, -40, 300, 20] }], props: { kind: 'broad', leaf: '#3c5230' } },
+    { type: 'tree', count: 60, center: [40, 40], ring: [40, 260], spacing: 7, seed: 8, avoid: [{ rect: [60, 0, 220, 40] }, { rect: [0, -60, 300, 70] }, { r: 5, x: 33, z: -3.5 }, { rect: [10, -6, 50, 22] }], props: { kind: 'broad', leaf: '#3c5230' } },
+    { type: 'rock', count: 50, center: [-10, 20], ring: [6, 60], spacing: 5, seed: 12, avoid: [{ r: 3, x: 33, z: -3.5 }, { rect: [60, -18, 200, 14] }], props: { size: 0.6, color: '#7a6e60' } },
+    { type: 'tree', count: 14, center: [-30, 10], ring: [10, 50], spacing: 6, seed: 14, avoid: [{ r: 5, x: 33, z: -3.5 }, { rect: [10, -6, 50, 22] }, { r: 9, x: FIRE[0], z: FIRE[1] }, { rect: [0, -40, 300, 20] }], props: { kind: 'broad', leaf: '#3c5230' } },
     { type: 'rock', count: 40, center: [100, -30], ring: [30, 200], spacing: 10, seed: 10, avoid: [{ rect: [70, -10, 200, 30, 0.25] }, { rect: [0, -60, 300, 70] }], props: { color: '#6a6258' } },
   ],
 
@@ -71,6 +73,7 @@ export default {
 
   figures: [
     { x: 4.5, z: -27.5, face: [30, -10], robe: '#5e4b3a', mantle: '#3f4d5e', skin: '#9b6a46', arms: 'out', hood: true },
+    ...TORCHES.map(([x, z], i) => ({ x, z, face: [x + 20, z - 1], robe: ['#a0825c', '#6e5a44', '#b59a72'][i % 3], mantle: ['#5a3d2b', '#3f4d5e', '#7d5c3e'][i % 3], skin: '#9b6a46', hood: i % 2 === 0 })),
   ],
 
   custom(ctx) {
@@ -99,6 +102,8 @@ export default {
       if (Math.hypot(x + 36, z + 118) < 26) continue;
       house(ctx, x, z, r.range(-0.3, 0.3), { w: r.range(4, 7), d: r.range(4, 6), h: r.range(2.4, 3.2), color: '#9a8466', roof: '#5a4a34', thatch: r() < 0.6 });
     }
+
+    for (const [x, z] of TORCHES) torch(ctx, x + 0.1, z + 0.38, { rot: Math.PI / 2 });
 
     campfire(ctx, FIRE[0], FIRE[1], { scale: 0.8, intensity: 55, distance: 20 });
     for (let i = 0; i < 9; i++) {

@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.1, vignette: 0.48, shadowTint: '#28264a', highlightTint: '#fff0d6' },
   shadow: { center: [0, -10], radius: 60 },
 
-  player: { start: [2.5, 2], yaw: 0.06, pitch: 0.12, eye: 1.65, speed: 4.5 },
+  player: { start: [3.5, -1.5], yaw: 0.16, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -57,14 +57,13 @@ export default {
 
   figures: [
     {
-      x: ANGEL[0], z: ANGEL[1], y: 3.3, face: [0, 10], scale: 1.4, robe: '#fbf8f0', mantle: '#f4eedf', skin: '#cdb59a', arms: 'out', emissive: 0.18,
-      light: { color: '#fff2d6', intensity: 30, distance: 30 },
-      halo: { size: 4.5, opacity: 0.3, color: '#fff3d6' },
+      x: ANGEL[0], z: ANGEL[1], y: 3.3, face: [0, 10], scale: 1.4, robe: '#fbf8f0', mantle: '#f4eedf', skin: '#cdb59a', arms: 'out', emissive: 0.1,
+      halo: { size: 6, opacity: 0.18, color: '#fff3d6' },
     },
   ],
 
   effects: [
-    { type: 'beam', at: ANGEL, height: 200, radiusBottom: 3.5, radiusTop: 12, color: '#fff1cf', opacity: 0.28 },
+    { type: 'beam', at: ANGEL, height: 200, radiusBottom: 3.5, radiusTop: 12, color: '#fff1cf', opacity: 0.18 },
     { type: 'motes', at: ANGEL, radius: 5, height: 22, count: 160 },
     { type: 'ring', at: [0, -11], lift: 0.06, radius: 5, width: 1.8, color: '#ffe8b8', opacity: 0.35 },
     { type: 'sunShafts', center: [0, -60], count: 5, spread: 40, length: 400, width: [8, 18], opacity: 0.06 },
@@ -79,6 +78,9 @@ export default {
       ctx.solid.add(new ctx.THREE.CylinderGeometry(0.03, 0.035, 1.6, 4), { position: [x, ctx.heightAt(x, z) + 0.05, z], rotation: [Math.PI / 2, r() * 6, 0], color: '#5a4030' });
     }
 
+    const glow = new ctx.THREE.PointLight('#fff2d6', 40, 26, 1.4);
+    glow.position.set(ANGEL[0], 2.4, ANGEL[1] + 7);
+    ctx.scene.add(glow);
     cloud(ctx, ANGEL[0], 2.9, ANGEL[1], 2.0, { color: '#f4f0e8', emissive: 0.15, puffs: 10, seed: 5, flat: 0.3 });
     cloud(ctx, ANGEL[0] + 1.5, 1.8, ANGEL[1] - 1.5, 2.4, { color: '#ece6da', emissive: 0.1, puffs: 8, seed: 6, flat: 0.4 });
     cloud(ctx, ANGEL[0], 42, ANGEL[1] - 16, 9, { color: '#e8e2d8', emissive: 0.3, puffs: 10, seed: 7, flat: 0.4 });

@@ -35,7 +35,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.35, shadowTint: '#2a3a5a', highlightTint: '#fff4e0' },
   shadow: { center: [2, -24], radius: 60 },
 
-  player: { start: [-2, 4], yaw: 0.08, pitch: 0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [7.5, 1], yaw: 0.1, pitch: 0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -88,6 +88,17 @@ export default {
   custom(ctx) {
     const r = rng(2323);
     water(ctx, { x: 10, z: -20, w: 70, d: 34, y: -0.55, color: '#3f8a9a', amp: 0.05 });
+    for (let z = -37; z <= -3; z++) {
+      let run = null;
+      for (let x = -25; x <= 46; x++) {
+        const wet = ctx.heightAt(x, z) < -0.3;
+        if (wet && run === null) run = x;
+        if ((!wet || x === 46) && run !== null) {
+          ctx.colliders.add({ x: (run + x - 1) / 2, z, w: x - run + 1, d: 1.2, top: 4 });
+          run = null;
+        }
+      }
+    }
 
     for (const [x, z] of raiderPoints) {
       const y = ctx.heightAt(x, z), side = r() < 0.5 ? -1 : 1;

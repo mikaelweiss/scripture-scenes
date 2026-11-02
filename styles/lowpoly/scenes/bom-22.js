@@ -1,6 +1,6 @@
 // Alma 14: in Ammonihah the believers' records were burned in the plaza. Later the Lord breaks the
 // prison walls; Alma and Amulek walk out of the rubble unharmed while the people flee. -z is north.
-import { campfire, house, jar, rng } from './lib/bom-19-kit.js';
+import { campfire, house, jar, rng, puffs } from './lib/bom-19-kit.js';
 
 const PRISON = [0, -34];
 const PIT = [-8, -23];
@@ -28,7 +28,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.08, vignette: 0.42, shadowTint: '#3a2e4e', highlightTint: '#ffe6c4' },
   shadow: { center: [0, -18], radius: 60 },
 
-  player: { start: [4, -10], yaw: 0.12, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: [-0.5, -17], yaw: 0.3, pitch: 0.0, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -77,8 +77,8 @@ export default {
   },
 
   figures: [
-    { x: PRISON[0] - 0.9, z: PRISON[1] + 1, face: [4, -10], robe: '#e8dcc4', mantle: '#8a6a44', skin: '#a87652', arms: 'out', emissive: 0.08 },
-    { x: PRISON[0] + 0.9, z: PRISON[1] + 1.2, face: [4, -10], robe: '#d8cab0', mantle: '#5a6a7a', skin: '#9b6a46', emissive: 0.08 },
+    { x: PRISON[0] - 0.9, z: PRISON[1] + 1, face: [-0.5, -17], robe: '#e8dcc4', mantle: '#8a6a44', skin: '#a87652', arms: 'out', emissive: 0.14 },
+    { x: PRISON[0] + 0.9, z: PRISON[1] + 1.2, face: [-0.5, -17], robe: '#d8cab0', mantle: '#5a6a7a', skin: '#9b6a46', emissive: 0.14 },
   ],
 
   effects: [
@@ -89,6 +89,7 @@ export default {
   custom(ctx) {
     const r = rng(2222);
     campfire(ctx, PIT[0], PIT[1], { scale: 1.6, intensity: 30, distance: 16 });
+    puffs(ctx, { position: [PIT[0], ctx.heightAt(PIT[0], PIT[1]) + 1.6, PIT[1]], count: 14, height: 9, size: 1.8, grow: 3, color: '#6a625c', opacity: 0.9, wind: [0.5, -0.3], speed: 0.05, spread: 0.6, seed: 2201 });
     for (let i = 0; i < 26; i++) {
       const a = r() * Math.PI * 2, d = r.range(0.8, 3);
       const x = PIT[0] + Math.cos(a) * d, z = PIT[1] + Math.sin(a) * d;
@@ -100,7 +101,7 @@ export default {
     }
 
     for (const [x, z, s] of [[-7, -38, 1.1], [7, -39, 1.2], [-11, -32, 0.8], [11, -33, 0.9]]) {
-      ctx.effects.smoke({ position: [x, ctx.heightAt(x, z) + 0.5, z], count: 3, height: 9, size: s, color: '#c8b090', wind: [0.4, -0.2], seed: Math.floor(r() * 1e6) });
+      puffs(ctx, { position: [x, ctx.heightAt(x, z) + 0.6, z], count: 9, height: 8, size: 2.2 * s, grow: 2.6, color: '#e2cfae', opacity: 0.4, wind: [0.4, -0.2], speed: 0.05, spread: 1.8, seed: Math.floor(r() * 1e6) });
     }
 
     const ring = [];
