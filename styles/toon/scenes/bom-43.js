@@ -61,7 +61,7 @@ function custom(ctx) {
     }
   });
 
-  glow(ctx, [CHRIST[0], ctx.groundHeight(...CHRIST) + 1.3, CHRIST[1]], 7, '#fff3d0', { opacity: 0.8 });
+  glow(ctx, [CHRIST[0], ctx.groundHeight(...CHRIST) + 1.3, CHRIST[1]], 4.5, '#fff3d0', { opacity: 0.55 });
 }
 
 export default {
@@ -143,7 +143,7 @@ export default {
   },
 
   player: {
-    start: [0, 17],
+    start: [0, 1],
     lookAt: CHRIST,
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

@@ -1,10 +1,11 @@
 // Ether 2:16-25, 6:2-12: the eight tight barges driven by the wind across the great deep, at times buried under the waves.
-// x is east, z is south. The player stands on a rock in the sea, the barges pass to the north.
+// x is east, z is south. The player rides the deck of one barge, the others pass to the north.
 import * as THREE from 'three';
 import { FX_LAYER } from '../engine/renderer.js';
-import { Batch, bargeGeometry, fence, glow, makeRng, rocks, toonStyle, water } from './lib/bom-43-kit.js';
+import { Batch, bargeGeometry, box, glow, makeRng, person, toonStyle, water } from './lib/bom-43-kit.js';
 
-const SEA_Y = -1.2;
+const SEA_Y = 3;
+const DECK = { center: [0, 2], hx: 1.7, hz: 5, top: 3.75 };
 const WAVES = { amp: 2.1, length: 26, speed: 1.1, dir: [1, -0.35], segments: 110 };
 
 const BARGES = [
@@ -47,6 +48,62 @@ function barges(ctx, sea) {
   });
 }
 
+// The barge the player rides. Its deck collider heaves with the hull so the player rises and falls with it.
+function ownBarge(ctx) {
+  const g = new THREE.Group();
+  const { hull, trim } = bargeGeometry({ length: 20, width: 7, height: 5 });
+  const h = new THREE.Mesh(hull, ctx.kit.toon('#8a6040'));
+  const tr = new THREE.Mesh(trim, ctx.kit.toon('#3a2418'));
+  h.rotation.y = tr.rotation.y = Math.PI / 2;
+  h.castShadow = tr.castShadow = h.receiveShadow = true;
+  g.add(h, tr);
+
+  const wood = ctx.kit.toon('#9a7048');
+  const dark = ctx.kit.toon('#4a3020');
+  const part = (geo, mat) => {
+    const m = new THREE.Mesh(geo, mat);
+    m.castShadow = m.receiveShadow = true;
+    g.add(m);
+  };
+  const { hx, hz, top } = DECK;
+  part(box(hx * 2, 1.35, hz * 2, [0, top - 0.675, 0]), wood);
+  for (let i = -3; i <= 3; i++) part(box(0.04, 0.02, hz * 2, [i * hx / 3.5, top + 0.01, 0]), dark);
+  for (const sx of [-1, 1]) {
+    part(box(0.12, 0.1, hz * 2, [sx * (hx - 0.06), top + 0.9, 0]), dark);
+    for (let k = 0; k <= 6; k++) part(box(0.12, 0.9, 0.12, [sx * (hx - 0.06), top + 0.45, -hz + 0.06 + k * (hz * 2 - 0.12) / 6]), dark);
+  }
+  for (const sz of [-1, 1]) part(box(hx * 2, 0.1, 0.12, [0, top + 0.9, sz * (hz - 0.06)]), dark);
+  part(new THREE.CylinderGeometry(0.4, 0.4, 0.3, 10).translate(0, top + 0.15, hz - 1.2), dark);
+
+  const companion = person(ctx, { robe: '#7a5a3c', mantle: '#a84a3a', skin: '#a8724a', hair: '#3a2418', sash: '#c8912e', arms: [0.4, 0.9] }, [0.9, -2.3], [10, -60], { clear: 0 });
+  ctx.scene.remove(companion);
+  companion.position.set(0.9, top, -hz + 0.7);
+  g.add(companion);
+  ctx.scene.add(g);
+
+  const [cx, cz] = DECK.center;
+  const deck = { x: cx, z: cz, hx, hz, rot: 0, top: 0 };
+  const rails = [
+    { x: cx - hx, z: cz, hx: 0.12, hz, rot: 0 },
+    { x: cx + hx, z: cz, hx: 0.12, hz, rot: 0 },
+    { x: cx, z: cz - hz, hx, hz: 0.12, rot: 0 },
+    { x: cx, z: cz + hz, hx, hz: 0.12, rot: 0 },
+    { x: cx + 0.9, z: cz - hz + 0.7, hx: 0.3, hz: 0.3, rot: 0 },
+  ];
+  const place = (t) => {
+    const heave = Math.sin(t * 0.8) * 0.4;
+    const base = SEA_Y + 0.2 + heave;
+    g.position.set(cx, base, cz);
+    g.rotation.set(Math.sin(t * 0.8 + 1) * 0.03, 0, Math.sin(t * 0.55) * 0.035);
+    deck.top = base + top;
+    for (const r of rails) r.top = base + top + 1.4;
+  };
+  place(0);
+  ctx.addCollider(deck);
+  rails.forEach((r) => ctx.addCollider(r));
+  ctx.onFrame(place);
+}
+
 function rain(ctx, count = 700) {
   const rng = makeRng(49);
   const geo = new THREE.BoxGeometry(0.02, 1.4, 0.02);
@@ -87,15 +144,7 @@ function custom(ctx) {
   const b = new Batch(ctx);
   const sea = water(ctx, { center: [0, -60], size: [300, 240], y: SEA_Y, color: '#2f5f6a', shine: '#d8ece6', streaks: 160, waves: WAVES });
   water(ctx, { center: [0, 0], size: [2400, 2400], y: SEA_Y - 0.05, color: '#2a5560', streaks: 0 });
-  fence(ctx, [0, 0], 14.5, { count: 40 });
-
-  const crags = [];
-  for (let i = 0; i < 34; i++) {
-    const a = rng() * Math.PI * 2, r = 13 + rng() * 5;
-    if (Math.cos(a) < -0.6 && Math.abs(Math.sin(a)) < 0.5) continue;
-    crags.push([Math.sin(a) * r, Math.cos(a) * r, 1 + rng() * 2.2]);
-  }
-  rocks(ctx, crags, ['#4a4844', '#5a5652', '#3e3c3a']);
+  ownBarge(ctx);
   for (let i = 0; i < 10; i++) {
     const a = rng() * Math.PI * 2, r = 40 + rng() * 120;
     const x = Math.sin(a) * r, z = Math.cos(a) * r;
@@ -137,7 +186,7 @@ export default {
   },
 
   player: {
-    start: [0, 6],
+    start: [0, 4.6],
     lookAt: [0, -60],
     colors: { robe: '#5e4632', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

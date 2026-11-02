@@ -5,7 +5,7 @@ import { Batch, GROUND, banner, between, dust, makeNoiseHill, makeRng, person, p
 
 const HILL = [-10, -150];
 const KNOLL = [-26, 4];
-const MORMON = [-23.5, 1.5];
+const MORMON = [-16.5, 4];
 const EAST = [120, -10];
 const WEST = [-80, -30];
 
@@ -17,8 +17,8 @@ const NEPHITES = {
   wraps: ['#c8a97a', '#8c5a3c', '#5e4632', '#b5523b'],
 };
 const LAMANITES = {
-  robes: ['#7a2e24', '#5a2a22', '#3a2a22', '#8c3a2a', '#6b3a2a', '#4a3a30', '#9a5030'],
-  mantles: ['#2b1a12', '#5a2a22', '#c8912e', '#3a2a22', '#7a2e24'],
+  robes: ['#b5523b', '#c8703a', '#9a5030', '#d08a50', '#a8402e', '#c89060', '#8c4a2e'],
+  mantles: ['#e6d8b8', '#c8912e', '#7a2e24', '#d9b070', '#5a2a22'],
   skins: ['#8a5a3b', '#9c6a45', '#a87650', '#b5825a', '#7a4e33', '#c08f66'],
   hair: ['#1f140e', '#2b1a12'],
   wraps: ['#c8912e', '#b5523b', '#e6d8b8', '#2b1a12'],
@@ -78,10 +78,10 @@ function custom(ctx) {
     banner(b, ctx, [r.center[0] - r.size[0] / 2 - 0.8, r.center[1]], { height: 6, color: pick(rng, ['#7a2e24', '#2b1a12', '#c8912e']), trim: '#e6d8b8' });
     if (i % 3 === 0) banner(b, ctx, [r.center[0] - r.size[0] / 2 - 0.5, r.center[1] - 5], { height: 5.4, color: '#5a2a22', trim: '#c8912e' });
   });
-  spears(ctx, rng, NEPHITE_RANKS, 28, '#5a3a22', 0.12);
-  spears(ctx, rng, LAMANITE_HOST, 24, '#3a2418', 0);
+  spears(ctx, rng, NEPHITE_RANKS, 7, '#5a3a22', 0.12);
+  spears(ctx, rng, LAMANITE_HOST, 6, '#3a2418', 0);
 
-  const knoll = makeNoiseHill(ctx, { center: KNOLL, radius: 18, height: 5.5, color: '#8a8050', seed: 7, flatTop: 0.25, walk: true });
+  const knoll = makeNoiseHill(ctx, { center: KNOLL, radius: 22, height: 8, color: '#8a8050', seed: 7, flatTop: 0.25, walk: true });
   const rise = knoll.heightAt(...MORMON) - 0.85;
   person(ctx, { robe: '#5e4632', mantle: '#b5523b', skin: '#a87650', hair: '#b9aea8', sash: '#c8912e', arms: [0.15, 0.2] }, [MORMON[0] - 0.5, MORMON[1]], EAST, { scale: 1.08, y: rise + 0.85, clear: 3.2 });
   person(ctx, { robe: '#7a6a52', mantle: '#2f8f8a', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e' }, [MORMON[0] + 1, MORMON[1] - 0.6], EAST, { y: rise + 0.85, clear: 0 });
@@ -141,7 +141,7 @@ export default {
   },
 
   player: {
-    start: [-29, 7],
+    start: [-19.5, 0.5],
     lookAt: [22, -40],
     colors: { robe: '#7a6a52', mantle: '#8c5a3c', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

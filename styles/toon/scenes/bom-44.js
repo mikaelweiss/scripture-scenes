@@ -67,7 +67,7 @@ function custom(ctx) {
   ctx.exclude({ kind: 'circle', x: RING[0], z: RING[1], r: RING_R + 1.2 });
 
   // Angels descending to minister.
-  const angels = [[-5, 7.5, -3], [5.5, 9, -6], [-2, 12, -9], [3, 6, 2.5], [-6.5, 10.5, -8], [7, 12.5, -1]];
+  const angels = [[-5, 4.6, -3], [5.5, 5.6, -6], [-2, 7.4, -9], [2.2, 4.6, 0.5], [-9.5, 6.6, -8], [6.5, 7.6, -1]];
   for (const [x, y, z] of angels) angel(ctx, [x, y, z], RING, { arms: [0.8, 0.45], halo: 5 });
   glow(ctx, [RING[0], 2, RING[1]], 14, '#ffe6a8', { opacity: 0.45 });
 
@@ -121,7 +121,7 @@ export default {
   },
 
   player: {
-    start: [0, 13],
+    start: [0, 8.5],
     lookAt: RING,
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

@@ -6,7 +6,6 @@ import { Batch, ball, box, campfire, cyl, fence, glow, lamp, makeRng, person, ro
 
 const SLAB = [0, -6];
 const KNEEL = [2.2, -4.4];
-const CLOUD_Y = 13;
 const STEP = 1.6;
 
 function stones(ctx) {
@@ -27,14 +26,51 @@ function stones(ctx) {
   return list;
 }
 
+const TILT = new THREE.Euler(-0.25, 0, 0.75);
+const ARM_DIR = new THREE.Vector3(0, 1, 0).applyEuler(TILT);
+const ARM = 2.4;
+const HAND = 1.35;
+
+// The Lord's hand, modelled with the fingertip at the origin and the arm rising along +y into the cloud.
 function finger(ctx) {
-  const geo = new THREE.CapsuleGeometry(0.085, 1.1, 4, 10);
-  geo.translate(0, 0.64, 0);
-  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: '#fffaf0', transparent: true, opacity: 0.95, fog: false }));
-  mesh.layers.set(FX_LAYER);
-  ctx.scene.add(mesh);
-  const halo = glow(ctx, [0, 0, 0], 2.2, '#fff3d0', { opacity: 0.9, pulse: 0 });
-  return { mesh, halo };
+  const skin = ctx.kit.basic('#fff6e6');
+  const sleeve = ctx.kit.basic('#fffdf6');
+  const g = new THREE.Group();
+  const add = (geo, mat, pos, rot = [0, 0, 0]) => {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(...pos);
+    m.rotation.set(...rot);
+    g.add(m);
+  };
+  const tip = new THREE.CapsuleGeometry(0.045, 0.36, 4, 10);
+  add(tip, skin, [-0.085, 0.23, 0]);
+  add(new THREE.BoxGeometry(0.27, 0.3, 0.11), skin, [0, 0.58, 0]);
+  for (let i = 0; i < 3; i++) add(new THREE.CapsuleGeometry(0.045, 0.1, 4, 8), skin, [-0.01 + i * 0.075, 0.4, 0.05], [0.9, 0, 0]);
+  add(new THREE.CapsuleGeometry(0.045, 0.16, 4, 8), skin, [0.15, 0.5, 0.04], [0.3, 0, -0.5]);
+  add(new THREE.CylinderGeometry(0.1, 0.09, 1.0, 10), skin, [0, 1.15, 0]);
+  add(new THREE.CylinderGeometry(0.2, 0.15, ARM - 1.4, 10), sleeve, [0, 1.4 + (ARM - 1.4) / 2, 0]);
+  g.rotation.copy(TILT);
+  g.scale.setScalar(HAND);
+  ctx.scene.add(g);
+  const halo = glow(ctx, [0, 0, 0], 1.6, '#fff3d0', { opacity: 0.7, pulse: 0 });
+  return { mesh: g, halo };
+}
+
+// A low bright cloud the arm reaches out of. It follows the hand along the row of stones.
+function brightCloud(ctx) {
+  const group = new THREE.Group();
+  const rng = makeRng(7);
+  const mats = [ctx.kit.toon('#fffaf0', { emissive: '#a89a80' }), ctx.kit.toon('#fff1d6', { emissive: '#a08a68' })];
+  for (let i = 0; i < 16; i++) {
+    const x = -2.4 + (i / 15) * 4.8 + (rng() - 0.5) * 0.5;
+    const r = 0.5 + rng() * 0.5;
+    const m = new THREE.Mesh(new THREE.SphereGeometry(r, 14, 10), mats[i % 2]);
+    m.position.set(x, (rng() - 0.3) * 0.7, (rng() - 0.5) * 1.2);
+    group.add(m);
+  }
+  ctx.scene.add(group);
+  const halo = glow(ctx, [0, 0, 0], 9, '#fff1c8', { opacity: 0.7, pulse: 0 });
+  return { group, halo };
 }
 
 function custom(ctx) {
@@ -63,8 +99,7 @@ function custom(ctx) {
 
   const stoneList = stones(ctx);
   const f = finger(ctx);
-  const cloudPos = new THREE.Vector3(SLAB[0], ctx.groundHeight(...SLAB) + CLOUD_Y, SLAB[1] - 2);
-  glow(ctx, [cloudPos.x, cloudPos.y, cloudPos.z], 22, '#fff1c8', { opacity: 0.85, pulse: 0.03 });
+  const cloud = brightCloud(ctx);
   lamp(ctx, [SLAB[0], sy + 4, SLAB[1]], '#fff0c8', 10, 18);
 
   ctx.onFrame((t) => {
@@ -76,10 +111,13 @@ function custom(ctx) {
       g.scale.setScalar(lit ? 1.1 + Math.sin(t * 2 + i) * 0.1 : 0.01);
     });
     const target = stoneList[Math.min(n, 15)].s.position;
-    const reach = n < 16 ? Math.sin(Math.min(1, phase * 1.4) * Math.PI) : 0;
+    const reach = n < 16 ? Math.min(1, Math.min(phase, 1 - phase) * 4) : 0;
     f.mesh.visible = f.halo.visible = n < 16;
-    f.mesh.position.set(target.x, target.y + 0.12 + (1 - reach) * 0.9, target.z);
-    f.halo.position.set(target.x, target.y + 0.7 + (1 - reach) * 0.9, target.z);
+    f.mesh.position.set(target.x, target.y + 0.1, target.z).addScaledVector(ARM_DIR, (1 - reach) * 0.8);
+    f.halo.position.copy(target);
+    f.halo.position.y += 0.15;
+    cloud.group.position.copy(f.mesh.position).addScaledVector(ARM_DIR, ARM * HAND - 0.1);
+    cloud.halo.position.copy(cloud.group.position);
   });
 
   person(ctx, { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#4a3020', sash: '#5e4632', arms: [0.2, 0.7] }, KNEEL, SLAB, { pose: 'kneel', clear: 1, lean: -0.15 });
@@ -114,17 +152,16 @@ export default {
       { count: 140, distance: [110, 620], height: [-75, -48], size: [26, 50], color: '#ffe8d8', shade: '#6a5a8a', drift: 0.0015 },
       { count: 40, distance: [70, 140], height: [-80, -62], size: [18, 30], color: '#ffe8d8', shade: '#6a5a8a', drift: 0.0015 },
       { count: 14, distance: [300, 700], height: [90, 180], size: [40, 80], color: '#f2c0a0', shade: '#3a3260' },
-      { count: 7, center: [0, -8], distance: [0, 3], height: [CLOUD_Y, CLOUD_Y + 2], size: [3, 5], color: '#fffaf0', shade: '#f0d8a0', drift: 0 },
     ],
   },
 
   light: {
-    beams: [{ from: [0, CLOUD_Y + 2, -8], to: { at: SLAB, lift: 0.8 }, width: [4, 1.6], color: '#fff2c9', intensity: 0.22, layers: 2, stripes: 14, fadeLow: 0.1 }],
+    beams: [],
   },
 
   player: {
-    start: [-0.9, 0.4],
-    lookAt: SLAB,
+    start: [1.0, -1.8],
+    lookAt: [-0.5, -6.4],
     colors: { robe: '#6f8a6a', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

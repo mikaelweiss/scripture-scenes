@@ -81,8 +81,8 @@ function custom(ctx) {
   stars(ctx, { count: 1400, color: '#f2f0ff', size: 2.2, minY: 0.06 });
   disc(ctx, [-0.5, 0.3, -0.8], 30, '#f6f0d8', { halo: '#9ab0e0', haloSize: 3 });
   const gy = ctx.groundHeight(...BOX);
-  glow(ctx, [BOX[0], gy + 0.8, BOX[1]], 2.2, '#ffd27a', { opacity: 0.5 });
-  lamp(ctx, [BOX[0], gy + 1.5, BOX[1]], '#ffd890', 2.5, 6);
+  glow(ctx, [BOX[0], gy + 0.8, BOX[1]], 1.8, '#ffd27a', { opacity: 0.45 });
+  lamp(ctx, [BOX[0], gy + 1.5, BOX[1]], '#ffd890', 7, 9);
   b.flush();
 }
 
@@ -96,7 +96,7 @@ export default {
 
   sky: { zenith: '#0e1430', mid: '#222c52', horizon: '#4a4a70', ground: '#1e2236', glowColor: '#8a9ad0', glowDir: [-0.5, 0.35, -0.8] },
 
-  sun: { dir: [-0.5, 0.6, -0.8], color: '#b8c8f0', intensity: 1.6, hemi: { sky: '#5a6aa0', ground: '#2a2430', intensity: 0.9 }, shadowSize: 60 },
+  sun: { dir: [-0.5, 0.6, -0.8], color: '#c8d4f6', intensity: 2.2, hemi: { sky: '#6a7ab0', ground: '#3a3440', intensity: 1.25 }, shadowSize: 60 },
 
   ground: {
     size: 1200, segments: 240, flatRadius: 160, hillHeight: 30, undulation: 0.4,
@@ -117,8 +117,8 @@ export default {
   },
 
   player: {
-    start: [5, -8.5],
-    lookAt: [-1, -13.5],
-    colors: { robe: '#5e4632', mantle: '#7a6a52', skin: '#a8724a', hair: '#2b1a12', sash: '#8c5a3c' },
+    start: [-0.3, -9.5],
+    lookAt: [1.5, -16],
+    colors: { robe: '#6b5240', mantle: '#a8916a', skin: '#a8724a', hair: '#2b1a12', sash: '#8c5a3c' },
   },
 };
