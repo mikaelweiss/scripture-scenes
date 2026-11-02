@@ -7,7 +7,7 @@ import { palette, house, palm, oliveTree, person, christ, cityWall, box } from '
 const JESUS = [0, 0];
 const GATE = [-92, 0];
 const TEMPLE = [-170, -34];
-const START = [6.5, 8];
+const START = [3.6, 5.2];
 
 function roadCrowd() {
   const r = rng(52);
@@ -46,7 +46,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.35, shadowTint: '#3a3050', highlightTint: '#fff0d0' },
   shadow: { center: [-14, 0], radius: 50 },
 
-  player: { start: START, yaw: 1.08, pitch: -0.06, eye: 1.65, speed: 4.5 },
+  player: { start: START, yaw: 1.02, pitch: -0.07, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,

@@ -7,7 +7,7 @@ import { palette, house, palm, person, christ, box } from './lib/nt-19-kit.js';
 const JESUS = [0.6, -7];
 const TREE = [8.5, -13];
 const ZACC = [4.6, -12.2];
-const START = [-1.4, 5.5];
+const START = [-1.6, 2.6];
 
 function streetCrowd() {
   const r = rng(41);
@@ -35,7 +35,7 @@ const roofPts = [[-7, -22], [-8.5, -21], [-7.5, -32], [7, -30], [8.2, -31], [-7,
 export default {
   title: 'Luke 19:1-10: Zacchaeus in the sycamore',
   seed: 19,
-  fov: 62,
+  fov: 58,
   exposure: 1.0,
 
   sun: { direction: [-0.55, 0.62, 0.4], color: '#ffe2b0', intensity: 2.8 },
@@ -48,7 +48,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.35, shadowTint: '#3a3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, -10], radius: 45 },
 
-  player: { start: START, yaw: -0.2, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: START, yaw: -0.3, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -131,7 +131,7 @@ export default {
       ctx.solid.add(new THREE.IcosahedronGeometry(1.1, 0), { position: [tx + lx, ty + ly, tz + lz], rotation: [r() * 3, r() * 3, 0], scale: [1.2, 0.6, 1.2], color: '#678540', jitter: 0.1 });
     }
 
-    person(ctx, { x: ZACC[0], z: ZACC[1], y: branchY + 0.38, pose: 'sit', face: JESUS, scale: 0.84, robe: '#7a3e2c', mantle: '#c9a24a', hood: false, skin: '#9b6a46' });
+    person(ctx, { x: ZACC[0], z: ZACC[1], y: branchY + 0.38, pose: 'sit', face: JESUS, scale: 1.0, robe: '#8e2f22', mantle: '#e8b83c', hood: false, skin: '#9b6a46' });
 
     christ(ctx, { x: JESUS[0], z: JESUS[1], face: ZACC, arms: 'out', light: 14, halo: 3.2, glow: 0.25 });
     for (const [dx, dz] of [[-1.4, -1.6], [1.6, -1.8], [-0.4, -2.6], [-2.2, -0.4]]) {

@@ -5,16 +5,16 @@ import { house, person, cityWall, box, glowAt } from './lib/nt-19-kit.js';
 
 const HILL = [0, -42];
 const CROSSES = [[-6, -41.5], [0, -42.5], [6, -41.5]];
-const START = [-4, -6];
-const muted = { robes: ['#5e4b3a', '#4a3a2c', '#6e5a44', '#4f4a52', '#5a4434', '#3e3a40', '#6b5a48'], mantles: ['#3a2c22', '#2f3a48', '#4a3a2c', '#3c3436'], skins: ['#7a4c31', '#8a5a3c', '#6e4630'], mantleChance: 0.8, hoodChance: 0.6 };
+const START = [-3, -9];
+const muted = { robes: ['#7e6852', '#6c5844', '#8a7258', '#6c6674', '#7a624a', '#5e5a68', '#8e7a62'], mantles: ['#5c4838', '#485a70', '#6c5642', '#5e5056'], skins: ['#8a5a3c', '#9b6a46', '#7a4c31'], mantleChance: 0.8, hoodChance: 0.6 };
 
 export default {
   title: 'John 19:16-30: The Crucifixion',
   seed: 23,
   fov: 58,
-  exposure: 1.3,
+  exposure: 1.55,
 
-  sun: { direction: [0.05, 0.16, -1], color: '#b08070', intensity: 1.4 },
+  sun: { direction: [-0.62, 0.24, -0.75], color: '#c08a70', intensity: 1.6 },
   light: { sky: '#8a7a8c', ground: '#4a3a32', hemi: 2.4 },
   sky: { top: '#16141a', horizon: '#5a3a2e', ground: '#1e1614', sunColor: '#8a4a30', glow: 0.7 },
   fog: { color: '#2a201e', near: 40, far: 360 },
@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 0.8, contrast: 1.08, vignette: 0.6, shadowTint: '#1a1020', highlightTint: '#e8c8a8' },
   shadow: { center: [0, -25], radius: 50 },
 
-  player: { start: START, yaw: -0.1, pitch: 0.16, eye: 1.65, speed: 4 },
+  player: { start: START, yaw: -0.09, pitch: 0.1, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
@@ -34,15 +34,15 @@ export default {
     bumps: 0.5,
     flats: [
       { x: 0, z: 0, r: 40, falloff: 30, height: 0 },
-      { x: HILL[0], z: HILL[1], r: 7, falloff: 26, height: 11 },
+      { x: HILL[0], z: HILL[1], r: 9, falloff: 24, height: 6.5 },
     ],
     colors: { ground: '#7a6a56', groundAlt: '#6e5e4a', grass: '#66603e', high: '#84745e', rock: '#6e6456' },
     patches: [{ x: HILL[0], z: HILL[1], r: 26, color: '#7a6a58', strength: 0.6, rough: 0.5 }],
   },
 
   scatter: [
-    { type: 'rock', count: 40, center: HILL, ring: [6, 40], spacing: 5, seed: 3, avoid: [{ x: -4, z: -6, r: 14 }, { rect: [0, -20, 14, 40] }], props: { color: '#6e6458', size: 1.4 } },
-    { type: 'rock', count: 30, center: [0, 0], ring: [30, 200], spacing: 12, seed: 4, avoid: [{ x: -4, z: -6, r: 14 }], props: { color: '#5e5448' } },
+    { type: 'rock', count: 40, center: HILL, ring: [6, 40], spacing: 5, seed: 3, avoid: [{ x: START[0], z: START[1], r: 6 }, { rect: [0, -20, 14, 40] }], props: { color: '#6e6458', size: 1.4 } },
+    { type: 'rock', count: 30, center: [0, 0], ring: [30, 200], spacing: 12, seed: 4, avoid: [{ x: START[0], z: START[1], r: 6 }], props: { color: '#5e5448' } },
     { type: 'tree', count: 20, center: [0, 0], ring: [50, 200], spacing: 12, seed: 5, props: { kind: 'burnt' } },
   ],
 

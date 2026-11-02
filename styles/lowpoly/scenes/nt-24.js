@@ -6,13 +6,13 @@ import { oliveTree, palm, person, christ, box, glowAt } from './lib/nt-19-kit.js
 const DOOR = [0, -20];
 const MARY = [-1.1, -16.2];
 const JESUS = [5.2, -12.4];
-const START = [2.6, -1];
+const START = [0.8, -6];
 const rockColor = '#b2a48c';
 
 export default {
   title: 'John 20:1-18: The empty tomb',
   seed: 24,
-  fov: 60,
+  fov: 54,
   exposure: 1.05,
 
   sun: { direction: [0.7, 0.24, 0.65], color: '#ffc49a', intensity: 2.8 },
@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.4, shadowTint: '#3a3060', highlightTint: '#ffe4c4' },
   shadow: { center: [0, -12], radius: 32 },
 
-  player: { start: START, yaw: 0.06, pitch: 0.02, eye: 1.65, speed: 3.8 },
+  player: { start: START, yaw: -0.16, pitch: 0.03, eye: 1.65, speed: 3.8 },
 
   terrain: {
     size: 900,
@@ -74,15 +74,15 @@ export default {
     // Chamber floor, burial shelf and the folded linen.
     box(ctx, { x: 0, z: -23.2, y: y0, w: 5.6, h: 0.45, d: 4.4, color: '#9a8c74' });
     box(ctx, { x: 0, z: -24.9, y: y0 + 0.45, w: 4.6, h: 0.6, d: 1, color: '#a69680' });
-    ctx.solid.box(1.6, 0.12, 0.6, { position: [-0.6, y0 + 1.11, -24.9], color: '#f4efe4', jitter: 0.02 });
-    ctx.solid.box(0.5, 0.14, 0.4, { position: [1.4, y0 + 1.12, -24.9], rotation: [0, 0.3, 0], color: '#f0eadc', jitter: 0.02 });
-    const lin = new T.PointLight('#f4f2ff', 4, 7, 1.4);
+    ctx.solid.box(0.6, 0.12, 0.6, { position: [-0.15, y0 + 1.11, -24.9], color: '#f4efe4', jitter: 0.02 });
+    ctx.solid.box(0.3, 0.14, 0.3, { position: [0.35, y0 + 1.12, -24.9], rotation: [0, 0.3, 0], color: '#f0eadc', jitter: 0.02 });
+    const lin = new T.PointLight('#f4f2ff', 2.2, 7, 1.4);
     lin.position.set(0, y0 + 2, -22.6);
     ctx.scene.add(lin);
-    for (const [x, face] of [[-1.6, [1, -20]], [1.6, [-1, -20]]]) {
-      person(ctx, { x, z: -24.5, y: y0 + 1.15, pose: 'sit', face, robe: '#fbfaf4', mantle: null, skin: '#f4efe4', hood: false, emissive: 0.35, scale: 1 });
+    for (const [x, face] of [[-0.85, [0.4, -20]], [0.85, [-0.4, -20]]]) {
+      person(ctx, { x, z: -24.5, y: y0 + 1.15, pose: 'sit', face, robe: '#fbfaf4', mantle: null, skin: '#f4efe4', hood: false, emissive: 0.18, scale: 1 });
     }
-    glowAt(ctx, [0, y0 + 1.6, -20.4], 3, '#f4f0ff', 0.25);
+    glowAt(ctx, [0, y0 + 1.6, -20.2], 2.4, '#f4f0ff', 0.1);
 
     // The great round stone, rolled aside in its groove.
     const sx = 3.0, sz = -19.3;

@@ -7,14 +7,14 @@ import { house, oliveTree, person, christ, cityWall, box, stars, glowAt } from '
 
 const JESUS = [0.6, -6.5];
 const ROCK = [-1.1, -7.4];
-const START = [3.8, 6.8];
+const START = [5.2, 4.2];
 
 const robes = ['#8b6b4a', '#a0825c', '#b59a72', '#7a4e36', '#94704e', '#a65d3f', '#c4b090'];
 
 export default {
   title: 'Luke 22:39-46: Gethsemane',
   seed: 22,
-  fov: 62,
+  fov: 52,
   exposure: 1.5,
 
   sun: { direction: [-0.45, 0.5, -0.55], color: '#a8bcff', intensity: 2.0 },
@@ -26,7 +26,7 @@ export default {
   grade: { saturation: 0.95, contrast: 1.08, vignette: 0.55, shadowTint: '#101838', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -4], radius: 36 },
 
-  player: { start: START, yaw: 0.22, pitch: -0.05, eye: 1.65, speed: 3.6 },
+  player: { start: START, yaw: 0.36, pitch: -0.04, eye: 1.65, speed: 3.6 },
 
   terrain: {
     size: 900,
@@ -81,8 +81,8 @@ export default {
     ctx.colliders.add({ x: ROCK[0], z: ROCK[1], w: 2.6, d: 2, bottom: ry, top: ry + 1.1 });
     christ(ctx, { x: JESUS[0], z: JESUS[1], pose: 'kneel', face: ROCK, light: 14, halo: 1.8, glow: 0.35 });
     const ay = ry + 2.2;
-    person(ctx, { x: ROCK[0] - 0.6, z: ROCK[1] - 1.6, y: ay, face: JESUS, arms: 'out', robe: '#fbfaf4', mantle: null, skin: '#f4efe4', hood: false, emissive: 0.22, scale: 1.05 });
-    glowAt(ctx, [ROCK[0] - 0.8, ay + 1.2, ROCK[1] - 1.6], 3.2, '#e8eeff', 0.35);
+    person(ctx, { x: ROCK[0] - 0.6, z: ROCK[1] - 1.6, y: ay, face: JESUS, arms: 'out', robe: '#fbfaf4', mantle: null, skin: '#f4efe4', hood: false, emissive: 0.12, scale: 1.05 });
+    glowAt(ctx, [ROCK[0] - 0.8, ay + 1.2, ROCK[1] - 1.9], 3.6, '#e8eeff', 0.18);
     ctx.effects.beam({ position: [ROCK[0] - 0.6, ry, ROCK[1] - 1.2], height: 26, radiusBottom: 1.6, radiusTop: 3.5, color: '#dfe6ff', opacity: 0.16 });
     const l = new THREE.PointLight('#dfe6ff', 5, 10, 1.6);
     l.position.set(ROCK[0] - 0.8, ay + 1.5, ROCK[1] - 1.2);
@@ -90,9 +90,9 @@ export default {
 
     // Peter, James and John asleep a stone's cast away; the other eight near the gate.
     const sleep = [
-      { x: -1.4, z: 2.4, pose: 'lie', head: [-2.6, 1.8] },
-      { x: 1.6, z: 4.0, pose: 'slump', face: [1.2, 0] },
-      { x: 4.6, z: 2.2, pose: 'lie', head: [5.8, 1.6] },
+      { x: 2.2, z: 0.8, pose: 'slump', face: [0.4, 2.4] },
+      { x: 4.3, z: -0.4, pose: 'slump', face: [2.4, -4] },
+      { x: 6.4, z: -1.8, pose: 'slump', face: [8.4, -3.6] },
       { x: 12, z: 14, pose: 'lie', head: [13, 13] },
       { x: 9.5, z: 16.5, pose: 'slump', face: [10, 10] },
       { x: 14, z: 17, pose: 'lie', head: [15, 18] },
@@ -103,7 +103,7 @@ export default {
       { x: 13, z: 11.5, pose: 'slump', face: [11, 15] },
     ];
     for (const s of sleep) person(ctx, { ...s, robe: r.pick(robes), mantle: r.pick(['#7d5c3e', '#4f5a6b', '#a34f32', '#556246']), skin: r.pick(['#8a5a3c', '#7a4c31']), hood: s.pose === 'lie' && r() < 0.5 });
-    for (const [x, z] of [[-1.4, 2.4], [4.6, 2.2], [12, 14], [14, 17], [7.5, 13], [15.5, 14.5], [8.4, 18.8]]) {
+    for (const [x, z] of [[12, 14], [14, 17], [7.5, 13], [15.5, 14.5], [8.4, 18.8]]) {
       ctx.solid.box(1.1, 0.06, 2, { position: [x + 0.1, ctx.heightAt(x, z) + 0.03, z], rotation: [0, r() * 3, 0], color: '#3a3428', jitter: 0.05 });
     }
 

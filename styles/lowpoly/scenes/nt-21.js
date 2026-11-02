@@ -16,7 +16,7 @@ const seats = [
 export default {
   title: 'Luke 22:7-20, John 13: The Last Supper',
   seed: 21,
-  fov: 68,
+  fov: 64,
   exposure: 1.05,
 
   sun: { direction: [-0.85, 0.22, -0.2], color: '#ffb066', intensity: 2.6 },
@@ -29,7 +29,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.5, shadowTint: '#2a2040', highlightTint: '#ffd8a0' },
   shadow: { center: [0, 0], radius: 22 },
 
-  player: { start: [0.4, 3.9], yaw: 0.02, pitch: -0.16, eye: 1.6, speed: 2.6 },
+  player: { start: [0.1, 3.3], yaw: 0, pitch: -0.12, eye: 1.6, speed: 2.6 },
 
   terrain: {
     size: 900,
@@ -111,8 +111,8 @@ export default {
     ctx.solid.add(new THREE.CylinderGeometry(0.05, 0.12, 0.12, 8), { position: [-2.9, top + 0.46, -2.45], color: '#a8643c' });
     lamp(ctx, { x: -1.6, y: top, z: -2.45, light: 3.5 });
     lamp(ctx, { x: 1.6, y: top, z: -2.45, light: 3.5 });
-    lamp(ctx, { x: -3.35, y: top, z: 0.6 });
-    lamp(ctx, { x: 3.35, y: top, z: 0.6 });
+    lamp(ctx, { x: -3.35, y: top, z: 0.6, light: 2.5 });
+    lamp(ctx, { x: 3.35, y: top, z: 0.6, light: 2.5 });
     lamp(ctx, { x: 0.6, y: top, z: -2.5 });
     for (const [x, z] of [[-6.6, -4.6], [6.6, -4.6], [6.6, 4.6]]) {
       box(ctx, { x, z, y: F, w: 0.35, h: 1.3, d: 0.35, color: '#7a5c40' });
