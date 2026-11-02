@@ -1,4 +1,4 @@
-// Usage: node tools/shot.mjs <style-folder> <out.png> [waitMs] [keys]
+// Usage: node tools/shot.mjs <style-folder>[?scene=<id>] <out.png> [waitMs] [keys]
 // keys: comma list of "Key:ms" holds, e.g. "KeyW:1500,KeyD:400", pressed before the shot.
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
@@ -24,7 +24,8 @@ const browser = await chromium.launch({ args: ['--use-gl=angle', '--enable-unsaf
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
 page.on('console', (m) => m.type() === 'error' && console.log('console error:', m.text()));
 page.on('pageerror', (e) => console.log('page error:', e.message));
-await page.goto(`http://localhost:${server.address().port}/styles/${style}/`);
+const [folder, query = ''] = style.split('?');
+await page.goto(`http://localhost:${server.address().port}/styles/${folder}/${query ? `?${query}` : ''}`);
 await page.waitForTimeout(Number(waitMs));
 await page.mouse.click(640, 360);
 for (const k of keys.split(',').filter(Boolean)) {

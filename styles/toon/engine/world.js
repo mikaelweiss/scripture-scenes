@@ -32,7 +32,9 @@ export function createWorld(data, container) {
   };
 
   const ctx = {
+    THREE,
     scene,
+    builders,
     kit,
     style,
     colliders,
@@ -81,6 +83,7 @@ export function createWorld(data, container) {
     if (!build) throw new Error(`Unknown object type: ${obj.type}`);
     build(obj, ctx);
   }
+  data.custom?.(ctx);
   buildBlocks(blocks, ctx);
   if (data.cracks) buildCracks(data.cracks, ctx);
   if (data.smolder) buildSmolder(data.smolder, ctx);

@@ -21,7 +21,9 @@
 <body>
   <script type="module">
     import { createWorld } from './engine/world.js';
-    import scene from './scene.js';
+    const id = new URLSearchParams(location.search).get('scene');
+    const { default: scene } = await import(id ? `./scenes/${id}.js` : './scene.js');
+    document.title = scene.title;
     createWorld(scene, document.body);
   </script>
 </body>

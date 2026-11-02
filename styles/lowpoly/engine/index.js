@@ -82,7 +82,8 @@ export function createWorld(spec, container = document.body) {
   const time = { value: 0 };
   const effects = createEffects(scene);
   const colliders = new Colliders();
-  const ctx = { solid: new Batch(rand), glow: new Batch(rand), heightAt, colliders, rand, effects };
+  const frameFns = [];
+  const ctx = { THREE, scene, solid: new Batch(rand), glow: new Batch(rand), heightAt, colliders, rand, effects, builders, onFrame: (fn) => frameFns.push(fn) };
 
   for (const obj of spec.objects ?? []) builders[obj.type](ctx, obj);
   for (const sc of spec.scatter ?? []) {
@@ -95,6 +96,8 @@ export function createWorld(spec, container = document.body) {
       builders[sc.type](ctx, { ...sc.props, x, z });
     }
   }
+
+  spec.custom?.(ctx);
 
   const solid = ctx.solid.build(new THREE.MeshLambertMaterial({ vertexColors: true }));
   if (solid) {
@@ -162,6 +165,7 @@ export function createWorld(spec, container = document.body) {
     grade.uniforms.uTime.value = t % 10;
     walker.update(dt);
     effects.update(t, dt);
+    for (const fn of frameFns) fn(t, dt, camera);
     sky.position.copy(camera.position);
     composer.render();
   });
