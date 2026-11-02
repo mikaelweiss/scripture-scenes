@@ -39,9 +39,16 @@ export function figure(ctx, f) {
   const group = createFigure({ ...f, arms: f.pose === 'out' ? 'out' : 'down', y });
   if (POSES[f.pose]) group.children[1].geometry = armsGeometry(...POSES[f.pose]);
   if (f.kneel) group.position.y -= 0.48 * (f.scale ?? 1);
+  // Fallen on the back with arms flung wide and the face up, so the body reads as a person and not a log.
   if (f.prostrate) {
-    group.rotation.x = Math.PI / 2 - 0.1;
-    group.position.y += 0.2;
+    const s = f.scale ?? 1;
+    group.children[1].geometry = armsGeometry(1.7, 0);
+    const head = group.children[group.children.length - 1];
+    head.scale.set(1.3, 1.3, 1.3 / 0.6);
+    head.position.y = -1.53 * 0.3;
+    group.rotation.set(-Math.PI / 2, group.rotation.y, 0, 'YXZ');
+    group.scale.z *= 0.6;
+    group.position.y += 0.19 * s;
   }
   ctx.scene.add(group);
   if (f.solid !== false && !f.y) ctx.colliders.add({ x: f.x, z: f.z, w: 0.6, d: 0.6, bottom: y, top: y + 1.8 * (f.scale ?? 1) });
@@ -55,10 +62,10 @@ export function figure(ctx, f) {
 }
 
 // Heavenly messenger: white, faceless, glowing, slowly drifting down along a column of light.
-export function angel(ctx, { x, z, y, face, scale = 1.05, bob = 0.6, phase = 0 }) {
-  const group = createFigure({ x, y, z, face, scale, robe: '#fdfbf4', mantle: '#f6f1e2', skin: '#f8f2e4', arms: 'out', emissive: 0.55 });
+export function angel(ctx, { x, z, y, face, scale = 1.05, bob = 0.6, phase = 0, glow = 0.55, haloSize = 4, haloOpacity = 0.5 }) {
+  const group = createFigure({ x, y, z, face, scale, robe: '#fdfbf4', mantle: '#f6f1e2', skin: '#f8f2e4', arms: 'out', emissive: glow });
   ctx.scene.add(group);
-  const halo = ctx.effects.halo({ position: [x, y + 1.2 * scale, z], size: 4, opacity: 0.5, color: '#fff4d8' });
+  const halo = ctx.effects.halo({ position: [x, y + 1.2 * scale, z], size: haloSize, opacity: haloOpacity, color: '#fff4d8' });
   ctx.onFrame((t) => {
     const dy = Math.sin(t * 0.6 + phase) * bob;
     group.position.y = y + dy;

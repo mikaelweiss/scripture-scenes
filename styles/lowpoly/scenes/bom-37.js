@@ -58,12 +58,12 @@ function cityWall(ctx) {
 // Arrows and stones fly from the crowd and pass Samuel on every side.
 function missiles(ctx, samuelTop) {
   const { THREE: T, scene, rand } = ctx;
-  const arrows = 26;
+  const arrows = 40;
   const arrowMesh = new T.InstancedMesh(arrowGeometry(0.9), new T.MeshLambertMaterial({ color: '#4a3a2a' }), arrows);
   const flights = Array.from({ length: arrows }, () => {
     const start = new T.Vector3(rand.range(-14, 14), 1.6, rand.range(-14, 4));
     const side = rand.sign();
-    const miss = new T.Vector3(SAMUEL[0] + side * rand.range(0.7, 2.6), samuelTop + rand.range(-0.6, 2.4), SAMUEL[1]);
+    const miss = new T.Vector3(SAMUEL[0] + side * rand.range(0.6, 2.0), samuelTop + rand.range(-0.8, 2.0), SAMUEL[1]);
     const end = miss.clone().add(miss.clone().sub(start).setY(0).normalize().multiplyScalar(rand.range(10, 25))).setY(miss.y + rand.range(-2, 3));
     return { start, end, arc: rand.range(1.5, 4), phase: rand(), dur: rand.range(1.3, 2.0) };
   });
@@ -157,7 +157,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.35, shadowTint: '#2a3050', highlightTint: '#fff2d8' },
   shadow: { center: [0, -12], radius: 70 },
 
-  player: { start: [0, -5], yaw: 0, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [6, -13], yaw: 0.3, pitch: 0.33, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -184,7 +184,7 @@ export default {
     groups: [
       {
         count: 720, center: SAMUEL, ring: [7, 44], arc: [0.05, Math.PI - 0.05], spacing: 0.85, face: SAMUEL, children: 0.12, seed: 21,
-        avoid: [{ rect: [0, 0, 3.4, 16] }, { rect: [0, WALL_Z + 6, 10, 4] }],
+        avoid: [{ rect: [3, -10, 6, 24, -0.3] }, { rect: [0, WALL_Z + 6, 10, 4] }],
       },
       {
         count: 140, center: SAMUEL, ring: [44, 58], arc: [0.3, Math.PI - 0.3], spacing: 1.5, face: SAMUEL, children: 0.15, seed: 22,
@@ -200,8 +200,8 @@ export default {
 
     const top = WALL_H + 0.2;
     figure(ctx, {
-      x: SAMUEL[0], z: SAMUEL[1] + 0.3, y: top, face: [0, 30], scale: 1.25, pose: 'up',
-      robe: '#a8442a', mantle: '#5a2e1e', skin: '#6a4028', emissive: 0.12,
+      x: SAMUEL[0], z: SAMUEL[1] + 0.3, y: top, face: [6, -12], scale: 1.95, pose: 'up',
+      robe: '#a8442a', mantle: '#5a2e1e', skin: '#6a4028', emissive: 0.2,
     });
     // Archers and throwers in front, a few listeners who believe kneeling near the wall.
     const r = ctx.rand;
@@ -212,6 +212,6 @@ export default {
     for (let i = 0; i < 5; i++) {
       figure(ctx, { x: -8 + i * 1.3, z: WALL_Z + 5.5 + (i % 2) * 0.8, face: [SAMUEL[0], SAMUEL[1]], kneel: true, pose: 'pray', robe: r.pick(palette.robes), mantle: '#e2d6bc', skin: r.pick(palette.skins) });
     }
-    missiles(ctx, top + 1.4);
+    missiles(ctx, top + 1.8);
   },
 };

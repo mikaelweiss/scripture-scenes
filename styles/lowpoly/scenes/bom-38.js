@@ -42,7 +42,7 @@ export default {
   exposure: 1.05,
 
   sun: { direction: [-0.62, 0.07, -0.8], color: '#ffc88a', intensity: 2.6 },
-  light: { sky: '#bcd2f0', ground: '#8a6a4a', hemi: 1.35 },
+  light: { sky: '#bcd2f0', ground: '#8a6a4a', hemi: 1.65 },
   sky: { top: '#5f8cc8', horizon: '#ffd7a0', ground: '#d9b48a', sunColor: '#ffb070', glow: 1.6 },
   fog: { color: '#e9c9a2', near: 110, far: 700 },
   clouds: { count: 34, shadow: '#c4a49a', lit: '#ffe4b8', rim: '#fff3d6', distance: [300, 950], altitude: [140, 260], hole: 0.3 },
@@ -51,7 +51,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.3, shadowTint: '#3a3a6a', highlightTint: '#fff0d0' },
   shadow: { center: [0, -14], radius: 60 },
 
-  player: { start: [2, 0], yaw: -0.12, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [2, 5], yaw: -0.22, pitch: -0.01, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -79,6 +79,8 @@ export default {
 
   custom(ctx) {
     town(ctx);
+    // A rock outcrop at the start lifts the eye enough to see the fallen on the ground.
+    ctx.builders.rock(ctx, { x: 2, z: 6, size: 2.2, color: '#9a8670' });
     const r = ctx.rand;
 
     // Those who set the day of death stand apart. Many have fallen to the earth.
@@ -88,7 +90,7 @@ export default {
       const x = NEPHI[0] + Math.cos(a) * d * 1.2, z = NEPHI[1] + Math.sin(a) * d;
       if (Math.abs(x - 3) < 3 && z > -6) continue;
       people.push([x, z]);
-      figure(ctx, { x, z, prostrate: true, solid: false, robe: r.pick(scoffers.robes), mantle: r.pick(scoffers.mantles), skin: r.pick(palette.skins) });
+      figure(ctx, { x, z, face: [x + r.range(-9, 9), z + r.range(-9, 9)], prostrate: true, solid: false, robe: r.pick(scoffers.robes), mantle: r.pick(scoffers.mantles), skin: r.pick(palette.skins) });
     }
     for (let i = 0; i < 80; i++) {
       const a = r.range(-0.5, Math.PI + 0.5), d = r.range(20, 38);
@@ -96,6 +98,12 @@ export default {
       if ((Math.abs(x - 3) < 3 && z > -6) || people.some(([px, pz]) => Math.hypot(px - x, pz - z) < 1.6)) continue;
       people.push([x, z]);
       figure(ctx, { x, z, face: [x + 40, z - 200], pose: r() < 0.4 ? 'forward' : 'down', robe: r.pick(scoffers.robes), mantle: r.pick(scoffers.mantles), skin: r.pick(palette.skins), hood: r() < 0.4 });
+    }
+
+    // Scoffers fallen to the earth close by, where the player sees them first.
+    const fallen = [[0, -2, 2.9], [5, -1.5, -2.6], [-4.5, -4.5, 2.0], [8.5, -3.5, -2.9], [11, -4, 2.7], [-7, -4, -2.4], [2.5, -5, 0.4], [15, -6, -2.5], [-10, -1.5, 2.8]];
+    for (const [x, z, yaw] of fallen) {
+      figure(ctx, { x, z, face: [x + Math.sin(yaw), z + Math.cos(yaw)], prostrate: true, solid: false, robe: r.pick(palette.robes), mantle: r.pick(scoffers.mantles), skin: r.pick(palette.skins) });
     }
 
     // Nephi kneels where he prayed all day, with a few believers rising in joy around him.

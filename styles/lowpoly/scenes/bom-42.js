@@ -31,7 +31,7 @@ export default {
   bloom: { strength: 0.7, radius: 0.6, threshold: 0.78 },
   shadow: { center: [0, -6], radius: 70 },
 
-  player: { start: [0, 11], yaw: 0, pitch: -0.04, eye: 1.65, speed: 4.5 },
+  player: { start: [0, 8], yaw: 0, pitch: -0.07, eye: 1.65, speed: 4.5 },
 
   objects,
 
@@ -50,8 +50,8 @@ export default {
   figures: [],
 
   effects: [
-    { type: 'beam', at: CIRCLE, height: 280, radiusBottom: FIRE_R + 1, radiusTop: 34, color: '#fff1cf', opacity: 0.45 },
-    { type: 'beam', at: CIRCLE, height: 280, radiusBottom: 3, radiusTop: 12, color: '#fff8e6', opacity: 0.25 },
+    { type: 'beam', at: CIRCLE, height: 280, radiusBottom: FIRE_R + 1, radiusTop: FIRE_R + 6, color: '#fff1cf', opacity: 0.16 },
+    { type: 'beam', at: CIRCLE, height: 280, radiusBottom: 1.6, radiusTop: 10, color: '#fff8e6', opacity: 0.08 },
     { type: 'ring', at: CIRCLE, lift: 0.05, radius: FIRE_R, width: 1.3, color: '#ffd890', opacity: 1 },
     { type: 'motes', at: CIRCLE, radius: FIRE_R, height: 45, count: 320 },
     { type: 'sunShafts', center: [-30, -120], count: 7, spread: 90, length: 500, width: [10, 26], opacity: 0.07 },
@@ -60,15 +60,16 @@ export default {
   custom(ctx) {
     // A fallen block of the plaza the player stands on to see over the multitude.
     for (const [w, d, h] of [[5, 4.4, 0.6], [3.6, 3, 1.2]]) {
-      const y = ctx.heightAt(0, 11) - 0.1;
-      ctx.solid.box(w, h, d, { position: [0, y + h / 2, 11.4], rotation: [0, 0.05, 0], color: '#b8a07e' });
-      ctx.colliders.add({ x: 0, z: 11.4, w, d, rot: 0.05, bottom: y, top: y + h });
+      const y = ctx.heightAt(0, 8) - 0.1;
+      ctx.solid.box(w, h, d, { position: [0, y + h / 2, 8.4], rotation: [0, 0.05, 0], color: '#b8a07e' });
+      ctx.colliders.add({ x: 0, z: 8.4, w, d, rot: 0.05, bottom: y, top: y + h });
     }
-    // Jesus among the children, arms out in blessing.
+    // Jesus among the children, arms out in blessing, on a low step so He stands above the little ones.
+    const step = ctx.heightAt(CIRCLE[0], CIRCLE[1]);
+    ctx.solid.add(new ctx.THREE.CylinderGeometry(1.1, 1.3, 0.35, 8), { position: [CIRCLE[0], step + 0.12, CIRCLE[1]], color: '#d8c6a4' });
     figure(ctx, {
-      x: CIRCLE[0], z: CIRCLE[1], face: [0, 30], scale: 1.12, pose: 'out', robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', emissive: 0.3,
-      light: { color: '#fff0cf', intensity: 60, distance: 30 },
-      halo: { size: 6, opacity: 0.55, color: '#fff3d6' },
+      x: CIRCLE[0], z: CIRCLE[1], y: step + 0.3, face: [0, 30], scale: 1.5, pose: 'out', robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', emissive: 0.22,
+      halo: { size: 2.8, opacity: 0.5, color: '#fff3d6' },
     });
 
     // A ring of soft white fire that does not burn.
@@ -79,12 +80,12 @@ export default {
     fires(ctx, flames, { lights: 0, colors: ['#ffc870', '#fff6dc'], ash: null });
 
     // Angels standing among the little ones, and more descending out of the open heavens.
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+    for (let i = 0; i < 6; i++) {
+      const a = Math.PI + 0.25 + (i / 5) * (Math.PI - 0.5);
       const x = CIRCLE[0] + Math.cos(a) * 8.8, z = CIRCLE[1] + Math.sin(a) * 8.8;
-      angel(ctx, { x, z, y: ctx.heightAt(x, z) + 0.15, face: CIRCLE, bob: 0.08, phase: i });
+      angel(ctx, { x, z, y: ctx.heightAt(x, z) + 0.15, face: CIRCLE, scale: 0.95, bob: 0.08, phase: i, glow: 0.3, haloSize: 2.4, haloOpacity: 0.2 });
     }
     const descending = [[-5, 6, -2], [6, 9, -5], [-8, 12, -8], [3, 15, -4], [9, 19, -10], [-11, 22, -6], [0, 26, -12]];
-    descending.forEach(([dx, y, dz], i) => angel(ctx, { x: CIRCLE[0] + dx, z: CIRCLE[1] + dz, y, face: [0, 30], bob: 1.2, phase: i * 1.7 }));
+    descending.forEach(([dx, y, dz], i) => angel(ctx, { x: CIRCLE[0] + dx, z: CIRCLE[1] + dz, y, face: [0, 30], bob: 1.2, phase: i * 1.7, glow: 0.4, haloSize: 3, haloOpacity: 0.3 }));
   },
 };

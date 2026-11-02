@@ -189,7 +189,11 @@ export default {
       const [x, z] = onRing(a, R - 4);
       banner(ctx, { x, z, h: 6, color: r.pick(['#2f5a7a', '#8a2a1e', '#e8dcc0']) });
     }
-    figure(ctx, { x: 0, z: -35.5, face: [0, 30], pose: 'raise', robe: '#e8dcc0', mantle: '#2f5a7a', skin: '#b07f58', scale: 1.08 });
+    // Gidgiddoni on a rough platform of stacked timber, raised above the host so he can be seen.
+    const deck = ctx.heightAt(0, -35.5);
+    ctx.solid.box(3, 1.1, 2.4, { position: [0, deck + 0.5, -35.5], color: '#7a5e40' });
+    ctx.colliders.add({ x: 0, z: -35.5, w: 3, d: 2.4, bottom: deck - 0.1, top: deck + 1.05 });
+    figure(ctx, { x: 0, z: -35.5, y: deck + 1.05, face: [4, 30], pose: 'raise', robe: '#e8dcc0', mantle: '#2f5a7a', skin: '#b07f58', scale: 1.25 });
 
     const camps = [[-30, 30], [32, 34], [-50, -2], [50, -4], [-20, -62], [22, -60]];
     fires(ctx, camps.map(([x, z]) => ({ x, z, size: 0.5 })), { lights: 0 });

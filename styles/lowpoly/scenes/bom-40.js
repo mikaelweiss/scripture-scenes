@@ -119,7 +119,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.12, vignette: 0.45, shadowTint: '#100a18', highlightTint: '#ffb070' },
   shadow: { center: [0, -20], radius: 80 },
 
-  player: { start: [0, 22], yaw: -0.18, pitch: 0.05, eye: 1.65, speed: 4.5 },
+  player: { start: [4, 8], yaw: 0.1, pitch: 0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -144,23 +144,23 @@ export default {
     { type: 'column', x: -8, z: -14, h: 5, color: '#5e5040', broken: true },
     { type: 'column', x: 8, z: -18, h: 5, color: '#5e5040', broken: true },
     { type: 'column', x: -20, z: -22, h: 5, color: '#5e5040', broken: true },
-    { type: 'rubble', x: 4, z: 6, radius: 6, count: 30, color: '#4e4236' },
+    { type: 'rubble', x: 18, z: 4, radius: 6, count: 30, color: '#4e4236' },
     { type: 'smolder', x: -26, z: 14, radius: 2.5, smoke: 12, height: 26 },
-    { type: 'smolder', x: 30, z: 6, radius: 3, smoke: 12, height: 30 },
+    { type: 'smolder', x: 44, z: 34, radius: 3, smoke: 12, height: 30 },
   ],
 
   scatter: [
     { type: 'tree', count: 70, center: [0, 0], ring: [90, 300], spacing: 7, seed: 8, avoid: [{ rect: [SEA_X + 160, -60, 330, 440] }], props: { kind: 'burnt' } },
     { type: 'rubble', count: 40, center: [0, 0], ring: [20, 150], seed: 7, avoid: [{ rect: [SEA_X + 160, -60, 330, 440] }], props: { color: '#4e4236', count: 8, radius: 3 } },
-    { type: 'smolder', count: 14, center: CITY, ring: [60, 220], spacing: 30, seed: 12, props: { radius: 4, smoke: 14, height: 50 }, avoid: [{ rect: [SEA_X + 160, -60, 330, 440] }, { rect: [0, 20, 70, 60] }] },
+    { type: 'smolder', count: 14, center: CITY, ring: [60, 220], spacing: 30, seed: 12, props: { radius: 4, smoke: 14, height: 50 }, avoid: [{ rect: [SEA_X + 160, -60, 330, 440] }, { rect: [10, 0, 100, 110] }] },
   ],
 
   crowd: {
     palette,
     groups: [
-      { count: 46, center: [-4, 10], ring: [0.8, 6], spacing: 0.9, face: CITY, children: 0.25, kneel: 0.6, seed: 21 },
-      { count: 30, center: [12, 18], ring: [0.8, 4.5], spacing: 0.9, face: [12, 18], children: 0.3, kneel: 0.5, seed: 22 },
-      { count: 40, center: [-18, 30], ring: [0.8, 5], spacing: 0.9, face: CITY, children: 0.2, kneel: 0.5, seed: 23 },
+      { count: 46, center: [-7, -10], ring: [0.8, 5], spacing: 0.9, face: CITY, children: 0.25, kneel: 0.6, seed: 21 },
+      { count: 30, center: [11, -6], ring: [0.8, 4], spacing: 0.9, face: [11, -6], children: 0.3, kneel: 0.5, seed: 22 },
+      { count: 40, center: [-17, 0], ring: [0.8, 5], spacing: 0.9, face: CITY, children: 0.2, kneel: 0.5, seed: 23 },
       { count: 60, center: [0, 0], ring: [24, 50], arc: [0, Math.PI], spacing: 3, face: CITY, children: 0.2, kneel: 0.4, seed: 24, avoid: [{ rect: [0, 24, 4, 14] }] },
     ],
   },
@@ -170,11 +170,11 @@ export default {
     sinkingCity(ctx);
     lightning(ctx);
     fires(ctx, flames, { lights: 4, lightIntensity: 140, lightDistance: 80 });
-    fires(ctx, [{ x: -26, z: 14, size: 1.3 }, { x: 30, z: 6, size: 1.5 }, { x: 6, z: -4, size: 1.0 }, { x: 4, z: 31, size: 1.1 }], { lights: 4, lightIntensity: 50, lightDistance: 30 });
+    fires(ctx, [{ x: -26, z: 14, size: 1.3 }, { x: 44, z: 34, size: 1.5 }, { x: 6, z: -4, size: 1.0 }, { x: 4, z: 31, size: 1.1 }], { lights: 4, lightIntensity: 50, lightDistance: 30 });
 
     // Mourners crying out in the dark, some with hands raised.
     const r = ctx.rand;
-    for (const [x, z, pose] of [[3, 14, 'up'], [-7, 15, 'raise'], [6, 9, 'pray'], [-10, 6, 'up'], [10, 22, 'pray']]) {
+    for (const [x, z, pose] of [[1, -4, 'up'], [-3, -2, 'raise'], [6, -9, 'pray'], [-11, -15, 'up'], [8, 0, 'pray']]) {
       figure(ctx, { x, z, face: CITY, pose, kneel: pose === 'pray', robe: r.pick(palette.robes), mantle: r.pick(palette.mantles), skin: r.pick(palette.skins), hood: true });
     }
   },
