@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { placeCrowd, createCrowd } from '../../engine/crowd.js';
+import { placeCrowd, parts } from '../../engine/crowd.js';
 import { rng, jitterColor } from '../../engine/util.js';
 
 const darkenBottom = (c, ny) => {
@@ -8,7 +8,7 @@ const darkenBottom = (c, ny) => {
 
 export const period = {
   men: {
-    robes: ['#2a2a2e', '#3a332d', '#2d3340', '#463b31', '#22252b', '#4d4438', '#33302c'],
+    robes: ['#2a2a2e', '#4a3a2c', '#353d52', '#5a4a38', '#2e3a30', '#4a4a50', '#3a3230'],
     mantles: ['#1f1f22', '#2e2924', '#272c36', '#3b3128'],
     skins: ['#e0b48f', '#d4a17c', '#c99474', '#e6bf9b', '#d9ad88'],
     mantleChance: 0.7,
@@ -19,7 +19,8 @@ export const period = {
     mantles: ['#d8cfbf', '#a89c88', '#4a4038', '#6e6458', '#c4b8a4', '#7a5a4a'],
     skins: ['#e0b48f', '#d4a17c', '#e6bf9b', '#d9ad88'],
     mantleChance: 0.75,
-    hoodChance: 0.85,
+    hoodChance: 0.6,
+    women: true,
   },
 };
 
@@ -28,19 +29,69 @@ export function box(ctx, { x, y = 0, z, w, h, d, rot = 0, color, jitter = 0.04, 
   if (collide) ctx.colliders.add({ x, z, w, d, rot, bottom: y, top: y + h });
 }
 
-function hatGeometry() {
-  const crown = new THREE.CylinderGeometry(0.1, 0.11, 0.17, 7).translate(0, 1.76, -0.01);
-  const brim = new THREE.CylinderGeometry(0.2, 0.2, 0.02, 9).translate(0, 1.67, -0.01);
-  const g = new THREE.BufferGeometry();
-  const a = crown.toNonIndexed(), b = brim.toNonIndexed();
-  const pos = new Float32Array([...a.attributes.position.array, ...b.attributes.position.array]);
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(pos.length).fill(1), 3));
+function shaded(geo, fn = () => 1) {
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  const pos = g.attributes.position;
+  const col = new Float32Array(pos.count * 3);
+  for (let i = 0; i < pos.count; i += 3) {
+    const cx = (pos.getX(i) + pos.getX(i + 1) + pos.getX(i + 2)) / 3;
+    const cy = (pos.getY(i) + pos.getY(i + 1) + pos.getY(i + 2)) / 3;
+    const cz = (pos.getZ(i) + pos.getZ(i + 1) + pos.getZ(i + 2)) / 3;
+    const v = fn(cx, cy, cz);
+    for (let k = 0; k < 3; k++) col.set([v, v, v], (i + k) * 3);
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
   g.computeVertexNormals();
   return g;
 }
 
-function sway(material, time) {
+const merge = (...geos) => {
+  const parts = geos.map((g) => (g.index ? g.toNonIndexed() : g));
+  const pos = new Float32Array(parts.reduce((n, g) => n + g.attributes.position.array.length, 0));
+  let o = 0;
+  for (const g of parts) {
+    pos.set(g.attributes.position.array, o);
+    o += g.attributes.position.array.length;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  return g;
+};
+
+// 1830s dress built from the same proportions as the engine crowd: origin at the feet, facing +z.
+// Seated people sink into their bench, so their parts drop by SIT and legs are left out.
+const SIT = 0.42;
+const shapes = {
+  shins: () => shaded(merge(...[-1, 1].map((s) => new THREE.CylinderGeometry(0.07, 0.065, 0.48, 5).rotateX(Math.PI / 2).translate(s * 0.1, SIT + 0.07, -0.16))), (x, y, z) => (z < -0.36 ? 0.45 : 1)),
+  legs: () => shaded(merge(...[-1, 1].map((s) => new THREE.CylinderGeometry(0.075, 0.07, 0.62, 5).translate(s * 0.09, 0.31, 0))), (x, y) => (y < 0.06 ? 0.45 : 1)),
+  coat: () => shaded(new THREE.CylinderGeometry(0.17, 0.25, 0.86, 7).translate(0, 0.99, 0), (x, y) => (y < 0.62 ? 0.82 : 1)),
+  shoulders: () => shaded(new THREE.CylinderGeometry(0.21, 0.19, 0.12, 7).translate(0, 1.38, 0)),
+  front: () => shaded(merge(new THREE.BoxGeometry(0.14, 0.2, 0.06).translate(0, 1.33, 0.155), new THREE.BoxGeometry(0.18, 0.05, 0.05).translate(0, 1.43, 0.12))),
+  vest: () => shaded(new THREE.BoxGeometry(0.2, 0.26, 0.06).translate(0, 1.13, 0.17)),
+  collar: () => shaded(new THREE.CylinderGeometry(0.085, 0.1, 0.07, 7).translate(0, 1.45, 0)),
+  arms: () => {
+    const arm = (s) => new THREE.CylinderGeometry(0.055, 0.065, 0.6, 5).translate(0, -0.3, 0).rotateX(-0.05).rotateZ(s * 0.12).translate(s * 0.2, 1.38, 0.0);
+    return shaded(merge(arm(-1), arm(1)), (x, y) => (y < 0.86 ? 0.8 : 1));
+  },
+  hands: () => shaded(merge(...[-1, 1].map((s) => new THREE.IcosahedronGeometry(0.05, 0).translate(s * 0.27, 0.78, 0.0)))),
+  dress: () => shaded(new THREE.CylinderGeometry(0.16, 0.34, 1.38, 8).translate(0, 0.69, 0), (x, y) => (y < 0.1 ? 0.7 : 1)),
+  shawl: () => shaded(new THREE.CylinderGeometry(0.19, 0.3, 0.42, 8).translate(0, 1.2, -0.01)),
+  apron: () => shaded(new THREE.BoxGeometry(0.3, 0.6, 0.04).translate(0, 0.62, 0.25).rotateX(-0.12)),
+  head: () => shaded(new THREE.IcosahedronGeometry(0.13, 1).scale(1, 1.12, 1).translate(0, 1.56, 0), (x, y, z) => (z > 0.02 ? 1 : 0.85)),
+  hair: () => shaded(new THREE.SphereGeometry(0.142, 8, 4, Math.PI * 0.82, Math.PI * 1.36, 0, Math.PI * 0.62).scale(1, 1.1, 1).translate(0, 1.57, -0.01)),
+  hat: () => shaded(merge(new THREE.CylinderGeometry(0.115, 0.125, 0.2, 8).translate(0, 1.79, -0.01), new THREE.CylinderGeometry(0.22, 0.22, 0.02, 10).translate(0, 1.69, -0.01))),
+  bonnet: () => {
+    const crown = new THREE.SphereGeometry(0.16, 8, 4, Math.PI * 0.8, Math.PI * 1.4, 0, Math.PI * 0.62).scale(1, 1.1, 1.1).translate(0, 1.58, -0.02);
+    const brim = new THREE.CylinderGeometry(0.2, 0.17, 0.14, 9, 1, true, -Math.PI * 0.62, Math.PI * 1.24).rotateX(Math.PI / 2 - 0.35).translate(0, 1.66, 0.04);
+    return shaded(merge(crown, brim));
+  },
+};
+const shapeCache = {};
+shapes.hood = () => shaded(parts.hood().scale(1.05, 1.03, 1.05));
+const shape = (k) => (shapeCache[k] ??= shapes[k]());
+
+function swayMaterial(time) {
+  const material = new THREE.MeshLambertMaterial({ vertexColors: true });
   material.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = time;
     shader.vertexShader = shader.vertexShader
@@ -49,45 +100,97 @@ function sway(material, time) {
         '#include <begin_vertex>',
         `#include <begin_vertex>
         float ph = instanceMatrix[3].x * 0.37 + instanceMatrix[3].z * 0.61;
-        transformed.x += sin(uTime * 0.9 + ph) * 0.03 * position.y;
-        transformed.z += cos(uTime * 0.7 + ph * 1.3) * 0.02 * position.y;`,
+        transformed.x += sin(uTime * 0.9 + ph) * 0.02 * position.y;
+        transformed.z += cos(uTime * 0.7 + ph * 1.3) * 0.015 * position.y;`,
       );
   };
+  return material;
 }
 
-// Places groups with the engine crowd and adds hats to men. Each group: { ...placeCrowd group, palette, hats, lift, seated }.
+const HAIR = ['#2a1d15', '#3b2718', '#4e3420', '#6a4626', '#1d1814', '#8a6a44', '#7a7068', '#a88a5c'];
+const TROUSERS = ['#6e6250', '#4a4640', '#8a7c62', '#3c3a3a', '#5c5448', '#9a8c70'];
+const VESTS = ['#7a5a3a', '#5a5048', '#8a3a30', '#4a5a6a', '#c8b89a', '#3a4a3a', '#6a4a5a'];
+const BONNETS = ['#e8e0cc', '#d4c8b0', '#5a4a3e', '#3e3a40', '#c8b490', '#f2ece0'];
+
+// Places groups in 1830s dress, or in ancient robes when the palette sets `ancient`.
+// Each group: { ...placeCrowd group, palette (period.men, period.women, or an ancient palette), hats, seated, kneel, lift, y, arms, exact }.
+// Men wear frock coats, light trousers, a white shirt front and cravat, and hats outdoors. Women wear long dresses, shawls, aprons, and bonnets.
 export function crowd(ctx, groups) {
+  const time = { value: 0 };
+  const material = swayMaterial(time);
+  const items = {};
+  const put = (k, p, color, drop = 0) => (items[k] ??= []).push([p, color, drop]);
   const all = [];
-  const hatted = [];
   for (const g of groups) {
     const people = placeCrowd([g], ctx.heightAt, (x, z) => ctx.colliders.ground(x, z, 1000, ctx.heightAt(x, z), { radius: 0 }));
     const r = rng((g.seed ?? 1) + 77);
+    const woman = g.palette?.women ?? g.palette === period.women;
     for (const p of people) {
       if (g.y !== undefined) p.y = g.y;
-      p.y += (g.lift ?? 0) - (g.seated ? 0.42 * p.scale : 0);
-      if (g.hats && p.scale > 0.85 && r() < g.hats) hatted.push(p);
+      p.y += g.lift ?? 0;
+      if (g.scale) p.scale = g.scale;
+      if (g.exact) p.yaw = Math.atan2((g.face ?? g.center)[0] - p.x, (g.face ?? g.center)[1] - p.z);
+      const drop = g.seated || g.kneel ? SIT : 0;
+      const o = g.outfit ?? {};
+      const hair = jitterColor(o.hair ?? r.pick(HAIR), r, 0.06);
+      put('head', p, p.skin, drop);
+      if (g.palette?.ancient) {
+        put('dress', p, p.robe, drop);
+        if (p.mantle) put('shawl', p, p.mantle, drop);
+        put(p.hood ? 'hood' : 'hair', p, p.hood ? p.mantle ?? p.robe : hair, drop);
+      } else if (woman) {
+        put('dress', p, p.robe, drop);
+        if (p.mantle) put('shawl', p, p.mantle, drop);
+        if (!g.seated && r() < 0.45) put('apron', p, jitterColor(r.pick(['#e8e2d4', '#d8d0bc', '#c8c0b0']), r, 0.04), drop);
+        if (p.hood) put('bonnet', p, jitterColor(o.bonnet ?? r.pick(BONNETS), r, 0.05), drop);
+        else put('hair', p, hair, drop);
+        put('collar', p, new THREE.Color('#f2ede2'), drop);
+      } else {
+        if (g.kneel) put('shins', p, jitterColor(o.trousers ?? r.pick(TROUSERS), r, 0.06), drop);
+        if (!g.seated) put('legs', p, jitterColor(o.trousers ?? r.pick(TROUSERS), r, 0.06), drop);
+        put('coat', p, p.robe, drop);
+        put('shoulders', p, p.robe, drop);
+        put('vest', p, jitterColor(o.vest ?? r.pick(VESTS), r, 0.06), drop);
+        put('front', p, new THREE.Color('#f4f0e6'), drop);
+        put('collar', p, new THREE.Color('#f4f0e6'), drop);
+        put(g.arms === 'out' ? 'armsOut' : 'arms', p, p.robe, drop);
+        if (g.arms !== 'out' && !g.seated && !g.kneel) put('hands', p, p.skin, drop);
+        put('hair', p, hair, drop);
+        if (g.hats && p.scale > 0.85 && r() < g.hats) put('hat', p, jitterColor(r.pick(['#1c1b1d', '#2a2622', '#3a3128', '#4a4038']), r, 0.05), drop);
+      }
     }
     all.push(...people);
   }
-  const time = { value: 0 };
-  ctx.scene.add(createCrowd(all, time));
-  if (hatted.length) {
-    const mat = new THREE.MeshLambertMaterial({ vertexColors: true });
-    sway(mat, time);
-    const mesh = new THREE.InstancedMesh(hatGeometry(), mat, hatted.length);
-    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0);
-    const hr = rng(5);
-    hatted.forEach((p, i) => {
+  if (!shapes.armsOut) {
+    shapes.armsOut = () => {
+      const arm = (s) => new THREE.CylinderGeometry(0.055, 0.065, 0.6, 5).translate(0, -0.3, 0).rotateX(-0.35).rotateZ(s * 0.95).translate(s * 0.2, 1.38, 0.02);
+      return shaded(merge(arm(-1), arm(1)));
+    };
+  }
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), v = new THREE.Vector3(), sc = new THREE.Vector3();
+  for (const [k, list] of Object.entries(items)) {
+    const mesh = new THREE.InstancedMesh(shape(k), material, list.length);
+    list.forEach(([p, color, drop], i) => {
       q.setFromAxisAngle(up, p.yaw);
-      m.compose(new THREE.Vector3(p.x, p.y, p.z), q, new THREE.Vector3().setScalar(p.scale));
+      m.compose(v.set(p.x, p.y - drop * p.scale, p.z), q, sc.setScalar(p.scale));
       mesh.setMatrixAt(i, m);
-      mesh.setColorAt(i, jitterColor(hr.pick(['#1c1b1d', '#2a2622', '#3a3128', '#20232a']), hr, 0.05));
+      mesh.setColorAt(i, color);
     });
     mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.computeBoundingSphere();
     ctx.scene.add(mesh);
   }
   ctx.onFrame((t) => (time.value = t));
   return all;
+}
+
+// One hand-placed person in 1830s dress, facing a point. kind: 'man' | 'woman'.
+export function person(ctx, { x, z, y, face, kind = 'man', coat, skin = '#e0b48f', hair, trousers, vest, hat = false, seated = false, kneel = false, arms, scale = 1, bonnet }) {
+  const palette = { robes: [coat ?? (kind === 'man' ? '#3a3a44' : '#5a4a5e')], mantles: ['#a89c88'], skins: [skin], mantleChance: kind === 'man' ? 0 : 0.8, hoodChance: bonnet ? 1 : 0, women: kind === 'woman' };
+  const [p] = crowd(ctx, [{ points: [[x, z]], count: 1, face, exact: true, palette, y, seated, kneel, arms, hats: hat ? 1 : 0, children: 0, outfit: { hair, trousers, vest, bonnet }, scale, seed: Math.round(x * 13 + z * 7) }]);
+  ctx.colliders.add({ x, z, w: 0.6, d: 0.6, bottom: p.y, top: p.y + 1.8 });
+  return p;
 }
 
 // Grid points filling a rectangle, with jitter, for seated rows.

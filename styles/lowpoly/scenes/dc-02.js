@@ -1,7 +1,7 @@
 // D&C 27:12 and 128:20: Peter, James, and John appear to Joseph Smith and Oliver Cowdery in the wilderness
 // along the Susquehanna River, 1829. The clearing is at the origin, the river runs north-south to the east (+x).
 import * as THREE from 'three';
-import { forest, pine, leafy, bush, softGlow } from './lib/dc-01-kit.js';
+import { forest, pine, leafy, bush, softGlow, person } from './lib/dc-01-kit.js';
 
 const MESSENGERS = [[-1.6, -5.2], [0, -5.8], [1.6, -5.2]];
 const KNEEL = [[-0.7, -1.4], [0.8, -1.3]];
@@ -52,7 +52,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.5, shadowTint: '#283058', highlightTint: '#ffe6c0' },
   shadow: { center: [0, -2], radius: 40 },
 
-  player: { start: [-1.2, 6.5], yaw: -0.08, pitch: 0.02, eye: 1.65, speed: 3.8 },
+  player: { start: [-3.4, 1.4], yaw: -0.55, pitch: 0.03, eye: 1.65, speed: 3.8 },
 
   terrain: {
     size: 900,
@@ -76,17 +76,15 @@ export default {
   scatter: [],
 
   figures: [
-    { x: KNEEL[0][0], z: KNEEL[0][1], y: -0.48, face: MESSENGERS[1], robe: '#2c2a2a', mantle: '#3a332c', skin: '#e0b48f', arms: 'down' },
-    { x: KNEEL[1][0], z: KNEEL[1][1], y: -0.48, face: MESSENGERS[1], robe: '#33302e', mantle: '#2a2e38', skin: '#d9ad88', arms: 'down' },
     ...MESSENGERS.map(([x, z], i) => ({
-      x, z, y: 0.25, face: [0, 2], scale: 1.1, robe: '#fffcf3', mantle: '#f4eedf', skin: '#f6e6cc', arms: i === 1 ? 'out' : 'down', emissive: 0.3,
+      x, z, y: 0.25, face: [0, 2], scale: 1.15, robe: '#fffcf3', mantle: '#f4eedf', skin: '#f6e6cc', arms: i === 1 ? 'out' : 'down', emissive: 0.22,
       ...(i === 1 ? { light: { color: '#fff0cf', intensity: 7, distance: 20 } } : {}),
-      halo: { size: 3.2, opacity: 0.35, color: '#fff3d6' },
+      halo: { size: 3.2, opacity: 0.2, color: '#fff3d6' },
     })),
   ],
 
   effects: [
-    { type: 'beam', position: [0, 0, -5.5], height: 120, radiusBottom: 3.2, radiusTop: 9, color: '#fff1cf', opacity: 0.45 },
+    { type: 'beam', position: [0, 0, -5.5], height: 120, radiusBottom: 3.2, radiusTop: 9, color: '#fff1cf', opacity: 0.3 },
     { type: 'ring', position: [0, 0.06, -5.4], radius: 2.6, width: 1.0, color: '#ffe8b0', opacity: 0.7 },
     { type: 'motes', position: [0, 0, -5.5], radius: 4, height: 14, count: 140, size: 0.04 },
   ],
@@ -94,6 +92,8 @@ export default {
   custom(ctx) {
     river(ctx);
     clearing(ctx);
+    person(ctx, { x: KNEEL[0][0], z: KNEEL[0][1], face: MESSENGERS[1], kneel: true, coat: '#4a3a2c', vest: '#c8b89a', hair: '#6a4626', skin: '#e6bf9b' });
+    person(ctx, { x: KNEEL[1][0], z: KNEEL[1][1], face: MESSENGERS[1], kneel: true, coat: '#353d52', vest: '#8a3a30', hair: '#1d1814', skin: '#d9ad88' });
     forest(ctx, { center: [0, -2], ring: [11, 220], count: 520, seed: 12, kinds: ['pine', 'pine', 'leafy', 'leafy', 'bush'], spacing: 3.6, avoid: [{ rect: [RIVER_X, 0, 44, 900] }, { rect: [-1, 12, 6, 10] }] });
     for (const [x, z] of [[-9, -12], [9, -13], [-12, -2], [12, 4]]) pine(ctx, x, z, 13);
     for (const [x, z] of [[-3, -15], [4, -16]]) leafy(ctx, x, z, 10, '#4a6a32');

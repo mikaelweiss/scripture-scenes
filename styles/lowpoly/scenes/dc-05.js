@@ -2,14 +2,14 @@
 // of the Son on the right hand of God and the kingdoms of glory. The room's north wall opens onto the vision:
 // the Father and Son on a cloud with worshipping angels, then the glory of the sun, the moon, and the stars.
 import * as THREE from 'three';
-import { crowd, period, box, light, candle, softGlow } from './lib/dc-01-kit.js';
+import { crowd, person, period, box, light, candle, softGlow } from './lib/dc-01-kit.js';
 import { rng } from '../engine/util.js';
 
 const W = 6.4, D = 5.2, H = 2.8;
 const ROOM = [0, 6];
-const THRONE = [6, -72];
-const SUN = [-80, 58, -340];
-const MOON = [-185, 36, -320];
+const THRONE = [0, -19];
+const SUN = [-125, 45, -300];
+const MOON = [-190, 20, -280];
 const STARS = [125, 58, -330];
 
 function room(ctx) {
@@ -59,9 +59,9 @@ function glories(ctx) {
     ctx.scene.add(m);
     return m;
   };
-  ball(SUN, 40, "#ffd870", 2);
-  softGlow(ctx, { position: SUN, size: 170, color: "#ffe6a0", opacity: 0.22 });
-  softGlow(ctx, { position: SUN, size: 100, color: "#fffbe8", opacity: 0.3 });
+  ball(SUN, 22, "#ffd870", 2);
+  softGlow(ctx, { position: SUN, size: 120, color: "#ffe6a0", opacity: 0.2 });
+  softGlow(ctx, { position: SUN, size: 70, color: "#fffbe8", opacity: 0.28 });
   const moon = ball(MOON, 20, "#9fb0d8", 1);
   moon.material.color.multiplyScalar(0.9);
   softGlow(ctx, { position: MOON, size: 110, color: '#a8bce8', opacity: 0.45 });
@@ -87,13 +87,17 @@ function glories(ctx) {
   softGlow(ctx, { position: STARS, size: 160, color: '#8a9ad8', opacity: 0.25 });
 
   // Cloud stair rising toward the throne.
-  for (let i = 0; i < 14; i++) {
-    const z = THRONE[1] + 46 - i * 3.2, y = ctx.heightAt(0, z);
-    ctx.solid.add(new THREE.IcosahedronGeometry(1, 0), { position: [r.range(-6, 6), y + 0.3, z], scale: [r.range(3, 6), 1, r.range(2, 3)], rotation: [0, r() * 3, 0], color: '#eef0fa', jitter: 0.04 });
+  for (let i = 0; i < 9; i++) {
+    const z = -1 - i * 1.6, y = ctx.heightAt(0, z);
+    ctx.solid.add(new THREE.IcosahedronGeometry(1, 0), { position: [r.range(-3, 3), y + 0.2, z], scale: [r.range(2.5, 4.5), 0.8, r.range(1.5, 2.2)], rotation: [0, r() * 3, 0], color: '#eef0fa', jitter: 0.04 });
+  }
+  for (let i = 0; i < 10; i++) {
+    const a = (i / 10) * Math.PI * 2;
+    ctx.solid.add(new THREE.IcosahedronGeometry(1, 0), { position: [THRONE[0] + Math.cos(a) * 4.5, throneY + 0.2, THRONE[1] + Math.sin(a) * 3], scale: [r.range(2.5, 3.5), 0.9, r.range(2, 3)], rotation: [0, r() * 3, 0], color: '#fbf8ff', jitter: 0.03 });
   }
 }
 
-const throneY = 9;
+const throneY = 3.2;
 
 export default {
   title: 'D&C 76: The Vision',
@@ -101,7 +105,7 @@ export default {
   fov: 64,
   exposure: 1.0,
 
-  sun: { direction: [-0.23, 0.17, -1], color: '#ffe8c0', intensity: 2.2 },
+  sun: { direction: [-0.416, 0.15, -1], color: '#ffe8c0', intensity: 2.2 },
   light: { sky: '#b4bef0', ground: '#c8b8a0', hemi: 1.35 },
   sky: { top: '#070b24', horizon: '#3a3f78', ground: '#a8a8d0', sunColor: "#fff0c0", glow: 0.35 },
   fog: { color: "#3a3f78", near: 160, far: 1100 },
@@ -110,7 +114,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.05, vignette: 0.5, shadowTint: '#28285a', highlightTint: '#fff2d8' },
   shadow: { center: [0, -20], radius: 80 },
 
-  player: { start: [1.4, 8.0], yaw: 0.06, pitch: 0.08, eye: 1.65, speed: 4 },
+  player: { start: [-1.1, 8.1], yaw: -0.02, pitch: 0.13, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1200,
@@ -121,7 +125,7 @@ export default {
     bumps: 0.9,
     flats: [
       { x: ROOM[0], z: ROOM[1], r: 7, falloff: 6, height: -0.12 },
-      { x: THRONE[0], z: THRONE[1], r: 20, falloff: 30, height: throneY },
+      { x: THRONE[0], z: THRONE[1], r: 7, falloff: 9, height: throneY },
     ],
     colors: { ground: '#d8dcf0', groundAlt: '#c4cae6', grass: '#e2e4f4', high: '#f4f2fa', rock: '#b4bcdc' },
     patches: [{ x: THRONE[0], z: THRONE[1], r: 24, color: '#fff6e0', strength: 0.6, rough: 0.3 }],
@@ -131,26 +135,24 @@ export default {
   scatter: [],
 
   crowd: {
-    palette: { robes: ['#fbf8f0', '#f4f0e6', '#fffdf6'], mantles: ['#f0eadc', '#fff8e8'], skins: ['#f6e6cc', '#f0dcc0'], mantleChance: 0.5, hoodChance: 0.3 },
-    groups: [{ count: 420, center: THRONE, ring: [9, 24], arc: [0, Math.PI * 2], spacing: 1.2, face: THRONE, children: 0, kneel: 0.4, seed: 5, avoid: [{ rect: [0, THRONE[1] + 18, 8, 20] }] }],
+    palette: { robes: ['#fbf8f0', '#f4f0e6', '#fffdf6'], mantles: ['#f0eadc', '#fff8e8'], skins: ['#f6e6cc', '#f0dcc0'], mantleChance: 0.5, hoodChance: 1 },
+    groups: [{ count: 420, center: THRONE, ring: [7, 22], arc: [0, Math.PI * 2], spacing: 1.2, face: THRONE, children: 0, kneel: 0.4, seed: 5, avoid: [{ rect: [0, THRONE[1] + 14, 12, 16] }, { rect: [0, 6, 30, 14] }] }],
   },
 
   figures: [
-    { x: -0.6, z: ROOM[1] - 0.45, y: -0.4, face: [0, -100], robe: '#2a2a30', mantle: '#22242a', skin: '#e0b48f' },
-    { x: 0.6, z: ROOM[1] - 0.45, y: -0.4, face: [0, -100], robe: '#3a332c', mantle: '#2c2824', skin: '#d4a17c' },
     {
-      x: THRONE[0] - 4.4, z: THRONE[1], y: throneY + 0.6, face: [0, 10], scale: 5.6, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'down', emissive: 0.3,
-      light: { color: '#fff0cf', intensity: 30, distance: 50 },
-      halo: { size: 12, opacity: 0.2, color: '#fff3d6' },
+      x: THRONE[0] + 1.9, z: THRONE[1], y: throneY + 0.5, face: [0, 10], scale: 3.7, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'down', emissive: 0.45,
+      light: { color: '#fff0cf', intensity: 30, distance: 40 },
+      halo: { size: 9, opacity: 0.22, color: '#fff3d6' },
     },
     {
-      x: THRONE[0] + 4.4, z: THRONE[1], y: throneY + 0.6, face: [0, 10], scale: 5.4, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'out', emissive: 0.3,
-      halo: { size: 12, opacity: 0.2, color: '#fff3d6' },
+      x: THRONE[0] - 1.9, z: THRONE[1], y: throneY + 0.5, face: [0, 10], scale: 3.5, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'out', emissive: 0.45,
+      halo: { size: 9, opacity: 0.22, color: '#fff3d6' },
     },
   ],
 
   effects: [
-    { type: 'ring', position: [THRONE[0], throneY + 0.2, THRONE[1]], radius: 6, width: 2, color: '#ffe8b0', opacity: 0.7 },
+    { type: 'ring', position: [THRONE[0], throneY + 0.3, THRONE[1]], radius: 5, width: 2, color: '#ffe8b0', opacity: 0.7 },
     { type: 'motes', position: [THRONE[0], throneY, THRONE[1]], radius: 20, height: 60, count: 300, size: 0.12 },
     { type: 'motes', position: [ROOM[0], 0, ROOM[1] - 4], radius: 4, height: 6, count: 120, size: 0.03, seed: 9 },
   ],
@@ -159,7 +161,9 @@ export default {
     room(ctx);
     glories(ctx);
     crowd(ctx, [
-      { points: [[-2.7, 4.2], [-2.7, 5.0], [-2.7, 5.8], [-2.7, 6.6], [-2.7, 7.4], [2.7, 6.2], [2.7, 7.0], [2.7, 7.8], [-1.6, 8.1], [-0.8, 8.1], [0.4, 8.1]], count: 11, face: [0, -30], palette: period.men, y: 0, children: 0, seed: 3 },
+      { points: [[-2.75, 3.9], [-2.75, 4.7], [-2.75, 5.5], [2.75, 5.6], [2.75, 6.4], [2.75, 7.2]], count: 6, face: [0, -30], palette: period.men, y: 0, children: 0, seed: 3 },
     ]);
+    person(ctx, { x: -0.6, z: ROOM[1] - 0.3, y: 0, face: [-0.6, -30], seated: true, coat: '#2e3448', hair: '#3b2718', skin: '#e6bf9b' });
+    person(ctx, { x: 0.6, z: ROOM[1] - 0.3, y: 0, face: [0.6, -30], seated: true, coat: '#4a3a2c', hair: '#5a4a3a', skin: '#d9ad88' });
   },
 };

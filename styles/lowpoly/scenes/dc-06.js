@@ -1,7 +1,7 @@
 // D&C 88:127-141: The School of the Prophets meets in the small upper room of Newel K. Whitney's store in Kirtland, Ohio,
 // winter 1833. The player stands at the south end of the room looking north to Joseph Smith at the head of the table.
 import * as THREE from 'three';
-import { crowd, period, box, light, candle, bench, frameHouse, leafy } from './lib/dc-01-kit.js';
+import { crowd, person, period, box, light, candle, bench, frameHouse, leafy } from './lib/dc-01-kit.js';
 
 const Y = 3.4;
 const W = 5.2, D = 6.6, H = 2.6;
@@ -121,7 +121,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.05, vignette: 0.48, shadowTint: '#2e3044', highlightTint: '#fff0dc' },
   shadow: { center: [0, 0], radius: 30 },
 
-  player: { start: [-1.45, 2.8], yaw: -0.2, pitch: -0.1, eye: 1.65, speed: 2.2 },
+  player: { start: [-1.75, 2.2], yaw: -0.3, pitch: -0.08, eye: 1.65, speed: 2.2 },
 
   terrain: {
     size: 700,
@@ -138,18 +138,18 @@ export default {
   objects: [],
   scatter: [],
 
-  figures: [{ x: JOSEPH[0], z: JOSEPH[1], y: Y, face: [0, 4], robe: '#2a2a30', mantle: '#22242a', skin: '#e0b48f', arms: 'out' }],
 
   custom(ctx) {
     store(ctx);
     room(ctx);
     town(ctx);
+    person(ctx, { x: JOSEPH[0], z: JOSEPH[1], y: Y, face: [0, 4], coat: '#2e3448', vest: '#c8b89a', trousers: '#8a7c62', hair: '#6a4626', skin: '#e6bf9b', arms: 'out', scale: 1.04 });
     const left = Array.from({ length: 5 }, (_, i) => [-0.8, -1.5 + i * 0.66]);
     const right = Array.from({ length: 5 }, (_, i) => [0.8, -1.5 + i * 0.66]);
     crowd(ctx, [
       { points: left, count: left.length, face: [6, -0.2], palette: period.men, seated: true, y: Y + 0.02, children: 0, seed: 11 },
       { points: right, count: right.length, face: [-6, -0.2], palette: period.men, seated: true, y: Y + 0.02, children: 0, seed: 12 },
-      { points: [[-1.9, -2.6], [1.9, -2.5], [-2.0, 0.2], [2.0, 0.6]], count: 4, face: [0, -0.5], palette: period.men, y: Y, children: 0, seed: 13 },
+      { points: [[-1.9, -2.6], [1.9, -2.5], [2.0, 0.6]], count: 3, face: [0, -0.5], palette: period.men, y: Y, children: 0, seed: 13 },
     ]);
     light(ctx, { position: [0, Y + 2.1, -0.4], color: '#ffe2b8', intensity: 3.5, distance: 7 });
     light(ctx, { position: [W / 2 - 0.4, Y + 1.5, -1.8], color: '#dfe8ff', intensity: 2, distance: 4 });

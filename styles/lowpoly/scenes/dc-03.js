@@ -2,7 +2,7 @@
 // David Whitmer, and Joseph Smith. Martin Harris prays alone farther off. The grove is north of the player (-z),
 // the Whitmer farm lies to the south.
 import * as THREE from 'three';
-import { forest, leafy, bush, rail, frameHouse, logCabin, softGlow } from './lib/dc-01-kit.js';
+import { forest, leafy, bush, rail, frameHouse, logCabin, softGlow, person } from './lib/dc-01-kit.js';
 
 const ANGEL = [0, -9];
 const TABLE = [1.6, -8];
@@ -62,7 +62,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.42, shadowTint: '#2e3a50', highlightTint: '#fff4d8' },
   shadow: { center: [0, -4], radius: 45 },
 
-  player: { start: [-0.6, 2.2], yaw: 0.02, pitch: 0.1, eye: 1.65, speed: 3.8 },
+  player: { start: [-3.3, -0.7], yaw: -0.4, pitch: -0.02, eye: 1.65, speed: 3.8 },
 
   terrain: {
     size: 900,
@@ -83,8 +83,6 @@ export default {
   scatter: [],
 
   figures: [
-    ...WITNESSES.map(([x, z], i) => ({ x, z, y: -0.48, face: ANGEL, robe: ['#2a2c34', '#33302c', '#2c2a28'][i], mantle: ['#22252c', '#3d342c', '#1f1f22'][i], skin: ['#e0b48f', '#d9ad88', '#e6bf9b'][i], arms: 'down' })),
-    { x: MARTIN[0], z: MARTIN[1], y: -0.48, face: [MARTIN[0], MARTIN[1] - 10], robe: '#3a3430', mantle: '#2a2622', skin: '#d4a17c', arms: 'down' },
     {
       x: ANGEL[0], z: ANGEL[1], y: 0.9, face: [0, 6], scale: 1.12, robe: '#fffcf3', mantle: '#f4eedf', skin: '#f6e6cc', arms: 'out', emissive: 0.15,
       light: { color: '#fff0cf', intensity: 4, distance: 16 },
@@ -101,6 +99,8 @@ export default {
 
   custom(ctx) {
     relics(ctx);
+    WITNESSES.forEach(([x, z], i) => person(ctx, { x, z, face: ANGEL, kneel: true, coat: ['#353d52', '#4a3a2c', '#2e3a30'][i], vest: ['#c8b89a', '#8a3a30', '#7a5a3a'][i], hair: ['#1d1814', '#4e3420', '#6a4626'][i], skin: ['#e0b48f', '#d9ad88', '#e6bf9b'][i] }));
+    person(ctx, { x: MARTIN[0], z: MARTIN[1], face: [MARTIN[0], MARTIN[1] - 10], kneel: true, coat: '#5a4a38', hair: '#7a7068', skin: '#d4a17c' });
     platesInHands(ctx, 0.9);
     farm(ctx);
     forest(ctx, { center: [0, -14], ring: [9, 200], count: 420, seed: 21, kinds: ['leafy', 'leafy', 'leafy', 'pine', 'bush'], leaf: ['#4f7a34', '#5f8a3c', '#3f6a2e'], spacing: 4, avoid: [{ rect: [0, 70, 140, 80] }, { rect: [-1, 12, 6, 14] }, { r: 4, x: MARTIN[0], z: MARTIN[1] }] });

@@ -1,7 +1,7 @@
 // D&C 107:53-57: Three years before his death Adam gathers his righteous posterity in the valley of Adam-ondi-Ahman,
 // blesses them, and the Lord appears. Adam stands on a knoll north of the player (-z), the people fill the slope below him.
 import * as THREE from 'three';
-import { forest, leafy, bush } from './lib/dc-01-kit.js';
+import { forest, leafy, bush, crowd } from './lib/dc-01-kit.js';
 
 const ADAM = [0, -24];
 const LORD = [0, -27.5];
@@ -12,7 +12,8 @@ const robes = {
   mantles: ['#5a3d2b', '#7d5c3e', '#a34f32', '#3f4d5e', '#8a7a5a', '#c9b48e', '#556246', '#e8dfca'],
   skins: ['#9b6a46', '#a87652', '#b5835e', '#c08f68', '#8a5a3c'],
   mantleChance: 0.7,
-  hoodChance: 0.35,
+  hoodChance: 0.45,
+  ancient: true,
 };
 
 function river(ctx) {
@@ -63,7 +64,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#2e3050', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -6], radius: 60 },
 
-  player: { start: [2, -8], yaw: 0.04, pitch: 0.12, eye: 1.65, speed: 4.5 },
+  player: { start: [2, -13], yaw: 0.08, pitch: 0.14, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -88,33 +89,29 @@ export default {
     { type: 'rock', count: 30, center: [0, 0], ring: [90, 300], spacing: 12, seed: 10, props: { color: '#8a8070' } },
   ],
 
-  crowd: {
-    palette: robes,
-    groups: [
-      { count: 760, center: ADAM, ring: [9, 46], arc: [0.15, Math.PI - 0.15], spacing: 0.95, face: ADAM, children: 0.2, kneel: 0.08, seed: 31, avoid: [{ rect: [2, 15, 6, 74] }] },
-      { count: 70, center: ADAM, ring: [5.5, 9], arc: [-0.6, Math.PI + 0.6], spacing: 0.9, face: ADAM, children: 0.1, kneel: 0.5, seed: 32, avoid: [{ rect: [2, -10, 4, 20] }] },
-    ],
-  },
-
   figures: [
     { x: ADAM[0], z: ADAM[1], face: [0, 40], scale: 1.08, robe: '#e8ddc6', mantle: '#8a6748', skin: '#c49a76', arms: 'out', hood: true },
     { x: -1.6, z: ADAM[1] + 2.4, y: 2.7, face: ADAM, scale: 1.0, robe: '#cbb48e', mantle: '#6a5038', skin: '#b5835e', arms: 'down' },
     { x: 1.7, z: ADAM[1] + 2.2, y: 2.7, face: ADAM, scale: 1.0, robe: '#b89a72', mantle: '#4a5a6a', skin: '#a87652', arms: 'down' },
     {
-      x: LORD[0], z: LORD[1], y: 4.4, face: [0, 40], scale: 1.3, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'out', emissive: 0.28, hood: true,
-      light: { color: '#fff0cf', intensity: 12, distance: 20 },
-      halo: { size: 3.6, opacity: 0.3, color: '#fff3d6' },
+      x: LORD[0], z: LORD[1], y: 4.4, face: [0, 40], scale: 1.45, robe: '#fffcf3', mantle: '#f6f0e2', skin: '#fbefd8', arms: 'out', emissive: 0.2, hood: true,
+      light: { color: '#fff0cf', intensity: 5, distance: 20 },
+      halo: { size: 4.4, opacity: 0.1, color: '#fff3d6' },
     },
   ],
 
   effects: [
-    { type: 'beam', position: [LORD[0], 3.2, LORD[1]], height: 300, radiusBottom: 3.5, radiusTop: 18, color: "#fff1cf", opacity: 0.35 },
+    { type: 'beam', position: [LORD[0], 3.2, LORD[1]], height: 300, radiusBottom: 3.5, radiusTop: 18, color: "#fff1cf", opacity: 0.22 },
     { type: 'motes', position: [LORD[0], 3.2, LORD[1]], radius: 6, height: 30, count: 180 },
     { type: 'sunShafts', center: [60, -120], count: 6, spread: 90, length: 500, width: [10, 24], opacity: 0.06 },
   ],
 
   custom(ctx) {
     river(ctx);
+    crowd(ctx, [
+      { count: 760, center: ADAM, ring: [9, 46], arc: [0.15, Math.PI - 0.15], spacing: 0.95, face: ADAM, children: 0.2, kneel: 0.08, seed: 31, palette: robes, avoid: [{ rect: [2, 15, 6, 74] }] },
+      { count: 70, center: ADAM, ring: [5.5, 9], arc: [-0.6, Math.PI + 0.6], spacing: 0.9, face: ADAM, children: 0.1, kneel: 0.5, seed: 32, palette: robes, avoid: [{ rect: [2, -10, 4, 20] }] },
+    ]);
     altar(ctx);
     forest(ctx, { center: [0, -10], ring: [62, 260], count: 260, seed: 7, kinds: ['leafy', 'leafy', 'leafy', 'pine'], spacing: 6, avoid: [{ rect: [-68, 0, 46, 600] }, { rect: [0, -90, 40, 70] }] });
     for (const [x, z] of [[-26, -40], [24, -46], [-38, 6], [40, 0], [30, 50], [-30, 58]]) leafy(ctx, x, z, 9 + ctx.rand() * 3, '#5a7a36');

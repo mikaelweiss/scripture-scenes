@@ -2,14 +2,14 @@
 // between the two tiers of pulpits. Joseph Smith reads the dedicatory prayer from the Melchizedek pulpits at the far end (-z).
 // The player stands in the center aisle near the Aaronic pulpits (+z).
 import * as THREE from 'three';
-import { crowd, rows, period, box, light, softGlow } from './lib/dc-01-kit.js';
+import { crowd, person, rows, period, box, light, softGlow } from './lib/dc-01-kit.js';
 import { rng } from '../engine/util.js';
 
 const W = 17, D = 22, H = 6.6, VAULT = 2.4;
 const WHITE = '#f2eee4', TRIM = '#e2dccf', RAIL = '#5e4430';
 const BANKS = [[-7.7, -4.5], [-3.6, -1.4], [1.4, 3.6], [4.5, 7.7]];
 const ROWS = Array.from({ length: 10 }, (_, i) => -5.3 + i * 1.15);
-const JOSEPH = [0, -9.15];
+const JOSEPH = [0, -7.3];
 
 function shell(ctx) {
   box(ctx, { x: 0, y: -0.1, z: 0, w: W, h: 0.1, d: D, color: '#a8865e', collide: false });
@@ -114,7 +114,7 @@ export default {
   grade: { saturation: 1.03, contrast: 1.06, vignette: 0.45, shadowTint: '#3a3448', highlightTint: '#fff2dc' },
   shadow: { center: [0, 0], radius: 20 },
 
-  player: { start: [0.2, 6.1], yaw: 0, pitch: 0.02, eye: 1.65, speed: 3 },
+  player: { start: [0.2, -1.6], yaw: 0, pitch: 0.06, eye: 1.65, speed: 3 },
 
   terrain: {
     size: 600,
@@ -129,15 +129,13 @@ export default {
   objects: [],
   scatter: [],
 
-  figures: [
-    { x: JOSEPH[0], z: JOSEPH[1], y: 2 * 0.62 + 0.2, face: [0, 10], robe: '#24242a', mantle: '#1e2026', skin: '#e0b48f', arms: 'out' },
-  ],
 
   custom(ctx) {
     shell(ctx);
     pulpits(ctx, -D / 2);
     pulpits(ctx, D / 2);
     pews(ctx);
+    person(ctx, { x: JOSEPH[0], z: JOSEPH[1], y: 0.2, face: [0, 10], coat: '#2a2e3e', vest: '#e8e0cc', trousers: '#8a7c62', hair: '#6a4626', skin: '#e6bf9b', arms: 'out', scale: 1.08 });
     const r = rng(36);
     const groups = [];
     BANKS.forEach(([x0, x1], b) => {
@@ -156,7 +154,7 @@ export default {
     for (let i = 0; i < 4; i++) {
       const y = i * 0.62 + 0.2, w = 6.2 - i * 0.6;
       for (let k = -1; k <= 1; k++) {
-        if (!(i === 2 && k === 0)) pulpitMen.push({ x: k * (w / 3) + 0.3, z: -D / 2 + 4.4 - i * 1.05 - 0.75, y });
+        if (!(i === 0 && k === 0)) pulpitMen.push({ x: k * (w / 3) + 0.3, z: -D / 2 + 4.4 - i * 1.05 - 0.75, y });
         pulpitMen.push({ x: k * (w / 3) - 0.3, z: D / 2 - 4.4 + i * 1.05 + 0.75, y, back: true });
       }
     }

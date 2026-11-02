@@ -1,7 +1,7 @@
 // D&C 20-21: The Church is organized in Peter Whitmer Sr.'s log home in Fayette, New York, April 6, 1830.
 // The player stands at the back of the main room (south, +z) looking north to Joseph Smith, Oliver Cowdery and the sacrament table.
 import * as THREE from 'three';
-import { crowd, rows, period, logRoom, bench, fireplace, light, candle, box, leafy, rail, frameHouse } from './lib/dc-01-kit.js';
+import { crowd, person, rows, period, logRoom, bench, fireplace, light, candle, box, leafy, rail, frameHouse } from './lib/dc-01-kit.js';
 import { rng } from '../engine/util.js';
 
 const W = 9.6, D = 7.6, H = 2.7;
@@ -73,7 +73,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.05, vignette: 0.45, shadowTint: '#3a3040', highlightTint: '#fff0d8' },
   shadow: { center: [0, 4], radius: 30 },
 
-  player: { start: [0.2, 3.0], yaw: 0, pitch: -0.06, eye: 1.65, speed: 2.6 },
+  player: { start: [0.2, 2.2], yaw: 0, pitch: -0.08, eye: 1.65, speed: 2.6 },
 
   terrain: {
     size: 700,
@@ -94,14 +94,12 @@ export default {
   objects: [],
   scatter: [],
 
-  figures: [
-    { x: JOSEPH[0], z: JOSEPH[1], face: [0, 4], robe: '#2a2a30', mantle: '#22242a', skin: '#e0b48f', arms: 'out' },
-    { x: OLIVER[0], z: OLIVER[1], face: [0, 4], robe: '#3a332c', mantle: '#2c2824', skin: '#d9ad88', arms: 'down' },
-  ],
 
   custom(ctx) {
     room(ctx);
     sacrament(ctx);
+    person(ctx, { x: JOSEPH[0], z: JOSEPH[1], y: 0, face: [0.2, 4], coat: '#2e3448', vest: '#c8b89a', trousers: '#8a7c62', hair: '#6a4626', skin: '#e6bf9b', arms: 'out', scale: 1.05 });
+    person(ctx, { x: OLIVER[0], z: OLIVER[1], y: 0, face: [0.2, 4], coat: '#3a3230', vest: '#7a5a3a', trousers: '#5c5448', hair: '#1d1814', skin: '#d9ad88' });
     const r = rng(9);
     const seats = rows(r, { x0: -3.4, x1: 3.6, z0: -0.9, z1: 1.1, dx: 0.6, dz: 1.0, skip: (x) => Math.abs(x - 0.2) < 0.45 });
     for (let z = -0.9; z <= 1.2; z += 1.0) {
