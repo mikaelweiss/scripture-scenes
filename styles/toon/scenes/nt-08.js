@@ -1,7 +1,7 @@
 // John 2:13-16. Jesus drives the moneychangers and the animals out of the temple court in Jerusalem.
 // x is east, z is south. The sanctuary stands to the north.
 import * as THREE from 'three';
-import { JESUS, JUDEANS, addMesh, animal, boxGeo, cyl, doves, figure, glow, makeRng, plankTexture, rod, table } from './lib/nt-07-kit.js';
+import { FX_LAYER, JESUS, JUDEANS, addMesh, animal, boxGeo, cyl, doves, figure, glow, makeRng, plankTexture, rod, table } from './lib/nt-07-kit.js';
 
 const JESUS_AT = [0, -6];
 const MARBLE = '#efe6d2';
@@ -52,7 +52,7 @@ function stoa(ctx, { cx, z0, z1, side }) {
 function coins(ctx, spots, seed = 9) {
   const rng = makeRng(seed);
   const n = spots.reduce((a, s) => a + s[2], 0);
-  const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.06, 0.015, 8), ctx.kit.toon('#e0b84a', { emissive: '#2a1e05' }), n);
+  const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.08, 0.08, 0.02, 8), ctx.kit.toon('#f0c850', { emissive: '#5a400a' }), n);
   const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
   let i = 0;
   for (const [cx, cz, count, r] of spots) for (let k = 0; k < count; k++) {
@@ -61,6 +61,8 @@ function coins(ctx, spots, seed = 9) {
     m.compose(new THREE.Vector3(x, ctx.groundHeight(x, z) + 0.01, z), q.setFromEuler(e.set((rng() - 0.5) * 0.3, 0, (rng() - 0.5) * 0.3)), new THREE.Vector3(1, 1, 1));
     mesh.setMatrixAt(i++, m);
   }
+  // Outlines would swallow coins this small, so they skip the line pass.
+  mesh.layers.set(FX_LAYER);
   ctx.scene.add(mesh);
 }
 
@@ -131,13 +133,13 @@ export default {
     stoa(ctx, { cx: -38, z0: -44, z1: 24, side: -1 });
     stoa(ctx, { cx: 38, z0: -44, z1: 24, side: 1 });
 
-    const jesus = figure(ctx, { ...JESUS, arms: [0.25, 0.4] }, { pos: JESUS_AT, face: [3, 10], scale: 1.06, glow: 0.18, clear: 2.2 });
+    const jesus = figure(ctx, { ...JESUS, arms: [0.25, 0.4] }, { pos: JESUS_AT, face: [3, 10], scale: 1.12, glow: 0.28, clear: 2.2 });
     const right = jesus.children.filter((c) => c.isGroup).find((c) => c.position.x < 0);
     right.rotation.set(-2.5, 0, -0.35);
     const cords = [];
     for (let k = 0; k < 5; k++) cords.push(rod([0, -0.58, 0], [(k - 2) * 0.08, -1.3, 0.25 + k * 0.05], 0.015, 4));
     addMesh(right, cords, ctx.kit.toon('#6b4a33'), { cast: false });
-    glow(ctx, [JESUS_AT[0], ctx.groundHeight(...JESUS_AT) + 1.4, JESUS_AT[1]], 4, '#fff0c8', 0.3);
+    glow(ctx, [JESUS_AT[0], ctx.groundHeight(...JESUS_AT) + 1.4, JESUS_AT[1]], 4.5, '#fff0c8', 0.4);
 
     overturned(ctx, { pos: [-3.8, -5.2], rot: 0.9 });
     overturned(ctx, { pos: [3.9, -6.8], rot: -1.0 });
@@ -152,8 +154,8 @@ export default {
     });
 
     cages(ctx, [[-17, -15, 0.2], [-16, 4, -0.1], [17, -16, -0.2], [18, 3, 0.1]]);
-    doves(ctx, { center: [-2, 6, -8], count: 10, radius: 7, speed: 0.7 });
-    doves(ctx, { center: [8, 9, -16], count: 6, radius: 5, speed: -0.6 });
+    doves(ctx, { center: [-2, 6, -8], count: 10, radius: 7, speed: 0.7, size: 1.5 });
+    doves(ctx, { center: [8, 9, -16], count: 6, radius: 5, speed: -0.6, size: 1.5 });
 
     const rng = makeRng(31);
     for (let i = 0; i < 9; i++) {
@@ -188,8 +190,9 @@ export default {
   },
 
   player: {
-    start: [1.8, 1.5],
-    lookAt: [0, -8],
+    start: [1.6, 1.8],
+    lookAt: [-4, -8.5],
+    fov: 44,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

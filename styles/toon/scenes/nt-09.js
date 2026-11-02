@@ -117,8 +117,8 @@ export default {
 
     const y = top;
     addMesh(ctx.scene, [boxGeo(1.1, 0.45, 0.7, [-1.6, y + 0.225, -1.4], { rotY: -1.0 })], ctx.kit.stoneMat('#bfa57c'));
-    figure(ctx, { ...JESUS, arms: [0.25, 0.75] }, { pos: [-1.6, -1.4], y: y + 0.4, face: [1.4, 1.2], seated: true, scale: 1.08, glow: 0.18, clear: 0 });
-    glow(ctx, [-1.6, y + 1.5, -1.4], 3.5, '#fff0c8', 0.3);
+    figure(ctx, { ...JESUS, arms: [0.25, 0.75] }, { pos: [-1.6, -1.4], y: y + 0.4, face: [1.4, 1.2], seated: true, scale: 1.15, glow: 0.3, clear: 0 });
+    glow(ctx, [-1.6, y + 1.4, -1.4], 4, '#fff0c8', 0.4);
     const woman = { robe: '#3f6a9a', mantle: '#b5523b', skin: '#a87650', hair: '#d9c7a3', sash: '#c8912e', arms: [0.3, 0.5] };
     figure(ctx, woman, { pos: [1.4, 0.9], face: [-1.6, -1.4] });
     addMesh(ctx.scene, [jarGeo(0.48, 2.2, ctx.terrainHeight(2.2, 1.6), 1.6)], ctx.kit.toon('#b5683b'));
@@ -141,8 +141,9 @@ export default {
   },
 
   player: {
-    start: [0.5, 6.5],
-    lookAt: [0, -2],
+    start: [-3.2, 3.6],
+    lookAt: [0.6, -3.2],
+    fov: 40,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

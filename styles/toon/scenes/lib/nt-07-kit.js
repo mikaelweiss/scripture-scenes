@@ -129,25 +129,34 @@ function waveTexture(base, light, dark) {
     g.fillStyle = base;
     g.fillRect(0, 0, 256, 256);
     g.lineCap = 'round';
-    for (let i = 0; i < 26; i++) {
-      const x = rng() * 256, y = rng() * 256, w = 20 + rng() * 40;
-      g.strokeStyle = rng() < 0.6 ? light : dark;
-      g.lineWidth = 2 + rng() * 2;
-      g.beginPath();
-      for (let k = 0; k <= 8; k++) {
-        const px = x + (k / 8) * w, py = y + Math.sin(k * 0.9) * 2.5;
-        for (const ox of [0, -256]) if (k === 0) g.moveTo(px + ox, py); else g.lineTo(px + ox, py);
+    for (let i = 0; i < 18; i++) {
+      const x = rng() * 256, y = rng() * 256, w = 14 + rng() * 22;
+      g.strokeStyle = rng() < 0.65 ? light : dark;
+      g.lineWidth = 2.5 + rng() * 1.5;
+      for (const ox of [0, -256]) for (const oy of [0, -256]) {
+        g.beginPath();
+        g.moveTo(x + ox, y + oy);
+        g.quadraticCurveTo(x + ox + w / 2, y + oy - 5, x + ox + w, y + oy);
+        g.stroke();
       }
-      g.stroke();
     }
   });
 }
 
-// Calm water: a flat plane with drifting hand-drawn ripple marks.
-export function calmWater(ctx, { y = 0, size = 3600, center = [0, 0], color = '#3f8f96', light = '#8fd0c8', dark = '#2f6f78', tile = 18 } = {}) {
+// Calm water: flat toon bands with drifting ripple marks. The marks fade into a plain far color with distance,
+// because a repeating texture smears into long streaks at grazing angles.
+export function calmWater(ctx, { y = 0, size = 3600, center = [0, 0], color = '#3f8f96', light = '#8fd0c8', dark = '#2f6f78', far = null, tile = 18, fade = [18, 70] } = {}) {
   const tex = waveTexture(color, light, dark);
   tex.repeat.set(size / tile, size / tile);
+  tex.anisotropy = 16;
   const mat = new THREE.MeshToonMaterial({ color: '#ffffff', map: tex, gradientMap: ctx.kit.gradient });
+  const uniforms = { uFar: { value: new THREE.Color(far ?? color) }, uFade: { value: new THREE.Vector2(...fade) } };
+  mat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform vec3 uFar;\nuniform vec2 uFade;')
+      .replace('#include <map_fragment>', '#include <map_fragment>\ndiffuseColor.rgb = mix(diffuseColor.rgb, uFar, smoothstep(uFade.x, uFade.y, length(vViewPosition)));');
+  };
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
   mesh.rotation.x = -Math.PI / 2;
   mesh.position.set(center[0], y, center[1]);

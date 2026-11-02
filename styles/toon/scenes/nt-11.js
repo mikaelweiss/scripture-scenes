@@ -57,7 +57,7 @@ export default {
 
   custom(ctx) {
     reshapeGround(ctx, SEGMENTS, (x, z, y) => y - (y + 2) * (1 - THREE.MathUtils.smoothstep(z, SHORE - 8, SHORE + 2)));
-    calmWater(ctx, { y: WATER_Y, size: 1400, color: '#4f9aa8', light: '#86c6c8', dark: '#468a98', tile: 12 });
+    calmWater(ctx, { y: WATER_Y, size: 1400, color: '#4f9aa8', light: '#8fd0cc', dark: '#3f8494', far: '#5ea6b0', tile: 22, fade: [40, 220] });
     ctx.addCollider({ x: 0, z: SHORE - 5 - 400, hx: 700, hz: 400, rot: 0, top: ctx.terrainHeight(0, SHORE) + 1.5 });
     const far = [];
     for (const [x, z, r, h] of [[-260, -330, 160, 40], [40, -380, 200, 55], [320, -300, 150, 35], [-420, -120, 120, 30], [440, -100, 130, 30]]) {
@@ -67,8 +67,8 @@ export default {
 
     boulders(ctx, [[SEAT[0], SEAT[1] + 0.6, 1.0, 0.55], [-4, 122, 1.4], [5, 123, 1.1], [16, 104, 1.2], [-22, 92, 1], [24, 86, 0.9]]);
     const seatTop = ctx.terrainHeight(SEAT[0], SEAT[1] + 0.6) + 0.5;
-    figure(ctx, { ...JESUS, arms: [0.45, 0.75] }, { pos: SEAT, y: seatTop - 0.2, face: [0, 60], seated: true, scale: 1.1, glow: 0.2, clear: 2.5 });
-    glow(ctx, [SEAT[0], seatTop + 1.0, SEAT[1]], 4.5, '#fff0c8', 0.35);
+    figure(ctx, { ...JESUS, arms: [0.45, 0.75] }, { pos: SEAT, y: seatTop - 0.2, face: [0, 60], seated: true, scale: 1.25, glow: 0.3, clear: 2.5 });
+    glow(ctx, [SEAT[0], seatTop + 1.1, SEAT[1]], 5.5, '#fff0c8', 0.45);
 
     const rng = makeRng(14);
     const flowers = [], grass = [];
@@ -80,7 +80,7 @@ export default {
     tufts(ctx, grass, { size: [0.15, 0.35], colors: ['#7f9a4a', '#6c8a42', '#9ab05e'], seed: 3 });
 
     leafyTrees(ctx, [[-36, 120], [38, 116], [-30, 140], [26, 142], [-48, 100], [52, 96], [6, 150]], { seed: 5, height: [5, 7], trunk: '#6b5a44', leaves: ['#7d9070', '#8a9a72', '#6f8460'] });
-    doves(ctx, { center: [6, ctx.terrainHeight(6, 100) + 10, 100], count: 7, radius: 9, speed: 0.35, color: '#efe9dc' });
+    doves(ctx, { center: [6, ctx.terrainHeight(6, 100) + 10, 100], count: 7, radius: 9, speed: 0.35, color: '#f6f2e8', size: 1.8 });
   },
 
   crowd: {
@@ -99,7 +99,8 @@ export default {
 
   player: {
     start: [-11, 113],
-    lookAt: [6, 100],
+    lookAt: [10, 107],
+    fov: 46,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -105,8 +105,8 @@ export default {
     figure(ctx, bride, { pos: [-4.6, -17.3], face: [-4.6, 0], seated: true });
     figure(ctx, groom, { pos: [-3.4, -17.3], face: [-3.4, 0], seated: true });
 
-    figure(ctx, JESUS, { pos: JESUS_AT, face: [8, 5], scale: 1.05, glow: 0.15, arms: [0.3, 0.6] });
-    glow(ctx, [JESUS_AT[0], ctx.groundHeight(...JESUS_AT) + 1.3, JESUS_AT[1]], 4, '#fff0c8', 0.35);
+    figure(ctx, JESUS, { pos: JESUS_AT, face: [8, 5], scale: 1.1, glow: 0.28, arms: [0.3, 0.6] });
+    glow(ctx, [JESUS_AT[0], ctx.groundHeight(...JESUS_AT) + 1.3, JESUS_AT[1]], 4.5, '#fff0c8', 0.42);
     figure(ctx, { robe: '#d9c7a3', mantle: '#3f6a9a', skin: '#a87650', hair: '#3f6a9a' }, { pos: [13.6, -1.3], face: [9, 4] });
     const servant = { robe: '#c8a97a', mantle: '#8c5a3c', skin: '#8a5a3b', hair: '#e6d8b8', sash: '#5e4632' };
     const pour = [[5.6, -2.3, [5.5, -1]], [7.6, -2.4, [7.7, -1]], [9.6, -2.3, [9.9, -1]], [11.4, -2.6, [11, -1]]];
@@ -151,8 +151,9 @@ export default {
   },
 
   player: {
-    start: [7.5, 6.5],
-    lookAt: [9, -1],
+    start: [7.4, 3.8],
+    lookAt: [8.4, -1.5],
+    fov: 46,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

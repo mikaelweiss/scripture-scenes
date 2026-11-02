@@ -124,8 +124,8 @@ export default {
     });
     addMesh(ctx.scene, ropes, ctx.kit.toon('#d9c7a3'), { cast: false });
 
-    figure(ctx, { ...JESUS, arms: [0.35, 0.9] }, { pos: JESUS_AT, y: floor, face: [0, -5.8], scale: 1.06, glow: 0.2, clear: 1.2 });
-    glow(ctx, [JESUS_AT[0], floor + 1.4, JESUS_AT[1]], 3.5, '#fff0c8', 0.35);
+    figure(ctx, { ...JESUS, arms: [0.35, 0.9] }, { pos: JESUS_AT, y: floor, face: [0, -5.8], scale: 1.1, glow: 0.3, clear: 1.2 });
+    glow(ctx, [JESUS_AT[0], floor + 1.4, JESUS_AT[1]], 4, '#fff0c8', 0.42);
     glow(ctx, [0, MAT_Y + 0.4, -6.2], 3, '#fff2cc', 0.25);
     const scribe = { robe: '#3a3a4a', mantle: '#5a4a6a', skin: '#a87650', hair: '#efe3c2', sash: '#c8912e' };
     for (const [x, z] of [[4.6, -9.4], [5.2, -8.2], [4.4, -7.0], [5.3, -5.8]]) figure(ctx, scribe, { pos: [x, z], y: floor, face: [0, -7.5], seated: true, clear: 0.6 });
@@ -150,8 +150,9 @@ export default {
   },
 
   player: {
-    start: [0, 2.5],
-    lookAt: [-0.6, -7],
+    start: [0.4, -1.6],
+    lookAt: [-0.4, -8],
+    fov: 42,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

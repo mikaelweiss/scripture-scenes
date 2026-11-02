@@ -129,7 +129,7 @@ export default {
       const lake = 1 - THREE.MathUtils.smoothstep(r, 260, 420);
       return y - THREE.MathUtils.smoothstep(d, -2, 10) * 4 * lake;
     });
-    calmWater(ctx, { y: WATER_Y, size: 1400, center: [0, -500], color: '#4f9aa0', light: '#7fc2bc', dark: '#468a92', tile: 10 });
+    calmWater(ctx, { y: WATER_Y, size: 1400, center: [0, -500], color: '#4f9aa0', light: '#8fd0c8', dark: '#3f8189', far: '#64aaac', tile: 14 });
     foamLine(ctx, shore, { from: -200, to: 200, y: WATER_Y + 0.03, width: 0.7 });
     jetty(ctx);
     lakeWalls(ctx);
@@ -159,8 +159,8 @@ export default {
     addMesh(ctx.scene, lines.map(([a, b]) => rod(a, b, 0.035, 4)), ctx.kit.toon('#c8a97a'), { cast: false });
 
     const boatFloor = -0.15;
-    figure(ctx, { ...JESUS, arms: [0.35, 0.55] }, { pos: [4.2, -16.6], y: boatFloor, face: [3.2, -11], scale: 1.06, glow: 0.18, clear: 0 });
-    glow(ctx, [4.2, boatFloor + 1.4, -16.6], 4, '#fff0c8', 0.3);
+    figure(ctx, { ...JESUS, arms: [0.35, 0.55] }, { pos: [4.2, -16.6], y: boatFloor + 0.2, face: [3.2, -11], scale: 1.1, glow: 0.3, clear: 0 });
+    glow(ctx, [4.2, boatFloor + 1.4, -16.6], 4.5, '#fff0c8', 0.4);
     figure(ctx, { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#3a2418', sash: '#3e6e66', arms: [0.3, 1.4] }, { pos: [3.8, -15.0], y: boatFloor, face: [4.2, -16.6], seated: true, clear: 0 });
     const fisher = (mantle) => ({ robe: '#c8a97a', mantle, skin: '#8a5a3b', hair: '#2b1a12', sash: '#5e4632', arms: [0.3, 1.2] });
     figure(ctx, fisher('#b5523b'), { pos: [3.0, -12.2], y: boatFloor, face: [4.2, -16.6] });
@@ -190,8 +190,9 @@ export default {
   },
 
   player: {
-    start: [0, -13],
-    lookAt: [3.5, -21],
+    start: [0.5, -14.2],
+    lookAt: [3.1, -19.2],
+    fov: 42,
     colors: { robe: '#b5523b', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
