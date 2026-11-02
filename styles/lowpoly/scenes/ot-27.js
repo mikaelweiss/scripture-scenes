@@ -78,7 +78,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.38, shadowTint: '#3a3050', highlightTint: '#ffe6b8' },
   shadow: { center: [0, 5], radius: 45 },
 
-  player: { start: [-3, 15.5], yaw: -0.45, pitch: -0.04, eye: 1.65, speed: 4.5 },
+  player: { start: [0.2, 11.5], yaw: -0.14, pitch: -0.05, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -156,12 +156,12 @@ export default {
     const ry = ctx.heightAt(...RUTH);
     const ruth = createFigure({ x: RUTH[0], y: ry, z: RUTH[1], scale: 0.98, robe: '#3e5a8a', mantle: '#e8dcc4', skin: '#a8754f', hood: true, arms: 'down' });
     ruth.rotation.order = 'YXZ';
-    ruth.rotation.set(0.45, -2.0, 0);
-    ruth.position.y -= 0.05;
+    ruth.rotation.set(0.3, Math.atan2(-1.5 - RUTH[0], 11 - RUTH[1]), 0);
+    ruth.position.y -= 0.42;
     ctx.scene.add(ruth);
     ctx.colliders.add({ x: RUTH[0], z: RUTH[1], w: 0.6, d: 0.6, bottom: ry, top: ry + 1.6 });
     const bundle = new THREE.Mesh(stalkClump(0.6, '#f0d080', '#d8b868'), new THREE.MeshLambertMaterial({ vertexColors: true }));
-    bundle.position.set(RUTH[0] + 0.15, ry + 0.8, RUTH[1] + 0.25);
+    bundle.position.set(RUTH[0] + 0.35, ry + 0.55, RUTH[1] + 0.05);
     bundle.rotation.set(0.9, 0.6, 0.3);
     ctx.scene.add(bundle);
     ctx.scene.add(new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.25, 6), new THREE.MeshLambertMaterial({ color: '#8a6a40' })).translateX(RUTH[0] - 0.5).translateY(ry + 0.12).translateZ(RUTH[1] + 0.4));

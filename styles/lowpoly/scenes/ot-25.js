@@ -31,7 +31,7 @@ const gideonPts = companies.flatMap((c) =>
   scatter({ count: 100, center: CAMP, ring: [55, 66], arc: c.arc, spacing: 1.5, seed: c.seed, avoid: [{ x: START[0], z: START[1], r: 3 }] }),
 );
 
-const LEFT = [0.35, 2.55];
+const LEFT = [-0.35, 2.55];
 const RIGHT = [-0.25, 1.45];
 
 export default {
@@ -124,18 +124,18 @@ export default {
       campFlames.push({ position: [x, y + 0.05, z], size: 0.9 });
     }
     flames(ctx, campFlames, { color: '#e86a24', core: '#ffc070' });
-    for (const [x, z] of firePts.slice(0, 6)) fireLight(ctx, [x, ctx.heightAt(x, z) + 1.8, z], { intensity: 70, distance: 38, color: '#ff7a30' });
+    for (const [x, z] of firePts.slice(0, 8)) fireLight(ctx, [x, ctx.heightAt(x, z) + 2.2, z], { intensity: 90, distance: 40, color: '#ff7a30' });
 
     // The host wakes, cries, and turns on itself: men running every way, swords raised.
     const fleePts = scatter({ count: 220, center: CAMP, ring: [3, 50], spacing: 1.2, seed: 44, avoid: [...tentPts.map(([x, z]) => ({ x, z, r: 2.6 })), ...camelPts.map(([x, z]) => ({ x, z, r: 1.6 }))] });
     const armed = fleePts.filter((_, i) => i % 2 === 0), fleeing = fleePts.filter((_, i) => i % 2 === 1);
-    const swordsmen = addPeople(ctx, makePeople(armed, { palette: midian, face: (x, z, rr) => rr() * Math.PI * 2, yawJitter: 0, seed: 45 }), { arms: { left: [0.4, 0.4], right: [0.2, 2.7] } });
+    const swordsmen = addPeople(ctx, makePeople(armed, { palette: midian, face: (x, z, rr) => rr() * Math.PI * 2, yawJitter: 0, seed: 45 }), { arms: { left: [0.4, 0.4], right: [-0.3, 2.7] } });
     addPeople(ctx, makePeople(fleeing, { palette: midian, face: (x, z) => Math.atan2(x - CAMP[0], z - CAMP[1]) + Math.PI * 0.5, yawJitter: 1.2, seed: 46 }), { arms: { left: [0.5, 1.1], right: [0.5, -0.8] } });
-    const swordHand = handAt(1, 0.2, 2.7);
+    const swordHand = handAt(1, -0.3, 2.7);
     instanced(
       ctx,
       new THREE.BoxGeometry(0.07, 0.8, 0.02).translate(0, 0.4, 0),
-      swordsmen.map((p) => ({ position: local(p, swordHand), rotation: [0.25, p.yaw, -0.2], scale: p.scale, color: '#e0e4ec' })),
+      swordsmen.map((p) => ({ position: local(p, swordHand), rotation: [0.25, p.yaw, 0.3], scale: p.scale, color: '#e0e4ec' })),
     );
   },
 };

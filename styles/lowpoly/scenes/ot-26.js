@@ -7,7 +7,7 @@ import { scatter, makePeople, addPeople, instanced, createFigure, rng } from './
 const SAMSON = [0, -4];
 const PILLARS = [[-1.25, -4], [1.25, -4]];
 const ROOF = { x: 0, z: -12, w: 38, d: 20, y: 7.2, t: 1.1 };
-const START = [0, 13];
+const START = [0, 8];
 
 const stone = '#cbb898';
 const darkStone = '#9c8668';
@@ -38,7 +38,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2a4a', highlightTint: '#ffe8c0' },
   shadow: { center: [0, 0], radius: 50 },
 
-  player: { start: START, yaw: 0, pitch: 0.12, eye: 1.65, speed: 4.5 },
+  player: { start: START, yaw: 0, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 900,
@@ -133,7 +133,7 @@ export default {
 
     // Samson, long-haired, arms spread to the two pillars.
     const sy = y0 + 0.02;
-    ctx.scene.add(createFigure({ x: SAMSON[0], y: sy, z: SAMSON[1], face: [0, 30], scale: 1.18, robe: '#9a6a42', mantle: '#6a3a26', skin: '#a8754f', arms: 'out' }));
+    addPeople(ctx, [{ x: SAMSON[0], y: sy, z: SAMSON[1], yaw: 0, scale: 1.18, robe: new THREE.Color('#9a6a42'), mantle: new THREE.Color('#6a3a26'), hood: false, skin: new THREE.Color('#a8754f') }], { arms: { left: [1.25, 0.2], right: [1.25, 0.2] } });
     ctx.colliders.add({ x: SAMSON[0], z: SAMSON[1], w: 0.8, d: 0.8, bottom: sy, top: sy + 2 });
     const fill = new THREE.PointLight('#ffe0b0', 12, 14, 1.4);
     fill.position.set(SAMSON[0], sy + 3, SAMSON[1] + 4);
@@ -152,15 +152,15 @@ export default {
     ctx.solid.add(new THREE.IcosahedronGeometry(0.17, 0), { position: [SAMSON[0], sy + 1.86, SAMSON[1] - 0.03], scale: [1, 0.7, 1.05], color: '#2a1e16' });
 
     // Philistines: the courtyard throng, the lords inside, and the crowd on the roof.
-    addPeople(ctx, makePeople(scatter({ count: 520, center: SAMSON, ring: [7, 32], arc: [0.15, Math.PI - 0.15], spacing: 0.95, seed: 61, avoid: [{ rect: [0, 14, 4.5, 30] }, { rect: [0, 30, 10, 6] }, { rect: [-40, 10, 37, 80] }, { rect: [40, 10, 37, 80] }, { rect: [0, 38, 80, 18] }] }), { palette: philistines, face: SAMSON, children: 0.1, seed: 62 }));
-    addPeople(ctx, makePeople(scatter({ count: 46, center: [0, -12], ring: [5, 16], spacing: 1.3, seed: 63, avoid: [{ rect: [0, -9, 7, 14] }, { rect: [0, -20, 8, 6] }, { rect: [-19, -12, 2.5, 22] }, { rect: [19, -12, 2.5, 22] }] }), { palette: philistines, face: SAMSON, seed: 64, scale: [1.0, 1.12] }));
+    addPeople(ctx, makePeople(scatter({ count: 520, center: SAMSON, ring: [7, 32], arc: [0.15, Math.PI - 0.15], spacing: 0.95, seed: 61, avoid: [{ rect: [0, 13, 6, 32] }, { rect: [0, 30, 10, 6] }, { rect: [-40, 10, 37, 80] }, { rect: [40, 10, 37, 80] }, { rect: [0, 38, 80, 18] }] }), { palette: philistines, face: SAMSON, children: 0.1, seed: 62 }));
+    addPeople(ctx, makePeople(scatter({ count: 46, center: [0, -12], ring: [5, 16], spacing: 1.3, seed: 63, avoid: [{ rect: [0, -7.5, 7, 17] }, { rect: [0, -20, 8, 6] }, { rect: [-19, -12, 2.5, 22] }, { rect: [19, -12, 2.5, 22] }] }), { palette: philistines, face: SAMSON, seed: 64, scale: [1.0, 1.12] }));
     const roofPts = [];
     for (let i = 0; i < 400 && roofPts.length < 330; i++) {
       const x = r.range(-ROOF.w / 2 + 1.2, ROOF.w / 2 - 1.2), z = r.range(ROOF.z - ROOF.d / 2 + 1, -3.3);
       if (Math.abs(x) < 1.0 || roofPts.some(([px, pz]) => (px - x) ** 2 + (pz - z) ** 2 < 0.9)) continue;
       roofPts.push([x, z]);
     }
-    addPeople(ctx, makePeople(roofPts, { palette: philistines, face: (x, z) => Math.atan2(-x * 0.3, 20 - z), seed: 65 }), { onStructures: true, arms: { left: [0.4, 2.6], right: [0.4, 2.8] } });
+    addPeople(ctx, makePeople(roofPts, { palette: philistines, face: (x, z) => Math.atan2(-x * 0.3, 20 - z), seed: 65 }), { onStructures: true, arms: { left: [-0.4, 2.6], right: [-0.4, 2.8] } });
 
     // Dust and stones begin to fall from the cracking roof over the pillars.
         ctx.effects.motes({ position: [-1.3, y0, -4], radius: 1.2, height: 7, count: 90, color: '#5a4a38', size: 0.08, seed: 4 });

@@ -268,3 +268,47 @@ export function banner(ctx, { x, z, h = 5, color = '#a03028', pole = '#4a3828', 
   ctx.solid.add(new THREE.CylinderGeometry(0.05, 0.06, h, 5), { position: [x, base + h / 2, z], color: pole });
   ctx.solid.box(size[0], size[1], 0.05, { position: [x + size[0] / 2, base + h - size[1] / 2 - 0.1, z], rotation: [0, 0, 0.04], color, jitter: 0.08 });
 }
+
+// Indoor column of holy light that stays bright up close, unlike the engine's sky beam which fades within 30 m.
+export function pillar(ctx, { position, height = 6, radius = 0.8, color = '#eef2ff', opacity = 0.9 }) {
+  const time = { value: 0 };
+  ctx.onFrame((t) => (time.value = t));
+  const mat = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    fog: false,
+    side: THREE.DoubleSide,
+    uniforms: { uTime: time, uColor: { value: new THREE.Color(color) }, uOpacity: { value: opacity } },
+    vertexShader: `
+      varying vec2 vUv; varying vec3 vN; varying vec3 vView; varying float vDist;
+      void main() {
+        vUv = uv;
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal);
+        vView = normalize(-mv.xyz);
+        vDist = length(mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform float uTime; uniform vec3 uColor; uniform float uOpacity;
+      varying vec2 vUv; varying vec3 vN; varying vec3 vView; varying float vDist;
+      void main() {
+        float near = smoothstep(0.4, 1.6, vDist);
+        float edge = pow(abs(dot(normalize(vN), normalize(vView))), 1.5);
+        float vertical = smoothstep(0.0, 0.05, vUv.y) * (1.0 - smoothstep(0.55, 1.0, vUv.y));
+        float streaks = 0.75 + 0.25 * sin(vUv.x * 40.0 + uTime * 0.6) * sin(vUv.x * 17.0 - uTime * 0.4);
+        gl_FragColor = vec4(uColor * edge * vertical * streaks * near * uOpacity, 1.0);
+      }`,
+  });
+  for (const [k, op] of [[1, 0.6], [0.6, 0.8], [0.3, 1]]) {
+    const geo = new THREE.CylinderGeometry(radius * k * 1.15, radius * k, height, 24, 1, true).translate(0, height / 2, 0);
+    const m = mat.clone();
+    m.uniforms.uTime = time;
+    m.uniforms.uOpacity = { value: opacity * op };
+    const mesh = new THREE.Mesh(geo, m);
+    mesh.position.set(...position);
+    mesh.renderOrder = 10;
+    ctx.scene.add(mesh);
+  }
+}

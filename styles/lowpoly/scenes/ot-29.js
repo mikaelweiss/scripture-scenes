@@ -3,9 +3,9 @@
 import * as THREE from 'three';
 import { scatter, makePeople, addPeople, handAt, local, instanced, createFigure, stream, tent, banner, rng } from './lib/ot-25-kit.js';
 
-const DAVID = [-1, 5];
-const GOLIATH = [1.5, -11];
-const BEARER = [1.0, -7.8];
+const DAVID = [-1, 2];
+const GOLIATH = [1.5, -9];
+const BEARER = [-1.4, -6.6];
 const ISRAEL = [0, 58];
 const PHILISTIA = [0, -56];
 const BROOK = [[-200, 16], [-120, 10], [-60, 14], [-20, 9], [10, 11], [50, 6], [110, 12], [200, 8]];
@@ -44,7 +44,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#2e3050', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -5], radius: 60 },
 
-  player: { start: [-4.5, 17], yaw: -0.1, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: [-6.5, 7], yaw: -0.46, pitch: 0.04, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -118,7 +118,8 @@ export default {
     const by = ctx.heightAt(...BEARER);
     const bp = { x: BEARER[0], y: by, z: BEARER[1], scale: 1, yaw: gp.yaw };
     ctx.scene.add(createFigure({ x: BEARER[0], y: by, z: BEARER[1], face: DAVID, robe: '#8a3a2a', mantle: '#b08a40', skin: '#a06a48', hood: true }));
-    ctx.solid.box(1.0, 1.5, 0.08, { position: local(bp, [-0.1, 0.95, 0.38]), rotation: [0, gp.yaw, 0], color: '#a07a38' });
+    ctx.solid.add(new THREE.CylinderGeometry(0.42, 0.42, 0.07, 10).rotateX(Math.PI / 2), { position: local(bp, [-0.3, 0.9, 0.3]), rotation: [0, gp.yaw - 0.5, 0], scale: [1, 1.35, 1], color: '#a07a38' });
+    ctx.solid.add(new THREE.CylinderGeometry(0.1, 0.1, 0.1, 8).rotateX(Math.PI / 2), { position: local(bp, [-0.32, 0.9, 0.35]), rotation: [0, gp.yaw - 0.5, 0], color: '#d0b060' });
     ctx.colliders.add({ x: BEARER[0], z: BEARER[1], w: 1, d: 1, bottom: by, top: by + 1.8 });
 
     // David: a youth with no armour, staff left behind, sling whirling over his head.
@@ -134,10 +135,19 @@ export default {
     const hand = local(dp, handAt(1, ...SLING));
     const sling = new THREE.Group();
     sling.position.set(...hand);
-    const cord = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.75).translate(0, 0, 0.37), new THREE.MeshLambertMaterial({ color: '#4a3424' }));
-    const stone = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshLambertMaterial({ color: '#e0dcd0' }));
-    stone.position.z = 0.78;
-    sling.add(cord, stone);
+    const cord = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.95).translate(0, 0, 0.47), new THREE.MeshLambertMaterial({ color: '#3a2618' }));
+    const pouch = new THREE.Mesh(new THREE.SphereGeometry(0.11, 6, 4).scale(1, 0.7, 1.3), new THREE.MeshLambertMaterial({ color: '#5a3a22' }));
+    pouch.position.z = 0.98;
+    const stone = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), new THREE.MeshLambertMaterial({ color: '#f0ece0', emissive: '#f0ece0', emissiveIntensity: 0.35 }));
+    stone.position.set(0, 0.06, 0.98);
+    sling.add(cord, pouch, stone);
+    const whirl = new THREE.Mesh(
+      new THREE.RingGeometry(0.85, 1.05, 32).rotateX(-Math.PI / 2),
+      new THREE.MeshBasicMaterial({ color: '#f4ead0', transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }),
+    );
+    whirl.position.set(...hand);
+    whirl.rotation.x = 0.25;
+    ctx.scene.add(whirl);
     sling.rotation.order = 'YXZ';
     ctx.scene.add(sling);
     ctx.onFrame((t) => sling.rotation.set(0.25, t * 9, 0));

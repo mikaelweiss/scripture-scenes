@@ -2,14 +2,14 @@
 // The child Samuel has risen from his mat and answers, "Speak; for thy servant heareth."
 // The room is built around the player: the doors behind (+z), the veil ahead (-z).
 import * as THREE from 'three';
-import { flames, fireLight, instanced, createFigure, rng } from './lib/ot-25-kit.js';
+import { flames, fireLight, createFigure, rng, pillar } from './lib/ot-25-kit.js';
 
 const ROOM = { w: 10, z0: -10, z1: 8, h: 6 };
 const MENORAH = [-3, -4];
 const TABLE = [3.1, -4];
 const ALTAR = [0, -7.6];
-const SAMUEL = [1.5, -0.3];
-const PRESENCE = [-1.6, 2.6];
+const SAMUEL = [1.0, 1.4];
+const PRESENCE = [-2.2, 2.7];
 
 export default {
   title: '1 Samuel 3:1-10: The Lord calls Samuel',
@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.08, vignette: 0.55, shadowTint: '#1a1430', highlightTint: '#ffd8a0' },
   shadow: { center: [0, 0], radius: 16 },
 
-  player: { start: [0.6, 7.2], yaw: 0.02, pitch: -0.06, eye: 1.6, speed: 3 },
+  player: { start: [0.3, 6.6], yaw: 0.02, pitch: -0.1, eye: 1.6, speed: 3 },
 
   terrain: {
     size: 200,
@@ -127,16 +127,16 @@ export default {
     ctx.solid.box(0.9, 0.08, 1.9, { position: [SAMUEL[0] + 0.3, 0.1, SAMUEL[1] - 0.9], rotation: [0, 0.2, 0], color: '#8a6a4a' });
     ctx.solid.box(0.85, 0.14, 1.0, { position: [SAMUEL[0] + 0.15, 0.18, SAMUEL[1] - 1.3], rotation: [0.05, 0.25, 0.06], color: '#6a4a5a' });
     ctx.solid.box(0.5, 0.14, 0.3, { position: [SAMUEL[0] + 0.5, 0.2, SAMUEL[1] - 0.1], rotation: [0, 0.2, 0], color: '#d8ccb0' });
-    ctx.scene.add(createFigure({ x: SAMUEL[0], y: -0.26, z: SAMUEL[1], face: PRESENCE, scale: 0.78, robe: '#e8e0cc', mantle: '#d8ccb0', skin: '#b07a55', arms: 'down' }));
+    ctx.scene.add(createFigure({ x: SAMUEL[0], y: -0.2, z: SAMUEL[1], face: PRESENCE, scale: 0.86, robe: '#e8e0cc', mantle: '#d8ccb0', skin: '#b07a55', arms: 'down' }));
     ctx.colliders.add({ x: SAMUEL[0], z: SAMUEL[1], w: 0.6, d: 0.6, bottom: 0, top: 1.2 });
     ctx.solid.add(new THREE.CylinderGeometry(0.1, 0.13, 0.08, 7), { position: [SAMUEL[0] + 1.0, 0.06, SAMUEL[1] - 0.4], color: '#a8683a' });
 
     // The Lord stands and calls: no form, only a soft standing light.
-    ctx.effects.beam({ position: [PRESENCE[0], 0, PRESENCE[1]], height: h, radiusBottom: 0.7, radiusTop: 1.1, color: '#e8ecff', opacity: 0.55 });
-    ctx.effects.halo({ position: [PRESENCE[0], 1.4, PRESENCE[1]], size: 2.6, opacity: 0.4, color: '#eef0ff' });
+    pillar(ctx, { position: [PRESENCE[0], 0, PRESENCE[1]], height: h, radius: 0.55, color: '#c4d0ff', opacity: 0.3 });
+    ctx.effects.halo({ position: [PRESENCE[0], 1.5, PRESENCE[1]], size: 2.8, opacity: 0.35, color: '#eef0ff' });
     ctx.effects.motes({ position: [PRESENCE[0], 0, PRESENCE[1]], radius: 0.9, height: 5, count: 50, color: '#f4f6ff', size: 0.025 });
     ctx.effects.ring({ position: [PRESENCE[0], 0.1, PRESENCE[1]], radius: 0.9, width: 0.5, color: '#dfe6ff', opacity: 0.6 });
-    const holy = new THREE.PointLight('#dfe6ff', 10, 9, 1.4);
+    const holy = new THREE.PointLight('#dfe6ff', 16, 10, 1.4);
     holy.position.set(PRESENCE[0], 1.8, PRESENCE[1]);
     ctx.scene.add(holy);
   },

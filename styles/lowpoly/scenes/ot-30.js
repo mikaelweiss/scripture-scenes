@@ -9,7 +9,7 @@ const PORCH_Z = -29;
 const ALTAR = [0, -8];
 const SEA = [-15, -14];
 const SCAFFOLD = [0, 8];
-const START = [-1.5, 21];
+const START = [-5, 14];
 
 const limestone = '#e4d8bc';
 const gold = '#e0b850';
@@ -24,7 +24,7 @@ const israel = {
 };
 const priests = { robes: ['#f2eee4', '#ece6d8'], mantles: ['#f6f2ea'], skins: ['#a87652', '#9b6a46'], mantleChance: 0.5, hoodChance: 0 };
 
-const RAISED = [0.55, 2.7];
+const RAISED = [-0.55, 2.75];
 const TRUMPET = [-0.15, 1.5];
 
 export default {
@@ -43,7 +43,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.38, shadowTint: '#3a3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, -15], radius: 60 },
 
-  player: { start: START, yaw: 0.0, pitch: 0.13, eye: 1.65, speed: 4.5 },
+  player: { start: START, yaw: -0.4, pitch: 0.14, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -149,18 +149,18 @@ export default {
     const [kx, kz] = SCAFFOLD;
     box(3.2, 1.6, 3.2, kx, y0, kz, bronze);
     for (let i = 0; i < 5; i++) box(1.2, 0.32 * (i + 1), 0.5, kx, y0, kz + 1.6 + 2.25 - i * 0.5, '#9a6a32');
-    const solomon = addPeople(ctx, [{ x: kx, z: kz, y: y0 + 1.6, yaw: Math.PI, scale: 1.08, robe: new THREE.Color('#5a2a7a'), mantle: new THREE.Color('#c8a040'), hood: false, skin: new THREE.Color('#a8754f') }], { arms: { left: RAISED, right: RAISED } });
-    ctx.solid.add(new THREE.CylinderGeometry(0.15, 0.13, 0.12, 8, 1, true), { position: [kx, y0 + 1.6 + 1.72 * 1.08, kz], color: gold });
+    const solomon = addPeople(ctx, [{ x: kx, z: kz, y: y0 + 1.6, yaw: Math.PI, scale: 1.15, robe: new THREE.Color('#5a2a7a'), mantle: new THREE.Color('#c8a040'), hood: false, skin: new THREE.Color('#a8754f') }], { arms: { left: RAISED, right: RAISED } });
+    ctx.solid.add(new THREE.CylinderGeometry(0.15, 0.13, 0.12, 8, 1, true), { position: [kx, y0 + 1.6 + 1.72 * 1.15, kz], color: gold });
 
     // Priests in white linen with trumpets east of the altar, singers with cymbals beside them.
     const priestPts = rows({ from: [9, -14], to: [9, 2], rows: 4, depth: 5, spacing: 1.1, jitter: 0.1, seed: 31 }).map(([x, z]) => [x + 2.5, z]);
     const trumpeters = addPeople(ctx, makePeople(priestPts, { palette: priests, face: [0, -30], yawJitter: 0.1, seed: 32 }), { arms: { left: TRUMPET, right: [0.15, 1.4] } });
     instanced(ctx, new THREE.ConeGeometry(0.09, 1.0, 7, 1, true).rotateX(-Math.PI / 2).translate(0, 0, 0.5), trumpeters.map((p) => ({ position: local(p, [0, 1.48, 0.12]), rotation: [-0.5, p.yaw, 0], scale: p.scale, color: '#e8d8a8' })));
     const singerPts = rows({ from: [17.5, -14], to: [17.5, 2], rows: 3, depth: 3, spacing: 1.1, jitter: 0.1, seed: 33 });
-    addPeople(ctx, makePeople(singerPts, { palette: priests, face: [0, -30], yawJitter: 0.15, seed: 34 }), { arms: { left: [0.6, 2.4], right: [0.6, 2.4] } });
+    addPeople(ctx, makePeople(singerPts, { palette: priests, face: [0, -30], yawJitter: 0.15, seed: 34 }), { arms: { left: [-0.45, 2.5], right: [-0.45, 2.5] } });
 
     // All Israel assembled in the court, facing the house.
-    addPeople(ctx, makePeople(scatter({ count: 1400, center: [0, 30], ring: [0, 34], arc: [-Math.PI, Math.PI], spacing: 0.95, seed: 35, avoid: [{ rect: [0, 10, 7, 9] }, { rect: [START[0], START[1] + 2, 3, 10] }, { rect: [-1.5, 18, 3.4, 20] }] }), { palette: israel, face: [0, -40], children: 0.15, kneel: 0.25, seed: 36 }));
+    addPeople(ctx, makePeople(scatter({ count: 1400, center: [0, 30], ring: [0, 34], arc: [-Math.PI, Math.PI], spacing: 0.95, seed: 35, avoid: [{ rect: [0, 10, 7, 9] }, { rect: [START[0] + 2, START[1] - 3, 7, 9] }, { rect: [-1.5, 18, 3.4, 20] }] }), { palette: israel, face: [0, -40], children: 0.15, kneel: 0.25, seed: 36 }));
     addPeople(ctx, makePeople(scatter({ count: 260, center: [-28, -6], ring: [0, 11], spacing: 1, seed: 37, avoid: [{ x: SEA[0], z: SEA[1], r: 6 }] }), { palette: israel, face: ALTAR, seed: 38, kneel: 0.2 }));
 
     // The court wall of hewn stone and cedar beams.
