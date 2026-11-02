@@ -3,7 +3,7 @@
 import { road, town, cityWall, horse, figure } from './lib/nt-32-kit.js';
 
 const SAUL = [1.2, -9.4];
-const LIGHT = [0.4, -12];
+const LIGHT = [0.2, -15];
 
 const companions = [
   [-3.2, -6.5], [-4.4, -8.8], [3.8, -6.2], [4.6, -9.4], [-2.4, -4.2], [-1.8, -2.6], [-5.6, -11.5],
@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.04, vignette: 0.3, shadowTint: '#4a4060', highlightTint: '#fff2d0' },
   shadow: { center: [0, -6], radius: 50 },
 
-  player: { start: [1.8, 1.5], yaw: 0.0, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [0.7, -3.4], yaw: -0.06, pitch: 0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -38,7 +38,7 @@ export default {
       { x: 0, z: -280, r: 70, falloff: 60, height: -2 },
     ],
     colors: { ground: '#b8966a', groundAlt: '#a4825a', grass: '#9a9058', high: '#a89070', rock: '#8e7a62' },
-    patches: [{ x: 0, z: -10, r: 9, color: '#f2e2b8', strength: 0.55, rough: 0.3 }],
+    patches: [{ x: 0, z: -10, r: 9, color: '#e6d2a4', strength: 0.4, rough: 0.3 }],
   },
 
   objects: [],
@@ -64,9 +64,9 @@ export default {
   figures: [],
 
   effects: [
-    { type: 'beam', at: LIGHT, height: 320, radiusBottom: 4.5, radiusTop: 34, color: '#fff6e0', opacity: 0.55 },
-    { type: 'beam', at: LIGHT, height: 320, radiusBottom: 2.2, radiusTop: 14, color: '#ffffff', opacity: 0.45 },
-    { type: 'ring', at: LIGHT, lift: 0.06, radius: 4.5, width: 2.5, color: '#fff1c8', opacity: 0.35 },
+    { type: 'beam', at: LIGHT, height: 320, radiusBottom: 3.2, radiusTop: 34, color: '#fff6e0', opacity: 0.55 },
+    { type: 'beam', at: LIGHT, height: 320, radiusBottom: 1.6, radiusTop: 14, color: '#ffffff', opacity: 0.45 },
+    { type: 'ring', at: LIGHT, lift: 0.06, radius: 3.4, width: 2.4, color: '#fff1c8', opacity: 0.4 },
     { type: 'motes', at: LIGHT, radius: 7, height: 50, count: 260, color: '#fffae8' },
   ],
 
@@ -75,15 +75,16 @@ export default {
     town(ctx, { center: [0, -300], radius: 55, count: 45, seed: 326, colors: ['#d8c8a6', '#cbb68e', '#e0d2b2'], height: [3, 8] });
     cityWall(ctx, { points: [[-70, -236], [70, -236], [80, -330], [-80, -330], [-70, -236]], h: 9, color: '#c8b28a', gaps: [{ x: 0, z: -236, r: 5 }] });
 
-    figure(ctx, { x: SAUL[0], z: SAUL[1], face: [LIGHT[0] - 6, SAUL[1] - 1.5], pose: 'prostrate', robe: '#6e2e2a', mantle: '#3a2c24', arms: 'out' });
+    figure(ctx, { x: SAUL[0], z: SAUL[1], face: [LIGHT[0] - 6, SAUL[1] - 1.5], pose: 'prostrate', robe: '#9a2e26', mantle: '#4a5a72', arms: 'out' });
     horse(ctx, { x: -6.5, z: -3.5, rot: 2.6, color: '#7a5638' });
     horse(ctx, { x: 7.2, z: -12.5, rot: -1.2, color: '#4e3828' });
     horse(ctx, { x: 9.5, z: 0.5, rot: 0.8, color: '#9a7a5a' });
     ctx.solid.box(0.6, 0.3, 0.45, { position: [-1.4, ctx.heightAt(-1.4, -8.4) + 0.12, -8.4], rotation: [0.1, 0.5, 0.2], color: '#7a5a3a' });
     ctx.solid.add(new ctx.THREE.CylinderGeometry(0.05, 0.05, 0.4, 6), { position: [1.6, ctx.heightAt(1.6, -7.6) + 0.05, -7.6], rotation: [0, 0.4, Math.PI / 2], color: '#e8dcc0' });
 
+    ctx.effects.ring({ position: [SAUL[0], ctx.heightAt(...SAUL) + 0.05, SAUL[1]], radius: 1.6, width: 1.2, color: '#fff1c8', opacity: 0.3 });
     ctx.effects.halo({ position: [LIGHT[0], 110, LIGHT[1] - 30], size: 110, opacity: 0.6, color: '#fffbea' });
-    const pl = new ctx.THREE.PointLight('#fff4dc', 40, 30, 1.3);
+    const pl = new ctx.THREE.PointLight('#fff4dc', 26, 30, 1.3);
     pl.position.set(LIGHT[0], 8, LIGHT[1]);
     ctx.scene.add(pl);
   },

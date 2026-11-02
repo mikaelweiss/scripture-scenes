@@ -4,7 +4,7 @@ import { water, house, town, boat, figure, brightCloud, beast, bird, serpent, Ba
 
 const HOUSE = [0, 4];
 const PETER = [-1.4, 1.2];
-const SHEET = [-0.5, 8.5, -15];
+const SHEET = [-1.0, 7.4, -11];
 
 export default {
   title: "Acts 10:9-16: Peter's vision at Joppa",
@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.3, shadowTint: '#2e3a5e', highlightTint: '#fff0d8' },
   shadow: { center: [0, 6], radius: 40 },
 
-  player: { start: [2.6, 6.6], yaw: 0.12, pitch: 0.22, eye: 1.65, speed: 4 },
+  player: { start: [1.4, 3.6], yaw: 0.5, pitch: 0.14, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1100,

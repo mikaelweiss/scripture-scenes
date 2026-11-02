@@ -393,7 +393,8 @@ export function divine(ctx, { x, z, y, face, scale = 1.1, light = 30, range = 18
 }
 
 // Axis-aligned stone room around (x, z) with floor at y. doors: { n|s|e|w: [{ at, width, height }] }, `at` along the wall.
-export function room(ctx, { x, z, y, w, d, h = 3.2, t = 0.5, color = '#7a6e62', floor = '#5e554c', ceiling = '#4e463e', doors = {}, floorTile = 1.2 }) {
+export function room(ctx, { x, z, y, w, d, h = 3.2, t = 0.5, color = '#8a867c', mortar = '#3a3632', floor = '#5e554c', ceiling = '#4e463e', doors = {}, floorTile = 1.2 }) {
+  const stones = rng(Math.round(x * 31 + z * 17 + w * 7) + 101);
   const seg = (side, a, b, yy, hh) => {
     if (b - a < 0.01 || hh <= 0) return;
     const horiz = side === 'n' || side === 's';
@@ -401,10 +402,24 @@ export function room(ctx, { x, z, y, w, d, h = 3.2, t = 0.5, color = '#7a6e62', 
     const px = horiz ? x + mid : x + (side === 'w' ? -w / 2 : w / 2);
     const pz = horiz ? z + (side === 'n' ? -d / 2 : d / 2) : z + mid;
     const bw = horiz ? L : t, bd = horiz ? t : L;
-    const rows = Math.max(1, Math.round(hh / 0.55));
+    ctx.solid.box(horiz ? L : t - 0.06, hh, horiz ? t - 0.06 : L, { position: [px, yy + hh / 2, pz], color: mortar, jitter: 0.02 });
+    const rows = Math.max(1, Math.round(hh / 0.58));
+    const rh = hh / rows;
+    const tone = new THREE.Color();
     for (let r = 0; r < rows; r++) {
-      const rh = hh / rows;
-      ctx.solid.box(bw + (horiz ? 0 : 0.02 * (r % 2)), rh - 0.03, bd + (horiz ? 0.02 * (r % 2) : 0), { position: [px, yy + r * rh + rh / 2, pz], color, jitter: 0.07 });
+      let s = a;
+      const first = (r % 2 ? 0.45 : 0.9) + stones() * 0.3;
+      let len = Math.min(first, b - s);
+      while (s < b - 0.01) {
+        if (b - s - len < 0.3) len = b - s;
+        const c = s + len / 2;
+        const bx = horiz ? x + c : px, bz = horiz ? pz : z + c;
+        const depth = t + (stones() - 0.3) * 0.05;
+        tone.set(color).offsetHSL((stones() - 0.5) * 0.03, (stones() - 0.5) * 0.06, (stones() - 0.5) * 0.16);
+        ctx.solid.box(horiz ? len - 0.05 : depth, rh - 0.05, horiz ? depth : len - 0.05, { position: [bx, yy + r * rh + rh / 2, bz], color: `#${tone.getHexString()}`, jitter: 0.04 });
+        s += len;
+        len = Math.min(0.75 + stones() * 0.6, b - s);
+      }
     }
     ctx.colliders.add({ x: px, z: pz, w: bw, d: bd, bottom: yy, top: yy + hh });
   };

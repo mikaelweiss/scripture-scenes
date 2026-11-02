@@ -4,7 +4,7 @@
 import { divine, figure, lampstand, water } from './lib/nt-32-kit.js';
 
 const CHRIST = [0, -6];
-const JOHN = [0.2, -3.4];
+const JOHN = [0.7, -3.2];
 const SCALE = 1.15;
 
 const candlesticks = Array.from({ length: 7 }, (_, i) => {
@@ -27,7 +27,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#2e2a5e', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -4], radius: 30 },
 
-  player: { start: [1.7, 2.6], yaw: 0.14, pitch: 0.1, eye: 1.65, speed: 4 },
+  player: { start: [1.2, 1.6], yaw: 0.1, pitch: 0.0, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1100,
@@ -81,7 +81,10 @@ export default {
     for (const [x, z] of candlesticks) lampstand(ctx, { x, z, h: 1.8, light: 4, range: 6 });
 
     const jy = ctx.heightAt(...JOHN);
-    figure(ctx, { x: JOHN[0], z: JOHN[1], y: jy, face: [-2.2, -5.4], pose: 'prostrate', robe: '#a08c70', mantle: '#5a4a3a', arms: 'out' });
+    figure(ctx, { x: JOHN[0], z: JOHN[1], y: jy, face: [-3, JOHN[1] - 0.6], pose: 'prostrate', robe: '#c8b08a', mantle: '#7a5a8a', arms: 'out' });
+    const fill = new THREE.PointLight('#ffe8c0', 6, 6, 1.5);
+    fill.position.set(JOHN[0] + 0.4, jy + 1.6, JOHN[1] + 1.4);
+    ctx.scene.add(fill);
     ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 1.6, 4), { position: [1.4, jy + 0.04, -1.6], rotation: [Math.PI / 2, 0.8, 0], color: '#5a4332' });
     ctx.solid.box(0.35, 0.05, 0.25, { position: [-1.2, jy + 0.03, -1.4], rotation: [0, 0.3, 0], color: '#c8b48a' });
   },

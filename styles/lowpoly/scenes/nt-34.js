@@ -9,7 +9,7 @@ const GATE_Z = -14.4;
 const PETER = [-0.7, -1.2];
 const ANGEL = [1.1, -2.2];
 
-const wallStone = '#6e6458';
+const wallStone = '#78756e';
 const moon = [0.35, 0.5, -0.8];
 
 export default {
@@ -27,7 +27,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.5, shadowTint: '#1a1e40', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -14], radius: 40 },
 
-  player: { start: [-0.9, 2.9], yaw: -0.08, pitch: 0.02, eye: 1.65, speed: 3.5 },
+  player: { start: [1.7, 2.7], yaw: 0.45, pitch: -0.06, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 900,

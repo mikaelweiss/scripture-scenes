@@ -72,7 +72,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.32, shadowTint: '#2e3a5e', highlightTint: '#fff0d0' },
   shadow: { center: [0, -2], radius: 32 },
 
-  player: { start: [1.9, 5.2], yaw: 0.06, pitch: 0.14, eye: 1.65, speed: 4.5 },
+  player: { start: [2.3, 2.6], yaw: 0.22, pitch: 0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -121,7 +121,7 @@ export default {
     const py = ctx.heightAt(...PAUL);
     ctx.solid.add(new THREE.DodecahedronGeometry(1.4, 0), { position: [PAUL[0], py - 0.2, PAUL[1]], scale: [1.3, 0.55, 1.1], color: '#a29a88', jitter: 0.06 });
     ctx.colliders.add({ x: PAUL[0], z: PAUL[1], w: 2.6, d: 2.2, bottom: py - 1, top: py + 0.5 });
-    figure(ctx, { x: PAUL[0], z: PAUL[1], y: py + 0.5, face: [PAUL[0] + 1, 14], scale: 1.04, robe: '#6a4a34', mantle: '#3e4a5e', arms: 'out' });
+    figure(ctx, { x: PAUL[0], z: PAUL[1], y: py + 0.5, face: [PAUL[0] + 1, 14], scale: 1.08, robe: '#8a5a3a', mantle: '#4a6a9a', arms: 'out' });
 
     const ay = ctx.heightAt(...ALTAR);
     const rot = 0.15;

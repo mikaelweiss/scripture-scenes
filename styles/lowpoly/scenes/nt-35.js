@@ -7,7 +7,7 @@ const PAUL = [-0.65, -2.2];
 const SILAS = [0.65, -2.2];
 const KEEPER = [2.8, -3.3];
 
-const wallStone = '#6a6054';
+const wallStone = '#7c7972';
 
 export default {
   title: 'Acts 16:23-34: The Philippian jail',
@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.1, vignette: 0.55, shadowTint: '#1a1e40', highlightTint: '#ffe0b0' },
   shadow: { center: [0, 0], radius: 20 },
 
-  player: { start: [-0.4, 2.7], yaw: 0.08, pitch: -0.04, eye: 1.65, speed: 3.5 },
+  player: { start: [0.2, 1.5], yaw: -0.05, pitch: -0.1, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 600,
@@ -74,10 +74,10 @@ export default {
         });
       }
     };
-    crack([[-1.8, 3.2, -3.74], [-1.5, 2.5, -3.74], [-2.0, 1.8, -3.74], [-1.6, 1.0, -3.74], [-1.9, 0.2, -3.74]], 'z');
-    crack([[0.6, 3.2, -3.74], [0.9, 2.6, -3.74], [0.7, 2.1, -3.74]], 'z');
-    crack([[4.74, 3.2, -2.6], [4.74, 2.4, -2.2], [4.74, 1.7, -2.8], [4.74, 0.8, -2.4], [4.74, 0, -2.9]], 'x');
-    crack([[-4.74, 3.2, 3.2], [-4.74, 2.2, 2.8], [-4.74, 1.4, 3.3]], 'x');
+    crack([[-1.8, 3.2, -3.69], [-1.5, 2.5, -3.69], [-2.0, 1.8, -3.69], [-1.6, 1.0, -3.69], [-1.9, 0.2, -3.69]], 'z');
+    crack([[0.6, 3.2, -3.69], [0.9, 2.6, -3.69], [0.7, 2.1, -3.69]], 'z');
+    crack([[4.69, 3.2, -2.6], [4.69, 2.4, -2.2], [4.69, 1.7, -2.8], [4.69, 0.8, -2.4], [4.69, 0, -2.9]], 'x');
+    crack([[-4.69, 3.2, 3.2], [-4.69, 2.2, 2.8], [-4.69, 1.4, 3.3]], 'x');
     for (let i = 0; i < 26; i++) {
       const x = ctx.rand.range(-4.4, 4.4), z = ctx.rand.range(-3.4, 3.4);
       if (Math.hypot(x, z - 2.7) < 1.2) continue;
@@ -128,7 +128,7 @@ export default {
 
     // The keeper bursting in with a torch, sword lowered.
     figure(ctx, { x: KEEPER[0], z: KEEPER[1], y: 0, face: [0.5, -1.5], robe: '#7a3a2a', mantle: '#4a4038', arms: 'out' });
-    torch(ctx, { x: KEEPER[0] - 0.7, y: 1.05, z: KEEPER[1] + 0.35, intensity: 16, range: 12 });
+    torch(ctx, { x: KEEPER[0] - 0.7, y: 1.05, z: KEEPER[1] + 0.35, intensity: 13, range: 12, color: '#ffb070' });
     ctx.solid.box(0.05, 0.85, 0.02, { position: [KEEPER[0] + 0.72, 0.62, KEEPER[1] + 0.32], rotation: [0.2, 0, -0.2], color: '#b8bcc4' });
     ctx.solid.box(0.18, 0.04, 0.05, { position: [KEEPER[0] + 0.66, 1.02, KEEPER[1] + 0.28], color: '#6a5030' });
     torch(ctx, { x: 4.6, y: 2.0, z: -2.6, intensity: 6, range: 7 });

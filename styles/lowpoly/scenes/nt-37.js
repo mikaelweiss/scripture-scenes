@@ -23,31 +23,31 @@ function hull(len, beam, depth, z0, z1, rand) {
   return geo;
 }
 
-function wreckPiece(ctx, { half, x, y, z, rot, tilt, color = '#5a4232' }) {
+function wreckPiece(ctx, { half, x, y, z, rot, tilt, color = '#8e6c4c' }) {
   const { THREE } = ctx;
   hull.THREE = THREE;
   const L = 30, B = 7.5, D = 4.2;
   const b = new Batch(ctx.rand);
   const [z0, z1] = half === 'bow' ? [-1, L / 2] : [-L / 2, -2];
   b.add(hull(L, B, D, z0, z1, ctx.rand), { color, jitter: 0.06 });
-  b.box(B * 0.8, 0.12, (z1 - z0) * 0.8, { position: [0, D / 2 + 0.05, (z0 + z1) / 2 - (half === 'bow' ? 1 : -1)], color: '#7a5a40', jitter: 0.06 });
+  b.box(B * 0.8, 0.12, (z1 - z0) * 0.8, { position: [0, D / 2 + 0.05, (z0 + z1) / 2 - (half === 'bow' ? 1 : -1)], color: '#a88a66', jitter: 0.06 });
   for (let k = 0; k < 6; k++) {
     const zz = half === 'bow' ? z0 + 0.2 : z1 - 0.2;
-    b.box(0.22, D * ctx.rand.range(0.6, 1.3), 0.22, { position: [ctx.rand.range(-B / 2.4, B / 2.4), ctx.rand.range(0, D * 0.4), zz + ctx.rand.range(-0.5, 0.5)], rotation: [ctx.rand.range(-0.5, 0.5), 0, ctx.rand.range(-0.4, 0.4)], color: '#4a3424' });
+    b.box(0.22, D * ctx.rand.range(0.6, 1.3), 0.22, { position: [ctx.rand.range(-B / 2.4, B / 2.4), ctx.rand.range(0, D * 0.4), zz + ctx.rand.range(-0.5, 0.5)], rotation: [ctx.rand.range(-0.5, 0.5), 0, ctx.rand.range(-0.4, 0.4)], color: '#6e5038' });
   }
   if (half === 'bow') {
-    b.add(new THREE.CylinderGeometry(0.22, 0.3, 12, 6), { position: [0, D / 2 + 6, 3], rotation: [0.25, 0, 0.15], color: '#4a3828' });
-    b.add(new THREE.CylinderGeometry(0.14, 0.14, 10, 5), { position: [1.5, D / 2 + 10, 4], rotation: [0.2, 0, 1.2], color: '#4a3828' });
+    b.add(new THREE.CylinderGeometry(0.22, 0.3, 12, 6), { position: [0, D / 2 + 6, 3], rotation: [0.25, 0, 0.15], color: '#7a5e44' });
+    b.add(new THREE.CylinderGeometry(0.14, 0.14, 10, 5), { position: [1.5, D / 2 + 10, 4], rotation: [0.2, 0, 1.2], color: '#7a5e44' });
     const sail = new THREE.BoxGeometry(8, 4.5, 0.1, 4, 3, 1);
     const sp = sail.attributes.position;
     for (let i = 0; i < sp.count; i++) sp.setZ(i, Math.sin(sp.getX(i) * 0.6) * 0.6 + ctx.rand.range(-0.3, 0.3));
     b.add(sail, { position: [1.2, D / 2 + 7.5, 4.3], rotation: [0.25, 0.3, 1.1], color: '#c8b896', jitter: 0.06 });
-    b.add(new THREE.CylinderGeometry(0.16, 0.16, 6, 5), { position: [0, D / 2 + 1.4, L / 2 + 1.8], rotation: [1.0, 0, 0], color: '#4a3828' });
+    b.add(new THREE.CylinderGeometry(0.16, 0.16, 6, 5), { position: [0, D / 2 + 1.4, L / 2 + 1.8], rotation: [1.0, 0, 0], color: '#7a5e44' });
   } else {
-    b.box(5, 2.4, 4, { position: [0, D / 2 + 1.2, z0 + 3.5], rotation: [0, 0, 0.05], color: '#6a4a34' });
-    b.add(new THREE.CylinderGeometry(0.18, 0.24, 5, 6), { position: [0, D / 2 + 2, z1 - 4], rotation: [0.1, 0, 1.3], color: '#4a3828' });
+    b.box(5, 2.4, 4, { position: [0, D / 2 + 1.2, z0 + 3.5], rotation: [0, 0, 0.05], color: '#8a6a4c' });
+    b.add(new THREE.CylinderGeometry(0.18, 0.24, 5, 6), { position: [0, D / 2 + 2, z1 - 4], rotation: [0.1, 0, 1.3], color: '#7a5e44' });
   }
-  const mesh = b.build(new THREE.MeshLambertMaterial({ vertexColors: true }));
+  const mesh = b.build(new THREE.MeshLambertMaterial({ vertexColors: true, emissive: '#3a3026' }));
   mesh.position.set(x, y, z);
   mesh.rotation.set(tilt[0], rot, tilt[1], 'YXZ');
   mesh.castShadow = mesh.receiveShadow = true;
@@ -61,7 +61,7 @@ export default {
   fov: 62,
   exposure: 1.05,
 
-  sun: { direction: [0.4, 0.5, -0.6], color: '#c8ccd4', intensity: 1.3 },
+  sun: { direction: [0.45, 0.55, 0.3], color: '#c8ccd4', intensity: 1.3 },
   light: { sky: '#9aa4b4', ground: '#4a443e', hemi: 1.1 },
   sky: { top: '#5a6474', horizon: '#a8b0b4', ground: '#6a6a66', sunColor: '#d8dce0', glow: 0.3 },
   fog: { color: '#8e989c', near: 40, far: 420 },
@@ -71,7 +71,7 @@ export default {
   grade: { saturation: 0.92, contrast: 1.06, vignette: 0.45, shadowTint: '#2a3448', highlightTint: '#ffe2b8' },
   shadow: { center: [0, 4], radius: 30 },
 
-  player: { start: [3.6, 12.2], yaw: 0.12, pitch: -0.02, eye: 1.65, speed: 4.2 },
+  player: { start: [4.2, 10.0], yaw: 0.16, pitch: 0.0, eye: 1.65, speed: 4.2 },
 
   terrain: {
     size: 1100,
@@ -142,8 +142,8 @@ export default {
     for (let i = 0; i < 5; i++) ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.04, 0.9, 4), { position: [PAUL[0] - 0.5 + i * 0.08, py + 0.05, PAUL[1] + 0.5], rotation: [Math.PI / 2, 0.4 + i * 0.2, 0], color: '#6a5038' });
 
     // The ship aground on the bar, bow stuck fast and stern broken by the waves.
-    wreckPiece(ctx, { half: 'bow', x: 10, y: SEA + 0.3, z: -42, rot: 0.6, tilt: [-0.12, 0.18] });
-    wreckPiece(ctx, { half: 'stern', x: -6, y: SEA - 2.0, z: -52, rot: 0.9, tilt: [0.2, -0.35] });
+    wreckPiece(ctx, { half: 'bow', x: 9, y: SEA + 0.6, z: -36, rot: 0.6, tilt: [-0.12, 0.18] });
+    wreckPiece(ctx, { half: 'stern', x: -8, y: SEA - 1.4, z: -46, rot: 0.9, tilt: [0.2, -0.35] });
     ctx.effects.smoke({ position: [6, SEA, -44], count: 10, height: 5, size: 2.5, color: '#e0e6e8', wind: [0.4, 0.3], seed: 4 });
     ctx.effects.smoke({ position: [-8, SEA, -52], count: 10, height: 4, size: 2.2, color: '#e0e6e8', wind: [0.4, 0.3], seed: 5 });
     for (let i = 0; i < 22; i++) {
