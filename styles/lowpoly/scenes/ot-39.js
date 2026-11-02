@@ -26,7 +26,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.08, vignette: 0.5, shadowTint: '#1a1430', highlightTint: '#ffd8a0' },
   shadow: { center: [0, -10], radius: 30 },
 
-  player: { start: [1.8, 7], yaw: 0.05, pitch: 0.06, eye: 1.65, speed: 3.5 },
+  player: { start: [0, -7], yaw: 0.13, pitch: 0.1, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 600, segments: 60, seed: 39, hills: 4, bumps: 0.1,
@@ -50,7 +50,7 @@ export default {
         count: 50, center: [0, -10], ring: [0, 14], spacing: 1.1, face: WRITING, children: 0, seed: 50,
         avoid: [
           ...tableXs.map((tx) => ({ rect: [tx, -11, 4.2, 30] })),
-          { rect: [0, 2, 3.5, 22] },
+          { rect: [0, -3, 4, 28] },
           { rect: [DAIS[0], DAIS[1], 14, 8] },
           { rect: [-9, NORTH + 3, 6, 6] },
         ],
@@ -115,7 +115,7 @@ export default {
       text.material.opacity = 0.85 + 0.15 * Math.sin(t * 1.7);
     });
 
-    const lx = WRITING[0] + 1, lz = NORTH + 3;
+    const lx = WRITING[0] - 5.6, lz = NORTH + 3;
     ctx.solid.add(new THREE.CylinderGeometry(0.9, 1.1, 0.5, 8), { position: [lx, 0.25, lz], color: '#c9a040' });
     ctx.solid.add(new THREE.CylinderGeometry(0.12, 0.16, 3.4, 6), { position: [lx, 2.1, lz], color: '#d8b04a' });
     for (const s of [-1, 0, 1]) {

@@ -29,7 +29,7 @@ export default {
   grade: { saturation: 0.85, contrast: 1.1, vignette: 0.55, shadowTint: '#1a2438', highlightTint: '#dfe8f0' },
   shadow: { center: [0, 0], radius: 25 },
 
-  player: { start: [0.4, 8.4], yaw: -0.72, pitch: -0.1, eye: 1.65, speed: 3 },
+  player: { start: [0.4, 8.4], yaw: -0.95, pitch: -0.06, eye: 1.65, speed: 3 },
 
   terrain: {
     size: 600, segments: 30, seed: 41, hills: 0, bumps: 0,
@@ -112,44 +112,65 @@ export default {
     jonah.rotation.order = 'YXZ';
     jonah.rotation.x = 1.45;
 
-    // The great fish surging up beside the ship, mouth open.
+    // The great fish surging up beside the ship, mouth open toward Jonah. Built facing -z, then turned toward the ship.
     const fish = new THREE.Group();
-    const fishMat = new THREE.MeshLambertMaterial({ color: '#3e5466', flatShading: true });
-    const belly = new THREE.MeshLambertMaterial({ color: '#8a9298', flatShading: true });
-    const body = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1).scale(3.2, 2.6, 11), fishMat);
-    body.position.set(0, 0, 4);
-    const head = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1).scale(3, 1.6, 3.6), fishMat);
-    head.position.set(0, 1.0, -5);
-    head.rotation.x = -0.45;
-    const jaw = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1).scale(2.6, 0.8, 3.4), belly);
-    jaw.position.set(0, -0.9, -5.4);
-    jaw.rotation.x = 0.4;
-    const mouth = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 0).scale(2.2, 1.1, 2.4), new THREE.MeshBasicMaterial({ color: '#2a0e10' }));
-    mouth.position.set(0, -0.1, -6.4);
-    const fin = new THREE.Mesh(new THREE.ConeGeometry(1.2, 3, 4).scale(0.3, 1, 1), fishMat);
-    fin.position.set(0, 2.8, 5);
-    fin.rotation.x = 0.5;
-    const tail = new THREE.Mesh(new THREE.ConeGeometry(2.6, 3, 4).scale(1.6, 0.3, 1), fishMat);
-    tail.position.set(0, 0.6, 15.5);
-    tail.rotation.x = Math.PI / 2;
-    for (const s of [-1, 1]) {
-      const eye = new THREE.Mesh(new THREE.OctahedronGeometry(0.22, 0), new THREE.MeshBasicMaterial({ color: '#d8d0b0' }));
-      eye.position.set(s * 2.4, 1.5, -5.2);
-      fish.add(eye);
+    const skin = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
+    const plain = (color) => new THREE.MeshLambertMaterial({ color, flatShading: true, side: THREE.DoubleSide });
+    const backColor = new THREE.Color('#5a7e94'), bellyColor = new THREE.Color('#dcd8c8');
+    const shaded = (geo, split) => {
+      const pos = geo.attributes.position;
+      const col = new Float32Array(pos.count * 3);
+      for (let i = 0; i < pos.count; i += 3) {
+        const c = (pos.getY(i) + pos.getY(i + 1) + pos.getY(i + 2)) / 3 < split ? bellyColor : backColor;
+        for (let k = 0; k < 3; k++) c.toArray(col, (i + k) * 3);
+      }
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      return geo;
+    };
+    const part = (mesh, pos, rot = [0, 0, 0], parent = fish) => {
+      mesh.position.set(...pos);
+      mesh.rotation.set(...rot);
+      parent.add(mesh);
+      return mesh;
+    };
+    part(new THREE.Mesh(shaded(new THREE.IcosahedronGeometry(1, 1).scale(3, 2.5, 8), -0.7), skin), [0, 0, 1]);
+    part(new THREE.Mesh(shaded(new THREE.IcosahedronGeometry(1, 1).scale(1.3, 1.2, 4.4), -0.4), skin), [0, 1.6, 10.5], [-0.45, 0, 0]);
+    // Jaws hinge open at the back of the head.
+    const hinge = part(new THREE.Group(), [0, 0.3, -5.2]);
+    part(new THREE.Mesh(shaded(new THREE.IcosahedronGeometry(1, 1).scale(2.8, 1.4, 4), -1), skin), [0, 0.7, -3], [0.62, 0, 0], hinge);
+    part(new THREE.Mesh(shaded(new THREE.IcosahedronGeometry(1, 1).scale(2.4, 0.7, 3.8), 0.6), skin), [0, -0.9, -2.8], [-0.5, 0, 0], hinge);
+    part(new THREE.Mesh(new THREE.IcosahedronGeometry(1, 0).scale(2.2, 2, 2.8), plain('#9a3a40')), [0, 0, -2.6], [0, 0, 0], hinge);
+    const tooth = new THREE.ConeGeometry(0.16, 0.5, 4);
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 6 - 0.5) * 2.2, x = Math.sin(a) * 1.9, z = -4.4 + (1 - Math.cos(a)) * 2.2;
+      part(new THREE.Mesh(tooth, plain('#f0ece0')), [x, -0.05 - (z + 4.4) * 0.3, z + 0.3], [0, 0, 0], hinge);
     }
-    fish.add(body, head, jaw, mouth, fin, tail);
-    fish.position.set(12, 0, 0);
-    fish.scale.setScalar(0.95);
-    fish.rotation.set(-0.32, 0.25, 0, 'YXZ');
+    for (const s of [-1, 1]) {
+      part(new THREE.Mesh(new THREE.OctahedronGeometry(0.42, 0), plain('#f0ead8')), [s * 2.2, 1.3, -1.4], [0, 0, 0], hinge);
+      part(new THREE.Mesh(new THREE.OctahedronGeometry(0.24, 0), plain('#141414')), [s * 2.42, 1.35, -1.55], [0, 0, 0], hinge);
+      // Pectoral fins.
+      part(new THREE.Mesh(new THREE.ConeGeometry(1.1, 3.6, 4).scale(1, 1, 0.22), plain('#7aa0b6')), [s * 3.6, -0.6, -1.5], [0.9, 0, s * 1.2]);
+    }
+    part(new THREE.Mesh(new THREE.ConeGeometry(1.3, 3.2, 4).scale(0.22, 1, 1), plain('#7aa0b6')), [0, 3, 1.5], [0.7, 0, 0]);
+    // Forked tail fin, raised clear of the water.
+    const lobe = new THREE.ConeGeometry(1.6, 6.5, 4).scale(0.22, 1, 1).translate(0, 3, 0);
+    part(new THREE.Mesh(lobe, plain('#7aa0b6')), [0, 4, 13.4], [0.45, 0, 0]);
+    part(new THREE.Mesh(lobe, plain('#7aa0b6')), [0, 4, 13.4], [1.75, 0, 0]);
+    fish.position.set(15.5, 0.2, -1);
+    fish.scale.setScalar(0.9);
+    fish.rotation.set(0.3, Math.PI / 2 - 0.25, 0, 'YXZ');
     scene.add(fish);
+    const fishLight = new THREE.PointLight('#c8dce8', 40, 30, 1.2);
+    fishLight.position.set(4, 10, 4);
+    scene.add(fishLight);
 
     // Foam where the fish breaks the surface.
     const foam = new THREE.Group();
     const foamMat = new THREE.MeshLambertMaterial({ color: '#d8e2e6', emissive: '#556066', flatShading: true });
-    for (let i = 0; i < 26; i++) {
-      const a = (i / 26) * Math.PI * 2, r = ctx.rand.range(2.6, 4);
-      const puff = new THREE.Mesh(new THREE.IcosahedronGeometry(ctx.rand.range(0.2, 0.45), 0), foamMat);
-      puff.position.set(Math.cos(a) * r, ctx.rand.range(-0.1, 0.2), Math.sin(a) * r * 2.6);
+    for (let i = 0; i < 30; i++) {
+      const a = (i / 30) * Math.PI * 2, r = ctx.rand.range(3, 3.8);
+      const puff = new THREE.Mesh(new THREE.IcosahedronGeometry(ctx.rand.range(0.25, 0.5), 0), foamMat);
+      puff.position.set(Math.cos(a) * r * 3, ctx.rand.range(-0.1, 0.2), Math.sin(a) * r * 0.9);
       puff.scale.y = 0.4;
       foam.add(puff);
     }
@@ -208,8 +229,8 @@ export default {
       shipQ.setFromRotationMatrix(ship.matrixWorld);
       camera.quaternion.premultiply(shipQ);
 
-      fish.position.y = 0.4 + Math.sin(t * 0.6) * 0.35;
-      foam.position.set(10, waveAt(10, -2, t), -2);
+      fish.position.y = 0.2 + Math.sin(t * 0.6) * 0.3;
+      foam.position.set(15, waveAt(15, 0.5, t), 0.5);
       for (const m of flotsam) {
         const { x, z, spin } = m.userData;
         m.position.set(x, waveAt(x, z, t) + 0.1, z);

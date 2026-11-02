@@ -3,7 +3,7 @@
 import { block, person } from './lib/ot-38-kit.js';
 
 const JONAH = [0, -32];
-const KING = [11, -27];
+const KING = [5.5, -21];
 const brick = '#b49572';
 
 export default {
@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 0.8, contrast: 1.05, vignette: 0.45, shadowTint: '#2a2830', highlightTint: '#f0e8d8' },
   shadow: { center: [0, -18], radius: 60 },
 
-  player: { start: [-1.6, -8], yaw: 0.04, pitch: 0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [-1.8, -11], yaw: -0.16, pitch: 0.02, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000, segments: 150, seed: 42, hills: 14, bumps: 0.15,
@@ -30,7 +30,7 @@ export default {
     colors: { ground: '#9c8a72', groundAlt: '#8e7c66', grass: '#7a7a58', high: '#8a7a64', rock: '#7a6a58' },
     patches: [
       { x: 0, z: -18, r: 34, color: '#a89a86', strength: 0.6, rough: 0.3 },
-      { x: KING[0], z: KING[1], r: 5, color: '#5a5654', strength: 0.95, rough: 0.4 },
+      { x: KING[0], z: KING[1], r: 5, color: '#8a8682', strength: 0.95, rough: 0.4 },
       { x: -14, z: -8, r: 8, color: '#6a6662', strength: 0.7, rough: 0.6 },
       { x: 12, z: 2, r: 7, color: '#6a6662', strength: 0.7, rough: 0.6 },
       { x: -6, z: -22, r: 9, color: '#6e6a66', strength: 0.6, rough: 0.6 },
@@ -58,7 +58,7 @@ export default {
     groups: [
       {
         count: 950, center: JONAH, ring: [5, 34], arc: [0.15, Math.PI - 0.15], spacing: 0.95, face: JONAH, children: 0.2, kneel: 0.55, seed: 21,
-        avoid: [{ rect: [-1.6, -4, 4, 34] }, { rect: [KING[0], KING[1], 7, 7] }, { rect: [JONAH[0], JONAH[1], 9, 7] }],
+        avoid: [{ rect: [-1.6, -4, 4, 34] }, { rect: [KING[0], KING[1], 8, 8] }, { rect: [2.4, -16, 4.5, 7] }, { rect: [JONAH[0], JONAH[1], 9, 7] }],
       },
       { count: 160, center: [0, -20], ring: [30, 48], spacing: 1.3, face: JONAH, children: 0.2, kneel: 0.6, seed: 22 },
     ],
@@ -73,11 +73,18 @@ export default {
     const r = ctx.rand;
 
     // The king of Nineveh, risen from his throne, in sackcloth on an ash heap.
-    ctx.solid.add(new THREE.DodecahedronGeometry(1, 0), { position: [KING[0], 0.1, KING[1]], scale: [2.4, 0.7, 2.2], color: '#6a6664', jitter: 0.08 });
-    ctx.colliders.add({ x: KING[0], z: KING[1], w: 3.6, d: 3.4, bottom: 0, top: 0.7 });
-    person(ctx, { x: KING[0], z: KING[1], y: 0.3, face: JONAH, robe: '#3a342e', mantle: '#2a2622', skin: '#a87652', hood: false, scale: 1.05, tilt: [0.35, 0] });
+    ctx.solid.add(new THREE.DodecahedronGeometry(1, 0), { position: [KING[0], 0.1, KING[1]], scale: [2.2, 1.1, 2], color: '#9a9692', jitter: 0.08 });
+    ctx.colliders.add({ x: KING[0], z: KING[1], w: 3.6, d: 3.4, bottom: 0, top: 1 });
+    person(ctx, { x: KING[0] - 0.6, z: KING[1] + 0.5, y: 0.75, face: [-3, -30], robe: '#7a6a52', mantle: '#5a4e40', skin: '#a87652', hood: false, scale: 1.15, arms: 'out', tilt: [0.18, 0] });
+    // His crown and royal robe, laid aside.
+    const crownAt = [KING[0] - 1.6, 0.55, KING[1] + 1.2];
+    ctx.glow.add(new THREE.TorusGeometry(0.26, 0.07, 4, 10).rotateX(Math.PI / 2 - 0.3), { position: crownAt, color: '#d8a838' });
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      ctx.solid.add(new THREE.ConeGeometry(0.06, 0.2, 4), { position: [crownAt[0] + Math.cos(a) * 0.26, crownAt[1] + 0.12, crownAt[2] + Math.sin(a) * 0.26], color: '#e0b040' });
+    }
     ctx.solid.box(2.6, 1.6, 1.2, { position: [KING[0] + 2.4, 0.8, KING[1] - 2], rotation: [0, 0.3, 0.1], color: '#8a6a3a' });
-    ctx.solid.box(2.2, 0.2, 1.4, { position: [KING[0] + 2.2, 0.1, KING[1] + 0.5], rotation: [0, 0.6, 0], color: '#6a2a3a' });
+    ctx.solid.box(2.2, 0.2, 1.4, { position: [KING[0] - 1.4, 0.1, KING[1] + 2.1], rotation: [0, 0.6, 0.05], color: '#7a2a5a' });
 
     // Mud-brick houses with flat roofs and dark doorways around the square.
     const houses = [];

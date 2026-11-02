@@ -20,11 +20,11 @@ export default {
   fog: { color: '#d9b08a', near: 80, far: 520 },
   clouds: { count: 30, shadow: '#8a6e6a', lit: '#ffd6a0', rim: '#fff1cc', distance: [300, 900], altitude: [120, 260], hole: 0.3 },
   mountains: { count: 30, color: '#9c8064', radius: [560, 780], height: [20, 60], haze: 0.65 },
-  bloom: { strength: 0.6, radius: 0.5, threshold: 0.8 },
+  bloom: { strength: 0.42, radius: 0.45, threshold: 0.9 },
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2650', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -10], radius: 60 },
 
-  player: { start: [0.5, 7], yaw: -0.14, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [1.2, 0.5], yaw: 0.04, pitch: 0.05, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100, segments: 160, seed: 38, hills: 10, bumps: 0.25,
@@ -120,13 +120,13 @@ export default {
 
     // The three faithful men and the fourth, walking free in the fire.
     const men = [
-      { x: fx - 2.6, z: fz + 2.6, robe: '#2f4a7a', mantle: '#c9b48e', face: [fx - 1, fz + 10] },
-      { x: fx - 0.6, z: fz + 1.0, robe: '#7a2a2a', mantle: '#d8c8a0', face: [fx, fz + 10] },
-      { x: fx + 2.9, z: fz + 2.2, robe: '#3e5a4a', mantle: '#b08a3a', face: [fx + 1, fz + 10] },
+      { x: fx - 2.8, z: fz + 3.8, robe: '#2f4a7a', mantle: '#c9b48e', face: [fx - 1, fz + 10] },
+      { x: fx - 0.9, z: fz + 2.6, robe: '#7a2a2a', mantle: '#d8c8a0', face: [fx, fz + 10] },
+      { x: fx + 3.1, z: fz + 3.4, robe: '#3e5a4a', mantle: '#b08a3a', face: [fx + 1, fz + 10] },
     ];
-    for (const m of men) person(ctx, { ...m, y: 0.1, skin: '#9b6a46', hood: true, arms: 'out', scale: 1.12 });
-    being(ctx, { x: fx + 1.2, z: fz - 0.2, y: 0.1, face: [fx, fz + 12], scale: 1.22, arms: 'out', light: 30, distance: 10, halo: 5, glow: 0.7 });
-    ctx.effects.motes({ position: [fx + 1.2, 0.1, fz - 0.2], radius: 2.2, height: 6, count: 60, color: '#fff6e0' });
+    for (const m of men) person(ctx, { ...m, y: 0.1, skin: '#9b6a46', hood: true, arms: 'out', scale: 1.25 });
+    being(ctx, { x: fx + 1.1, z: fz + 1.4, y: 0.1, face: [fx, fz + 12], scale: 1.35, arms: 'out', light: 22, distance: 9, halo: 3.2, glow: 0.5 });
+    ctx.effects.motes({ position: [fx + 1.1, 0.1, fz + 1.4], radius: 2.2, height: 6, count: 60, color: '#fff6e0' });
 
     // The golden image on the plain, sixty cubits high.
     const ix = -48, iz = -80;

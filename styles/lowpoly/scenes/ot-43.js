@@ -6,7 +6,7 @@ const HALL = { x: 0, z: -14, w: 26, d: 46, h: 20 };
 const NORTH = HALL.z - HALL.d / 2;
 const THRONE = [0, NORTH + 5];
 const TOP = 6.4;
-const ALTAR = [2.2, -4];
+const ALTAR = [2.6, -10];
 
 export default {
   title: "Isaiah 6:1-8: Isaiah's vision in the temple",
@@ -17,12 +17,12 @@ export default {
   sun: { direction: [0.2, 0.9, 0.3], color: '#fff2d8', intensity: 0.3 },
   light: { sky: '#e8dcc8', ground: '#7a6448', hemi: 0.8 },
   sky: { top: '#d8ccb8', horizon: '#e8dcc8', ground: '#c8b8a0', sunColor: '#ffffff', glow: 0 },
-  fog: { color: '#d8cab0', near: 14, far: 110 },
-  bloom: { strength: 0.6, radius: 0.6, threshold: 0.85 },
-  grade: { saturation: 0.95, contrast: 1.04, vignette: 0.5, shadowTint: '#4a3a50', highlightTint: '#fff4dc' },
+  fog: { color: '#cbb89a', near: 30, far: 160 },
+  bloom: { strength: 0.35, radius: 0.5, threshold: 0.95 },
+  grade: { saturation: 0.95, contrast: 1.12, vignette: 0.5, shadowTint: '#4a3a50', highlightTint: '#fff4dc' },
   shadow: { center: [0, -14], radius: 30 },
 
-  player: { start: [-1.6, 8], yaw: 0, pitch: 0.16, eye: 1.65, speed: 3.5 },
+  player: { start: [-2.6, 0.5], yaw: 0, pitch: 0.2, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 400, segments: 40, seed: 43, hills: 0, bumps: 0,
@@ -55,8 +55,12 @@ export default {
     block(ctx, { x: THRONE[0], z: THRONE[1] - 1.6, y: TOP, w: 4.4, h: 7, d: 1, color: '#f0d070' });
     block(ctx, { x: THRONE[0], z: THRONE[1] - 0.6, y: TOP, w: 3.6, h: 1.4, d: 2, color: '#e8c860' });
     for (const s of [-1, 1]) block(ctx, { x: THRONE[0] + s * 2.1, z: THRONE[1] - 0.4, y: TOP, w: 0.6, h: 2.2, d: 2.4, color: '#e0b850' });
-    being(ctx, { x: THRONE[0], z: THRONE[1] - 0.2, y: TOP + 0.3, face: [0, 20], scale: 2.1, arms: 'out', light: 40, distance: 30, halo: 7, glow: 0.7 });
-    ctx.effects.halo({ position: [THRONE[0], TOP + 6, THRONE[1] - 1], size: 18, color: '#fff4dc', opacity: 0.25 });
+    being(ctx, { x: THRONE[0], z: THRONE[1] - 0.2, y: TOP + 0.3, face: [0, 20], scale: 2.6, arms: 'out', light: 18, distance: 22, halo: 0, glow: 0.35 });
+    ctx.effects.halo({ position: [THRONE[0], TOP + 2.6, THRONE[1] - 0.6], size: 5, color: '#fff4dc', opacity: 0.35 });
+
+    // A deep veil behind the throne so the white figures stand out.
+    ctx.solid.box(18, h - 1, 0.3, { position: [0, (h - 1) / 2, NORTH + 0.6], color: '#3a2a46', jitter: 0.02 });
+    for (const s of [-1, 1]) ctx.solid.box(0.5, h - 1, 0.4, { position: [s * 9, (h - 1) / 2, NORTH + 0.7], color: '#d8b050' });
 
     // His train filling the temple: white cloth pouring down the stair and across the floor.
     const train = new THREE.PlaneGeometry(1, 1, 10, 24);
@@ -73,8 +77,8 @@ export default {
     ctx.glow.add(train, { color: '#e8e2d6', jitter: 0.03 });
 
     // Seraphim above the throne.
-    const seraphs = [[-4.2, TOP + 4.2, THRONE[1] + 4], [4.2, TOP + 4.2, THRONE[1] + 4], [-8, TOP + 2.2, THRONE[1] + 7], [8, TOP + 2.2, THRONE[1] + 7]];
-    seraphs.forEach(([x, y, z], i) => seraph(ctx, { x, y, z, face: [0, 20], scale: 1.7, seed: i + 1 }));
+    const seraphs = [[-5, TOP + 6.5, THRONE[1] + 2], [5, TOP + 6.5, THRONE[1] + 2], [-9.5, TOP + 3.5, THRONE[1] + 6], [9.5, TOP + 3.5, THRONE[1] + 6]];
+    seraphs.forEach(([x, y, z], i) => seraph(ctx, { x, y, z, face: [0, 20], scale: 2.5, seed: i + 1 }));
 
     // The altar of incense with live coals, and the seraph bringing one to Isaiah.
     block(ctx, { x: ALTAR[0], z: ALTAR[1], w: 1.8, h: 1.1, d: 1.8, color: '#d8b050' });
@@ -83,8 +87,8 @@ export default {
       ctx.glow.add(new THREE.OctahedronGeometry(ctx.rand.range(0.1, 0.2), 0), { position: [ALTAR[0] + ctx.rand.range(-0.6, 0.6), 1.15, ALTAR[1] + ctx.rand.range(-0.6, 0.6)], color: ctx.rand.pick(['#ff6a1a', '#ffa040']) });
     }
     fireLight(ctx, { position: [ALTAR[0], 2, ALTAR[1]], intensity: 8, distance: 8 });
-    ctx.effects.smoke({ position: [ALTAR[0], 1.2, ALTAR[1]], count: 10, height: 16, size: 0.5, color: '#e8e0d0', wind: [0.6, -1.2] });
-    const flier = seraph(ctx, { x: 2.6, y: 2.6, z: -2.2, face: [-1.6, 1.2], scale: 1.0, seed: 9 });
+    ctx.effects.smoke({ position: [ALTAR[0], 1.2, ALTAR[1]], count: 8, height: 9, size: 0.45, color: '#e8e0d0', wind: [0.8, 0.2] });
+    const flier = seraph(ctx, { x: 1.6, y: 2.0, z: -8.2, face: [-1.2, -6.6], scale: 0.85, seed: 9 });
     const coal = new THREE.Mesh(new THREE.OctahedronGeometry(0.12, 0), new THREE.MeshBasicMaterial({ color: '#ff8a2a', toneMapped: false }));
     coal.position.set(0, 0.1, 0.6);
     flier.add(coal);
@@ -93,12 +97,12 @@ export default {
     flier.add(tongs);
 
     // Isaiah, fallen to his knees: "Woe is me! for I am undone."
-    person(ctx, { x: -1.6, z: 1.2, y: -0.5, face: THRONE, tilt: [0.35, 0], robe: '#6a5a44', mantle: '#8a7454', skin: '#9b6a46', hood: true, arms: 'out' });
+    person(ctx, { x: -1.2, z: -6.6, y: -0.5, face: THRONE, tilt: [0.35, 0], robe: '#6a5a44', mantle: '#8a7454', skin: '#9b6a46', hood: true, arms: 'out' });
 
     // Smoke filling the house.
-    for (const [x, z, hgt] of [[-10, -30, 18], [10, -31, 18]]) {
-      ctx.effects.smoke({ position: [x, 1, z], count: 8, height: hgt, size: 1.3, color: '#efe6d6', wind: [0, -0.3] });
+    for (const [x, z, hgt] of [[-11.5, -27, 14], [11.5, -28, 14]]) {
+      ctx.effects.smoke({ position: [x, 1, z], count: 5, height: hgt, size: 0.9, color: '#efe6d6', wind: [0, 0.2] });
     }
-    fireLight(ctx, { position: [0, 8, -8], intensity: 30, distance: 40, color: '#fff0d0', flicker: 0.02 });
+    fireLight(ctx, { position: [0, 8, -8], intensity: 22, distance: 40, color: '#fff0d0', flicker: 0.02 });
   },
 };

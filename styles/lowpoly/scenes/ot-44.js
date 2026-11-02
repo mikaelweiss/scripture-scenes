@@ -2,7 +2,7 @@
 // together bone to his bone; beyond, breath has entered them and they stand, an exceeding great army. -z is north.
 import { rng } from '../engine/util.js';
 
-const EZEKIEL = [4.5, 5];
+const EZEKIEL = [3.2, -2];
 const bone = '#e2d8c0';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   fov: 62,
   exposure: 1.05,
 
-  sun: { direction: [0.25, 0.4, -0.85], color: '#ffe2b8', intensity: 2.4 },
+  sun: { direction: [-0.55, 0.5, 0.67], color: '#ffe2b8', intensity: 2.4 },
   light: { sky: '#a8b0c8', ground: '#6a5a48', hemi: 1.0 },
   sky: { top: '#4a5878', horizon: '#e8c8a0', ground: '#c0a888', sunColor: '#fff0c8', glow: 1.3 },
   fog: { color: '#d4bc9c', near: 60, far: 420 },
@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.06, vignette: 0.45, shadowTint: '#2e2a48', highlightTint: '#ffe8c8' },
   shadow: { center: [0, -20], radius: 70 },
 
-  player: { start: [0, 14], yaw: 0.02, pitch: -0.03, eye: 1.65, speed: 4.5 },
+  player: { start: [-0.5, 6], yaw: 0.02, pitch: 0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000, segments: 180, seed: 44, hills: 70, hillScale: 0.008, bumps: 0.4,
@@ -47,7 +47,7 @@ export default {
       hoodChance: 0.2,
     },
     groups: [
-      { count: 1700, center: [0, -82], ring: [0, 44], arc: [Math.PI * 0.05, Math.PI * 1.95], spacing: 1.05, face: EZEKIEL, children: 0, seed: 9 },
+      { count: 1700, center: [0, -70], ring: [0, 32], arc: [Math.PI * 0.05, Math.PI * 1.95], spacing: 1.05, face: EZEKIEL, children: 0, seed: 9 },
     ],
   },
 
@@ -116,8 +116,8 @@ export default {
     // Spears raised among the standing army.
     const spears = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.025, 0.025, 2.8, 4).translate(0, 1.4, 0), new THREE.MeshLambertMaterial({ color: '#5a4430' }), 500);
     for (let i = 0; i < spears.count; i++) {
-      const a = rand() * Math.PI * 2, d = Math.sqrt(rand()) * 42;
-      const x = Math.cos(a) * d, z = -82 + Math.sin(a) * d;
+      const a = rand() * Math.PI * 2, d = Math.sqrt(rand()) * 31;
+      const x = Math.cos(a) * d, z = -70 + Math.sin(a) * d;
       p.set(x + 0.3, heightAt(x, z), z);
       q.setFromEuler(e.set(rand.range(-0.08, 0.08), 0, rand.range(-0.08, 0.08)));
       spears.setMatrixAt(i, m.compose(p, q, s.set(1, 1, 1)));
@@ -125,7 +125,7 @@ export default {
     scene.add(spears);
 
     // The breath from the four winds sweeping over the valley.
-    ctx.effects.sunShafts({ center: [0, -90], sunDir: [0.25, 0.4, -0.85], count: 8, spread: 70, length: 420, width: [12, 28], opacity: 0.09 });
+    ctx.effects.sunShafts({ center: [0, -90], sunDir: [-0.55, 0.5, 0.67], count: 8, spread: 70, length: 420, width: [12, 28], opacity: 0.09 });
     const wind = new THREE.InstancedMesh(new THREE.OctahedronGeometry(0.12, 0), new THREE.MeshBasicMaterial({ color: '#fff6e0', transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false }), 600);
     const seeds = Array.from({ length: wind.count }, () => [rand() * Math.PI * 2, rand.range(4, 70), rand.range(0.5, 8), rand.range(0.05, 0.2)]);
     wind.frustumCulled = false;
