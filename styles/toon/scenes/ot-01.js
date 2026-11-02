@@ -85,7 +85,7 @@ function creatures(ctx) {
     ['horse', [18, 2]], ['horse', [21, 4]],
     ['deer', [28, 12]], ['deer', [31, 14]],
     ['zebra', [14, -10]], ['zebra', [11, -12]],
-    ['rabbit', [3, 22]], ['rabbit', [4, 23]],
+    ['rabbit', [1, 11]], ['rabbit', [2.2, 12]],
     ['bear', [44, 2]],
     ['camel', [6, -6]], ['camel', [3, -8]],
     ['cow', [-10, 2]], ['cow', [-13, 0]],
@@ -93,7 +93,7 @@ function creatures(ctx) {
   for (const [type, [x, z]] of herd) {
     const a = animal(ctx.kit, type);
     a.position.set(x, ctx.groundHeight(x, z), z);
-    a.rotation.y = rng() * 6.28;
+    a.rotation.y = (rng() < 0.5 ? 1 : -1) * Math.PI / 2 + (rng() - 0.5) * 0.7;
     ctx.scene.add(a);
     ctx.addCollider({ x, z, hx: 0.6, hz: 0.6, rot: 0, top: ctx.groundHeight(x, z) + 1.5 });
   }
@@ -208,8 +208,8 @@ export default {
   },
 
   player: {
-    start: [0, 32],
-    lookAt: [6, -40],
+    start: [6, 21],
+    lookAt: [10, -40],
     colors: { robe: '#efe3c2', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },
 };

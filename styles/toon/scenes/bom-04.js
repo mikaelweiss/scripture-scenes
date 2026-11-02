@@ -87,7 +87,7 @@ function custom(ctx) {
 
   // Mist of darkness over the path, and cloud under the floating building.
   const puffs = [];
-  for (let i = 0; i < 70; i++) puffs.push({ x: ROD_X + (rng() - 0.5) * 30, z: -2 - rng() * 22, y: 0.4 + rng() * 2.6, s: 1.6 + rng() * 2.4, ph: rng() * 6 });
+  for (let i = 0; i < 70; i++) puffs.push({ x: ROD_X + (rng() - 0.5) * 30, z: -2 - rng() * 22, y: 0.1 + rng() * 1.5, s: 1.4 + rng() * 1.9, ph: rng() * 6 });
   for (let i = 0; i < 26; i++) puffs.push({ x: bx + (rng() - 0.5) * W, z: bz + (rng() - 0.5) * D, y: FLOOR_Y - 3 - rng() * 3, s: 2.5 + rng() * 2.5, ph: rng() * 6, under: true });
   const mistMat = new THREE.MeshToonMaterial({ color: '#3a3446', emissive: '#18141f', gradientMap: ctx.kit.gradient, transparent: true, opacity: 0.82 });
   const mist = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 9), mistMat, puffs.length);

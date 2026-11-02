@@ -102,9 +102,12 @@ export default {
     thorns(ctx);
     const adam = { robe: '#a88a68', mantle: '#7a5a3c', skin: '#a8724a', hair: '#4a3020', sash: '#5e4632', arms: [0.12, 0.2] };
     const eve = { robe: '#c8a97a', mantle: '#8a6a4a', skin: '#b5825a', hair: '#8a6a4a', sash: '#5e4632', arms: [0.12, 0.25] };
-    const a = figure(ctx, adam, [15, -0.9], { facing: [40, -2] });
-    const e = figure(ctx, eve, [15.4, 0.9], { facing: [40, 2], scale: 0.96 });
+    const a = figure(ctx, adam, [17.5, -1.2], { facing: [40, -2] });
+    const e = figure(ctx, eve, [17.9, 0.6], { facing: [40, 2], scale: 0.96 });
     a.rotation.x = e.rotation.x = 0.08;
+    const fill = new THREE.PointLight('#ffe0b8', 14, 10, 1.2);
+    fill.position.set(21, ctx.terrainHeight(21, 0) + 2.6, -0.3);
+    ctx.scene.add(fill);
     glow(ctx, [-30, 14, 0], 60, '#fff0c0', 0.25, 0.02);
   },
 
@@ -116,8 +119,8 @@ export default {
   },
 
   player: {
-    start: [30, 4],
-    lookAt: [0, 0],
+    start: [23, 4.5],
+    lookAt: [0, -1.5],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

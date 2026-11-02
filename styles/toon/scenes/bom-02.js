@@ -52,6 +52,7 @@ function custom(ctx) {
 
   camel(b, ctx, { pos: [-24, 14], rot: 2.2, couched: true, color: '#c49a62', load: '#b5523b' });
   camel(b, ctx, { pos: [-30, 9], rot: 1.4, color: '#b88a58' });
+  camel(b, ctx, { pos: [-6.5, -4], rot: 1.3, color: '#cfa46c', load: '#4f7f80' });
   camel(b, ctx, { pos: [-17, 20], rot: -2.6, couched: true, color: '#cfa46c' });
   for (let i = 0; i < 9; i++) goat(b, ctx, { pos: [-30 + rng() * 10, -18 + rng() * 8], rot: rng() * 6, color: rng() < 0.5 ? '#3a2a20' : '#e6d8b8' });
 
@@ -74,7 +75,7 @@ function custom(ctx) {
   b.flush();
 
   // Lehi stretches his hand toward the river and speaks to Laman.
-  person(ctx, { pos: LEHI, face: [14, -2], scale: 1.08, colors: { robe: '#e6d8b8', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [0.55, 1.35] } });
+  person(ctx, { pos: LEHI, face: [14, -2], scale: 1.15, colors: { robe: '#e6d8b8', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [0.55, 1.35] } });
 }
 
 export default {
@@ -108,8 +109,8 @@ export default {
     ],
   },
   player: {
-    start: [-5, 7],
-    lookAt: [8, -7],
+    start: [-0.5, 3.5],
+    lookAt: [0.5, -10],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

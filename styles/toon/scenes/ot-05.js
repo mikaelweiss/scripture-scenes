@@ -155,7 +155,7 @@ export default {
   },
 
   player: {
-    start: [10, 14],
+    start: [8, 5],
     lookAt: [-4, -30],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

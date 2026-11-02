@@ -102,7 +102,7 @@ function custom(ctx) {
   b.flush();
 
   // Lehi, arms raised, crying repentance. A few mockers point and jeer from the front.
-  person(ctx, { pos: LEHI, y: ly + 0.85, face: [0, 20], scale: 1.15, colors: { robe: '#f1e8d2', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [2.35, 0.35] } });
+  person(ctx, { pos: LEHI, y: ly + 0.85, face: [0, 20], scale: 1.25, colors: { robe: '#f1e8d2', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [2.35, 0.35] } });
   const mockers = [[-3.2, -8.5], [2.8, -8], [-1.4, -6.8], [4.6, -10.5], [-4.8, -11]];
   mockers.forEach(([x, z], i) => person(ctx, { pos: [x, z], face: LEHI, colors: { robe: ['#b5523b', '#c98b3c', '#7a6a52', '#9c6b4e', '#4f7f80'][i], mantle: ['#5e4632', '#8c5a3c', '#c8912e', '#3e6e66', '#a64b35'][i], skin: '#9c6a45', hair: '#2b1a12', arms: i % 2 ? [0.25, 1.45] : [0.9, 1.1] } }));
 }
@@ -140,8 +140,8 @@ export default {
     ],
   },
   player: {
-    start: [0, -1],
-    lookAt: LEHI,
+    start: [0, -2.5],
+    lookAt: [-2.2, -14],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

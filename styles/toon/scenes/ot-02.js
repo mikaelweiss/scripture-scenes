@@ -4,8 +4,8 @@ import { BASE_STYLE, ROBES, THREE, Parts, animal, between, figure, flock, glow, 
 
 const TREE = [0, -18];
 const SPRING = [-11, -9];
-const ADAM = [-1.4, 1.5];
-const EVE = [0.4, 1.1];
+const ADAM = [-0.6, 5.4];
+const EVE = [1.4, 5.0];
 
 function treeOfLife(ctx) {
   const [x, z] = TREE;
@@ -140,15 +140,15 @@ export default {
     animals(ctx);
     const adam = { robe: '#e8dcc0', mantle: '#c8a97a', skin: '#a8724a', hair: '#4a3020', sash: '#8c5a3c', arms: [0.25, 0.1] };
     const eve = { robe: '#f2e8d4', mantle: '#8fb07a', skin: '#b5825a', hair: '#3a2418', sash: '#c8912e', arms: [0.25, 0.1] };
-    figure(ctx, adam, ADAM, { facing: [EVE[0], EVE[1] + 2], scale: 1.04 });
-    figure(ctx, eve, EVE, { facing: [ADAM[0], ADAM[1] + 2], scale: 0.98 });
+    figure(ctx, adam, ADAM, { facing: [EVE[0] + 1, EVE[1] + 6], scale: 1.04 });
+    figure(ctx, eve, EVE, { facing: [ADAM[0] + 2, ADAM[1] + 8], scale: 0.98 });
   },
 
   clouds: { layers: [{ count: 28, distance: [400, 850], height: [80, 180], size: [40, 80], color: '#ffffff', shade: '#7a8aa8' }] },
 
   player: {
-    start: [3, 21],
-    lookAt: [0, -14],
+    start: [5, 11],
+    lookAt: [-1, -16],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

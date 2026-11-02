@@ -118,8 +118,8 @@ export default {
     groups: [{ shape: 'rect', center: [0, 46], size: [5, 6], count: 2, facingJitter: 2 }],
   },
   player: {
-    start: [0, -6],
-    lookAt: [0, -18],
+    start: [-2.6, -8],
+    lookAt: [-1.6, -19],
     colors: { robe: '#6b5a4a', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -401,25 +401,48 @@ export function boxes(ctx, items) {
   return g;
 }
 
-// A rising column of smoke puffs.
-export function smokeColumn(ctx, [x, y, z], { count = 14, rise = 16, size = 1.4, drift = [4, 1], color = '#e8e2da', shade = '#5a5260', seed = 6 } = {}) {
-  const geo = new THREE.IcosahedronGeometry(1, 1);
-  const mesh = new THREE.InstancedMesh(geo, ctx.kit.toon(color, { emissive: shade }), count);
-  mesh.frustumCulled = false;
-  mesh.castShadow = false;
-  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  ctx.scene.add(mesh);
+let softTex;
+function softTexture() {
+  if (softTex) return softTex;
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.45, 'rgba(255,255,255,0.7)');
+  grad.addColorStop(0.8, 'rgba(255,255,255,0.15)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  softTex = new THREE.CanvasTexture(c);
+  softTex.colorSpace = THREE.SRGBColorSpace;
+  return softTex;
+}
+
+// A soft continuous column of smoke: many overlapping blurred sprites that widen and fade as they rise.
+export function smokeColumn(ctx, [x, y, z], { count = 14, rise = 16, size = 1.4, drift = [4, 1], color = '#e8e2da', shade = '#5a5260', seed = 6, opacity = 0.8 } = {}) {
+  const n = Math.max(30, count * 3);
   const rng = makeRng(seed);
-  const puffs = Array.from({ length: count }, (_, i) => ({ ph: i / count + rng() * 0.03, jx: (rng() - 0.5) * 2, jz: (rng() - 0.5) * 2, g: between(rng, [0.7, 1.3]) }));
-  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), s = new THREE.Vector3();
+  const base = new THREE.Color(color).lerp(new THREE.Color(shade), 0.3);
+  const top = new THREE.Color(color);
+  const puffs = Array.from({ length: n }, (_, i) => {
+    const mat = new THREE.SpriteMaterial({ map: softTexture(), color: base.clone(), transparent: true, depthWrite: false, opacity: 0 });
+    const s = new THREE.Sprite(mat);
+    s.layers.set(FX_LAYER);
+    s.material.rotation = rng() * 6.28;
+    ctx.scene.add(s);
+    return { s, ph: i / n + rng() * 0.01, jx: rng() - 0.5, jz: rng() - 0.5, g: between(rng, [0.85, 1.15]), w: rng() * 6.28 };
+  });
   ctx.onFrame((t) => {
-    puffs.forEach((p, i) => {
-      const life = (t * 0.05 + p.ph) % 1;
-      const k = size * p.g * (0.3 + life * 2.2) * Math.min(1, life * 10) * (1 - Math.max(0, life - 0.8) * 5);
-      const spread = 0.6 + life * 3;
-      mesh.setMatrixAt(i, m.compose(v.set(x + life * life * drift[0] + p.jx * spread, y + life * rise, z + life * life * drift[1] + p.jz * spread), q, s.set(k, k * 0.8, k)));
-    });
-    mesh.instanceMatrix.needsUpdate = true;
+    for (const p of puffs) {
+      const life = (t * 0.04 + p.ph) % 1;
+      const spread = size * (0.2 + life * 1.6);
+      const sway = Math.sin(t * 0.6 + p.w + life * 5) * life * 1.2;
+      p.s.position.set(x + life * life * drift[0] + p.jx * spread + sway, y + life * rise, z + life * life * drift[1] + p.jz * spread);
+      p.s.scale.setScalar(size * p.g * (1.6 + life * 6));
+      p.s.material.opacity = opacity * Math.min(1, life * 12) * Math.pow(1 - life, 1.1);
+      p.s.material.color.copy(base).lerp(top, Math.min(1, life * 2));
+    }
   });
 }
 

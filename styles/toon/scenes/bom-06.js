@@ -5,7 +5,7 @@ import { Batch, DAY_STYLE, camel, makeRng, person, tent } from './lib/bom-01-kit
 
 const CAMP = [0, -6];
 const BOW = [1.6, -1.2];
-const NEPHI = [-22, -42];
+const NEPHI = [-4, -27];
 
 function custom(ctx) {
   const b = new Batch(ctx);
@@ -94,7 +94,7 @@ function custom(ctx) {
   b.flush();
 
   // Nephi climbing; Lehi bowed at his tent door; Laman and Lemuel murmuring apart.
-  person(ctx, { pos: NEPHI, face: [6, -140], scale: 1.3, colors: { robe: '#d9c7a3', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e', arms: [0.35, 0.5] } });
+  person(ctx, { pos: NEPHI, face: [4, -140], scale: 1.6, colors: { robe: '#d9c7a3', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e', arms: [0.35, 0.5] } });
   person(ctx, { pos: [-5.6, -8.6], y: ctx.terrainHeight(-5.6, -8.6), face: CAMP, kneel: true, colors: { robe: '#e6d8b8', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#8c6a48' } });
   person(ctx, { pos: [9.5, 3], face: [11, 4.5], colors: { robe: '#7a6a52', mantle: '#8c5a3c', skin: '#9c6a45', hair: '#2b1a12', arms: [0.9, 0.9] } });
   person(ctx, { pos: [11, 4.5], face: [9.5, 3], colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#3a2418', arms: [0.4, 0.2] } });
@@ -108,7 +108,7 @@ export default {
   sky: { zenith: '#4a76a0', mid: '#9cb4c0', horizon: '#f0d0a0', ground: '#c89a6a', glowColor: '#fff0c8', glowDir: [-0.4, 0.7, -0.6] },
   sun: { dir: [-0.45, 0.7, 0.55], color: '#fff0d6', intensity: 2.6, hemi: { sky: '#d0e0e8', ground: '#a8744a', intensity: 1.1 }, shadowSize: 60 },
   ground: {
-    size: 1400, segments: 300, flatRadius: 50, hillHeight: 48, undulation: 0.4,
+    size: 1400, segments: 300, flatRadius: 22, hillHeight: 20, undulation: 0.4,
     plaza: { center: [0, 0], size: [0, 0] },
     colors: { sand: '#d4a872', dirt: '#bf9060', grass: '#a89a62', grassDark: '#8a7e4e', plaza: '#d4a872', plazaLine: '#bf9060', scorch: '#3a2a22', scorchEdge: '#6e4630', hill: '#b07a52' },
   },
@@ -131,8 +131,8 @@ export default {
     groups: [{ center: CAMP, radius: [1.8, 4.2], angle: [1.4, 4.9], count: 12, kneel: 0.75, children: 0.3, lean: 0.35, facingJitter: 0.6 }],
   },
   player: {
-    start: [-3, 9],
-    lookAt: [-13, -40],
+    start: [-1.5, 2.5],
+    lookAt: [-4.5, -30],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

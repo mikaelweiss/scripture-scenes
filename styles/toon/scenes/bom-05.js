@@ -30,36 +30,36 @@ function custom(ctx) {
   // The Liahona: a brass ball with two spindles, one pointing the way.
   const by = ctx.terrainHeight(...BALL);
   const brass = ctx.kit.toon('#d9a441', { emissive: '#4a2e08' });
-  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.34, 20, 14), brass);
-  ball.position.set(BALL[0], by + 0.34, BALL[1]);
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 14), brass);
+  ball.position.set(BALL[0], by + 0.5, BALL[1]);
   ball.castShadow = true;
-  const band = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.03, 6, 24), ctx.kit.toon('#b07a2c'));
+  const band = new THREE.Mesh(new THREE.TorusGeometry(0.51, 0.04, 6, 24), ctx.kit.toon('#b07a2c'));
   band.rotation.x = Math.PI / 2;
   band.position.copy(ball.position);
   ctx.scene.add(ball, band);
   const spindle = (len) => {
     const g = new THREE.Group();
-    const m = new THREE.Mesh(new THREE.ConeGeometry(0.04, len, 6).rotateX(Math.PI / 2).translate(0, 0, len / 2), ctx.kit.toon('#f1d27a', { emissive: '#5a3a10' }));
+    const m = new THREE.Mesh(new THREE.ConeGeometry(0.06, len, 6).rotateX(Math.PI / 2).translate(0, 0, len / 2), ctx.kit.toon('#f1d27a', { emissive: '#5a3a10' }));
     g.add(m);
-    g.position.set(BALL[0], by + 0.72, BALL[1]);
+    g.position.set(BALL[0], by + 1.03, BALL[1]);
     ctx.scene.add(g);
     return g;
   };
   const post = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.03, 0.08, 6), brass);
-  post.position.set(BALL[0], by + 0.7, BALL[1]);
+  post.position.set(BALL[0], by + 1.0, BALL[1]);
   ctx.scene.add(post);
-  const s1 = spindle(0.55), s2 = spindle(0.4);
+  const s1 = spindle(0.75), s2 = spindle(0.55);
   s2.position.y += 0.05;
   ctx.onFrame((t) => {
     s1.rotation.y = 2.4 + Math.sin(t * 0.4) * 0.08;
     s2.rotation.y = 2.4 + Math.sin(t * 0.7 + 1) * 0.6;
   });
-  glow(ctx, { pos: [BALL[0], by + 0.5, BALL[1]], size: 2.6, color: '#ffd27a', opacity: 0.7, pulse: 0.08 });
+  glow(ctx, { pos: [BALL[0], by + 0.6, BALL[1]], size: 3, color: '#ffd27a', opacity: 0.7, pulse: 0.08 });
   ctx.exclude({ kind: 'circle', x: BALL[0], z: BALL[1], r: 1.2 });
-  ctx.addCollider({ x: BALL[0], z: BALL[1], hx: 0.35, hz: 0.35, rot: 0, top: by + 0.7 });
+  ctx.addCollider({ x: BALL[0], z: BALL[1], hx: 0.5, hz: 0.5, rot: 0, top: by + 1 });
 
   // Lehi stooping over the ball at his tent door.
-  person(ctx, { pos: [-0.2, -4.6], y: ctx.terrainHeight(-0.2, -4.6), face: BALL, scale: 1.06, kneel: true, colors: { robe: '#e6d8b8', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [0.35, 0.9] } });
+  person(ctx, { pos: [0.7, -4.45], y: ctx.terrainHeight(0.7, -4.45), face: BALL, scale: 1.06, kneel: true, colors: { robe: '#e6d8b8', mantle: '#4f7f80', skin: '#a8724a', hair: '#d9d2c4', sash: '#c8912e', arms: [0.35, 0.9] } });
 }
 
 export default {
@@ -79,7 +79,7 @@ export default {
     { type: 'stones', count: 260, ring: [3, 90], size: [0.1, 0.45], colors: ['#c49a72', '#a8805e', '#d8b48a'] },
     { type: 'trees', count: 14, ring: [40, 120], height: [3, 5], broken: 0.3, fallen: 0, trunkColor: '#6b5a4a', leafColors: ['#8a9a62', '#9aa46a'] },
   ],
-  smolder: [{ pos: [8, -1], radius: 0.8, embers: 10, flames: 1, smoke: 0, logs: 3, scorch: 1.2, smokeScale: 0.35, smokeHeight: 5 }],
+  smolder: [{ pos: [-7, 1.5], radius: 0.8, embers: 10, flames: 1, smoke: 0, logs: 3, scorch: 1.2, smokeScale: 0.35, smokeHeight: 5 }],
   custom,
   clouds: { layers: [{ count: 20, distance: [400, 800], height: [90, 180], size: [40, 80], color: '#fff0dc', shade: '#c88a7a' }] },
   light: { rings: [{ at: BALL, lift: 0, radius: 1.1, width: 0.12, height: 1.2, color: '#ffd98a', intensity: 0.8, wallIntensity: 0.35 }] },
@@ -94,11 +94,11 @@ export default {
       hair: ['#2b1a12', '#3a2418', '#1f140e'],
       wraps: ['#e6d8b8', '#c8912e', '#b5523b', '#d9c7a3', '#4f7f80'],
     },
-    groups: [{ center: BALL, radius: [2.2, 4.6], angle: [1.25, 5.03], count: 16, children: 0.25, facingJitter: 0.3 }],
+    groups: [{ center: BALL, radius: [2.2, 4.6], angle: [2.15, 5.75], count: 16, children: 0.25, facingJitter: 0.3 }],
   },
   player: {
-    start: [2.6, 2.2],
-    lookAt: [-2.6, -7],
+    start: [2.6, 1.6],
+    lookAt: [-6, -6.5],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

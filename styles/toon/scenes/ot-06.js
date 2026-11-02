@@ -111,7 +111,7 @@ function kilns(ctx) {
     p.add('#a87a50', dome, { pos: [x, y - 0.2, z], scale: [3, 3.6, 3] });
     p.box('#2b1a12', [1.4, 1.4, 0.4], [x, y + 0.7, z + 2.8]);
     glow(ctx, [x, y + 0.8, z + 3.1], 3, '#ff9a40', 0.8, 0.1);
-    smokeColumn(ctx, [x, y + 3.4, z], { count: 12, rise: 18, size: 0.9, drift: [8, 2], color: '#cfc8c0', shade: '#5a5260', seed: Math.abs(x) });
+    smokeColumn(ctx, [x, y + 3.4, z], { count: 12, rise: 20, size: 1.2, drift: [8, 2], color: '#a8a09c', shade: '#4a4450', seed: Math.abs(x), opacity: 0.9 });
     ctx.addCollider({ x, z, hx: 3, hz: 3, rot: 0, top: y + 3.4 });
   }
   ctx.scene.add(p.group(ctx.kit));

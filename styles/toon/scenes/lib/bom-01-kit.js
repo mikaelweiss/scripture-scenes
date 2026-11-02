@@ -143,7 +143,7 @@ export function camel(b, ctx, { pos, rot = 0, color = '#c49a62', couched = false
   const [x, z] = pos;
   const y = ctx.terrainHeight(x, z);
   const f = frameAt(x, y, z, rot);
-  const lift = couched ? 0.55 : 1.55;
+  const lift = couched ? 0.2 : 1.55;
   const dark = new THREE.Color(color).multiplyScalar(0.78).getStyle();
   b.add(color, ball(0.62, [0, lift + 0.35, 0], [1, 0.75, 1.55]), { frame: f });
   b.add(color, ball(0.42, [0, lift + 0.82, -0.05], [1, 1, 1.2]), { frame: f });
@@ -152,7 +152,7 @@ export function camel(b, ctx, { pos, rot = 0, color = '#c49a62', couched = false
   b.add(dark, box(0.08, 0.14, 0.08, [0.1, lift + 1.56, 1.2]), { frame: f });
   b.add(dark, box(0.08, 0.14, 0.08, [-0.1, lift + 1.56, 1.2]), { frame: f });
   if (couched) {
-    for (const s of [-1, 1]) b.add(dark, ball(0.2, [s * 0.45, 0.25, 0.5], [1, 0.6, 2.2]), { frame: f });
+    for (const s of [-1, 1]) b.add(dark, ball(0.2, [s * 0.45, 0.14, 0.4], [1, 0.6, 2.2]), { frame: f });
   } else {
     for (const [lx, lz] of [[-0.3, 0.6], [0.3, 0.6], [-0.3, -0.6], [0.3, -0.6]]) b.add(color, cyl(0.08, 0.1, lift + 0.1, [lx, (lift + 0.1) / 2, lz], [0, 0, 0], 6), { frame: f });
   }
