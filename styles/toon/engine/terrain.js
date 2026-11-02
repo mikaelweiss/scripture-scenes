@@ -111,7 +111,7 @@ export function terrainMaterial(spec, smolder, kit) {
     gScorch: { value: new THREE.Color(colors.scorch) },
     gScorchEdge: { value: new THREE.Color(colors.scorchEdge) },
     gHill: { value: new THREE.Color(colors.hill) },
-    gPlazaRect: { value: new THREE.Vector4(spec.plaza.center[0], spec.plaza.center[1], spec.plaza.size[0] / 2, spec.plaza.size[1] / 2) },
+    gPlazaRect: { value: spec.plaza ? new THREE.Vector4(spec.plaza.center[0], spec.plaza.center[1], spec.plaza.size[0] / 2, spec.plaza.size[1] / 2) : new THREE.Vector4(0, 0, -1, -1) },
     gScorchSpots: { value: spots },
     gScorchCount: { value: Math.min(smolder.length, 16) },
   };
