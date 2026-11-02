@@ -88,8 +88,9 @@ export default {
     ],
   },
   player: {
-    start: [0.3, -4],
-    lookAt: [TREE[0] - 1, TREE[1]],
+    start: [-0.6, -6.8],
+    lookAt: [TREE[0] - 2, TREE[1] + 0.5],
+    fov: 44,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

@@ -1,9 +1,9 @@
 // Matthew 21:1-11: Jesus rides into Jerusalem on a colt while the multitude spreads garments and palm branches in the way.
-// x is east, z is south. The road runs north from the Mount of Olives to the city gate at z = -110.
+// x is east, z is south. The road runs north from the Mount of Olives to the city gate at z = -78.
 import { Batch, DAY_STYLE, PALETTE, animal, box, city, glow, makeRng, olive, palm, palmWaver, person, temple, xf } from './lib/nt-19-kit.js';
 
 const JESUS = [0, -20];
-const GATE_Z = -110;
+const GATE_Z = -78;
 const CHRIST = { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#b5825a', hair: '#4a3020', sash: '#e9dcc0' };
 
 function custom(ctx) {
@@ -11,8 +11,8 @@ function custom(ctx) {
   const b = new Batch(ctx);
   const rng = makeRng(20);
 
-  city(b, ctx, { wall: [[150, GATE_Z], [-150, GATE_Z]], gate: 150, depth: 70, count: 70, height: 9, seed: 21, towers: 7, skip: (x, z) => Math.abs(x - 40) < 50 && z < -150 });
-  temple(b, ctx, { pos: [40, -200], scale: 0.9 });
+  city(b, ctx, { wall: [[150, GATE_Z], [-150, GATE_Z]], gate: 150, depth: 70, count: 70, height: 9, seed: 21, towers: 7, skip: (x, z) => Math.abs(x - 26) < 50 && z < -150 });
+  temple(b, ctx, { pos: [26, -195], scale: 0.9 });
 
   // Garments and cut branches strewn on the road ahead of and behind the colt.
   const cloth = ['#b5523b', '#c8912e', '#4f7f80', '#6f8a6a', '#e6d8b8', '#8c5a3c', '#3e6e66', '#a64b35', '#d9c7a3', '#7a3a5a'];
@@ -28,11 +28,11 @@ function custom(ctx) {
     }
   }
 
-  for (let z = 30; z > -95; z -= 9 + rng() * 6) {
+  for (let z = 30; z > -66; z -= 9 + rng() * 6) {
     for (const s of [-1, 1]) palm(b, ctx, { pos: [s * (11 + rng() * 4), z], height: 8 + rng() * 3, lean: 0.1 + rng() * 0.2, dir: rng() * 6.28, seed: Math.floor(rng() * 999) });
   }
   for (let i = 0, n = 0; n < 90 && i < 600; i++) {
-    const x = (rng() - 0.5) * 220, z = -80 + rng() * 220;
+    const x = (rng() - 0.5) * 220, z = -70 + rng() * 210;
     if (Math.abs(x) < 18 || ctx.blocked(x, z, 1)) continue;
     olive(b, ctx, { pos: [x, z], size: 0.9 + rng() * 0.5, seed: i });
     n++;
@@ -40,7 +40,10 @@ function custom(ctx) {
 
   // The colt with its rider, and the disciples who brought it.
   animal(b, ctx, { kind: 'donkey', pos: JESUS, rot: Math.PI, color: '#7a6a5a' });
-  b.add('#b5523b', box(0.95, 0.5, 1.1, [JESUS[0], ctx.terrainHeight(...JESUS) + 1.2, JESUS[1] + 0.05]));
+  const back = ctx.terrainHeight(...JESUS) + 1.25;
+  b.add('#b5523b', box(0.9, 0.08, 1.0, [JESUS[0], back, JESUS[1] + 0.05]));
+  for (const sx of [-1, 1]) b.add('#b5523b', box(0.06, 0.5, 0.9, [JESUS[0] + sx * 0.45, back - 0.24, JESUS[1] + 0.05], [0, 0, sx * 0.12]));
+  b.add('#e0b040', box(0.92, 0.05, 0.12, [JESUS[0], back + 0.05, JESUS[1] - 0.4]));
   b.flush();
   const rider = person(ctx, { pos: [JESUS[0], JESUS[1] + 0.1], y: ctx.terrainHeight(...JESUS) + 1.1, kneel: true, face: [JESUS[0], JESUS[1] - 10], scale: 1.1, glow: 0.35, colors: { ...CHRIST, arms: [0.35, 0.7] } });
   rider.scale.y = 0.78;
@@ -93,18 +96,19 @@ export default {
     minSpacing: 0.66,
     facing: JESUS,
     colors: PALETTE,
-    aisles: [{ from: [0, 40], to: [0, -1], width: 2 }, { from: [0, -36], to: [0, -104], width: 6 }],
+    aisles: [{ from: [0, 40], to: [0, -1], width: 2 }, { from: [0, -36], to: [0, -74], width: 6 }],
     keepClear: [{ kind: 'circle', x: JESUS[0], z: JESUS[1], r: 2.4 }],
     groups: [
-      { shape: 'rect', center: [-6.5, -22], size: [5, 76], count: 330, children: 0.2, facingJitter: 0.7 },
-      { shape: 'rect', center: [6.5, -22], size: [5, 76], count: 330, children: 0.2, facingJitter: 0.7 },
-      { shape: 'rect', center: [0, -9], size: [5, 14], count: 50, children: 0.1, facing: [0, -120], facingJitter: 0.3 },
+      { shape: 'rect', center: [-6.5, -26], size: [5, 84], count: 330, children: 0.2, facingJitter: 0.7 },
+      { shape: 'rect', center: [6.5, -26], size: [5, 84], count: 330, children: 0.2, facingJitter: 0.7 },
+      { shape: 'rect', center: [0, -5], size: [5, 8], count: 30, children: 0.1, facing: [0, -120], facingJitter: 0.3 },
       { shape: 'rect', center: [0, 24], size: [6, 30], count: 60, children: 0.1, facing: [0, -120], facingJitter: 0.3 },
     ],
   },
   player: {
-    start: [-1.4, -26.5],
-    lookAt: [0.3, -19],
+    start: [1.7, -17.0],
+    lookAt: [-1.6, -70],
+    fov: 42,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

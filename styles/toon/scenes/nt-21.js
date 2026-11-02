@@ -70,10 +70,10 @@ function custom(ctx) {
 
   // Bread, cups and a wine jug on the cloth.
   const ty = fy + T + 0.08;
-  for (const [x, z] of [[-0.5, -10.7], [1.6, -10.8], [-2.2, -10.7], [-3.2, -8.6], [3.2, -7.4], [3.1, -9.6]]) b.add('#c8914a', ball(0.18, [x, ty + 0.04, z], [1.3, 0.45, 1]));
+  for (const [x, z] of [[0, -10.65], [1.7, -10.8], [-2.2, -10.7], [-3.2, -8.6], [3.2, -7.4], [3.1, -9.6]]) b.add('#c8914a', ball(0.18, [x, ty + 0.04, z], [1.3, 0.45, 1]));
   for (const [x, z] of [[0.45, -10.6], [-1.3, -10.9], [2.6, -10.6], [-3.3, -7.2], [-3.1, -9.6], [3.3, -8.4], [3.2, -6.4]]) b.add('#a0603a', cyl(0.08, 0.06, 0.16, [x, ty + 0.08, z], [0, 0, 0], 8));
-  b.add('#b5683b', cyl(0.12, 0.2, 0.5, [0.2, ty + 0.25, -11.05], [0, 0, 0], 9));
-  b.add('#b5683b', cyl(0.07, 0.12, 0.12, [0.2, ty + 0.55, -11.05], [0, 0, 0], 8));
+  b.add('#b5683b', cyl(0.12, 0.2, 0.5, [1.0, ty + 0.25, -11.05], [0, 0, 0], 9));
+  b.add('#b5683b', cyl(0.07, 0.12, 0.12, [1.0, ty + 0.55, -11.05], [0, 0, 0], 8));
   for (const [x, z] of [[-1.1, -10.6], [3.3, -9.0]]) b.add('#d8c095', cyl(0.3, 0.22, 0.05, [x, ty + 0.03, z], [0, 0, 0], 12));
 
   // Basin, pitcher and towel by the entrance (John 13:4-5).
@@ -94,7 +94,7 @@ function custom(ctx) {
     n++;
   }
 
-  lamp(b, ctx, { pos: [-1.6, -10.7], y: ty, light: { color: '#ffb060', intensity: 9, distance: 14 } });
+  lamp(b, ctx, { pos: [-1.6, -10.7], y: ty, light: { color: '#ffb060', intensity: 12, distance: 14 } });
   lamp(b, ctx, { pos: [3.2, -8.2], y: ty, light: { color: '#ffb060', intensity: 6, distance: 10 } });
   lamp(b, ctx, { pos: [-3.2, -7.0], y: ty, light: { color: '#ffb060', intensity: 6, distance: 10 } });
   lamp(b, ctx, { pos: [5.8, -4.2], y: fy + 0.05, light: null });
@@ -105,8 +105,8 @@ function custom(ctx) {
 
   // Jesus at the head of the table, the Twelve seated round it.
   const center = [0, -8.6];
-  person(ctx, { pos: [0, -11.9], y: fy, kneel: true, scale: 1.1, glow: 0.3, face: center, colors: { ...CHRIST, arms: [0.3, 1.2] } });
-  glow(ctx, { pos: [0, fy + 1.3, -11.9], size: 3.2, color: '#fff3d0', opacity: 0.5 });
+  person(ctx, { pos: [0, -11.9], y: fy, kneel: true, scale: 1.3, glow: 0.35, face: center, colors: { ...CHRIST, arms: [0.25, 1.5] } });
+  glow(ctx, { pos: [0, fy + 1.4, -12.4], size: 2.6, color: '#fff3d0', opacity: 0.35 });
   const seats = [[-2.4, -11.9], [-1.2, -11.95], [1.2, -11.95], [2.4, -11.9], [-4.3, -10.1], [-4.35, -8.6], [-4.35, -7.1], [-4.3, -5.7], [4.3, -10.1], [4.35, -8.6], [4.35, -7.1], [4.3, -5.7]];
   seats.forEach((p, i) => person(ctx, { pos: p, y: fy, kneel: true, face: [p[0] * 0.3, -9], colors: TWELVE[i] }));
 }
@@ -127,8 +127,9 @@ export default {
   objects: [],
   custom,
   player: {
-    start: [-1.2, -1.2],
-    lookAt: [-0.5, -10],
+    start: [1.3, -5.6],
+    lookAt: [0, -11.5],
+    fov: 38,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

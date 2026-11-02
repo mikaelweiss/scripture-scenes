@@ -42,11 +42,11 @@ function custom(ctx) {
       b.add('#3a2a20', box(0.7, 0.05, 0.07, [x, base + height - 0.05, z + 0.17]));
     }
   });
-  glow(ctx, { pos: [0, knollTop + 4, -19.6], size: 5, color: '#fff0d0', opacity: 0.35, pulse: 0.02 });
+  glow(ctx, { pos: [0, knollTop + 3.6, -20.4], size: 4.2, color: '#fff0d0', opacity: 0.3, pulse: 0.02 });
 
   // The city wall behind, with its gate, and the temple beyond.
-  city(b, ctx, { wall: [[160, -105], [-160, -105]], gate: 190, depth: 70, count: 60, height: 10, seed: 24, towers: 8, wallColor: '#a89478', colors: ['#a08a70', '#968068', '#ae9a7c'], skip: (x, z) => Math.abs(x - 40) < 50 && z < -140 });
-  temple(b, ctx, { pos: [40, -180], scale: 0.85 });
+  city(b, ctx, { wall: [[160, -105], [-160, -105]], gate: 190, depth: 70, count: 60, height: 10, seed: 24, towers: 8, wallColor: '#a89478', colors: ['#a08a70', '#968068', '#ae9a7c'], skip: (x, z) => Math.abs(x + 75) < 50 && z < -140 });
+  temple(b, ctx, { pos: [-75, -180], scale: 0.85 });
   // A road out of the gate past the knoll.
   for (let z = -102; z < 40; z += 2.5) b.add('#9a8670', box(4.5, 0.04, 2.4, [-30 + z * 0.08, ctx.terrainHeight(-30 + z * 0.08, z) + 0.02, z], [0, 0.08, 0]), { cast: false });
 
@@ -69,8 +69,8 @@ export default {
   subtitle: 'There was a darkness over all the earth. It is finished',
   seed: 23,
   style: { ...DAY_STYLE, fog: { color: '#3a3032', near: 70, far: 520 } },
-  sky: { zenith: '#16121a', mid: '#2e2428', horizon: '#5e463a', ground: '#2a2220', glowColor: '#8a5a3a', glowDir: [-0.3, 0.08, -1] },
-  sun: { dir: [-0.3, 0.75, -0.5], color: '#c8a890', intensity: 0.9, hemi: { sky: '#6a5a62', ground: '#3a2a24', intensity: 0.85 }, shadowSize: 60 },
+  sky: { zenith: '#1a1520', mid: '#3a2e32', horizon: '#8a6448', ground: '#2a2220', glowColor: '#c08a5a', glowDir: [0, 0.1, -1] },
+  sun: { dir: [-0.2, 0.7, 0.5], color: '#d8b898', intensity: 1.05, hemi: { sky: '#7a6a70', ground: '#4a3a30', intensity: 1.0 }, shadowSize: 60 },
   ground: {
     size: 1000, segments: 200, flatRadius: 140, hillHeight: 35, undulation: 0.3,
     plaza: { center: [0, 900], size: [1, 1] },
@@ -101,8 +101,9 @@ export default {
     ],
   },
   player: {
-    start: [-0.8, -7.5],
+    start: [-0.6, -9.6],
     lookAt: [0, -21],
+    fov: 44,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

@@ -3,8 +3,8 @@
 import { Batch, DAY_STYLE, addSun, ball, box, cyl, cypress, glow, makeRng, olive, person } from './lib/nt-19-kit.js';
 
 const FACE_Z = -10;
-const JESUS = [-4.6, -3];
-const MARY = [1.6, -6.2];
+const JESUS = [-2.6, -4.4];
+const MARY = [1.3, -5.9];
 const CHRIST = { robe: '#fbf7ee', mantle: '#f3eddf', skin: '#b5825a', hair: '#4a3020', sash: '#e9dcc0' };
 const ANGEL = { robe: '#fbf7ee', mantle: '#ffffff', skin: '#fbf7ee', hair: '#fbf7ee' };
 
@@ -78,10 +78,10 @@ function custom(ctx) {
   b.flush();
 
   // Light within the empty tomb, and the two angels in white sitting where the body had lain.
-  const inner = new THREE.PointLight('#fff1c8', 12, 9, 1.2);
-  inner.position.set(0, y + 1.8, -11.6);
+  const inner = new THREE.PointLight('#fff1c8', 10, 3.4, 1.2);
+  inner.position.set(0, y + 1.6, -12.7);
   ctx.scene.add(inner);
-  glow(ctx, { pos: [0, y + 1.3, FACE_Z - 0.4], size: 4.5, color: '#fff0c8', opacity: 0.55 });
+  glow(ctx, { pos: [0, y + 1.2, FACE_Z - 0.6], size: 3.2, color: '#fff0c8', opacity: 0.45 });
   for (const z of [-11.3, -13.5]) {
     person(ctx, { pos: [0.2, z], y: y + 0.35, kneel: true, glow: 0.7, face: [0.2, z + 3], colors: ANGEL });
     glow(ctx, { pos: [0.2, y + 1.3, z], size: 2.6, color: '#fff6dc', opacity: 0.6 });
@@ -91,7 +91,7 @@ function custom(ctx) {
   const mary = person(ctx, { pos: MARY, face: JESUS, colors: { robe: '#7a3a5a', mantle: '#b5523b', skin: '#b5825a', hair: '#4a3020', arms: [0.35, 0.9] } });
   mary.rotation.x = 0.1;
   person(ctx, { pos: JESUS, face: MARY, scale: 1.08, glow: 0.4, colors: { ...CHRIST, arms: [0.45, 0.35] } });
-  glow(ctx, { pos: [JESUS[0], ctx.terrainHeight(...JESUS) + 1.2, JESUS[1]], size: 5, color: '#fff3d0', opacity: 0.5 });
+  glow(ctx, { pos: [JESUS[0], ctx.terrainHeight(...JESUS) + 1.1, JESUS[1] - 0.3], size: 3.4, color: '#fff3d0', opacity: 0.4 });
 
   addSun(ctx, { dir: [1, 0.12, 0.15], size: 50, color: '#fff2d0', halo: '#ffc890' });
 }
@@ -102,7 +102,7 @@ export default {
   seed: 24,
   style: { ...DAY_STYLE, fog: { color: '#e8c8b4', near: 90, far: 700 } },
   sky: { zenith: '#3a5a8a', mid: '#b896a8', horizon: '#ffcf9a', ground: '#c8a88a', glowColor: '#ffd8a0', glowDir: [1, 0.12, 0.15] },
-  sun: { dir: [0.85, 0.35, 0.3], color: '#ffd8b0', intensity: 2.2, hemi: { sky: '#c8c8e0', ground: '#8a6a5a', intensity: 1.0 }, shadowSize: 60 },
+  sun: { dir: [0.75, 0.4, 0.55], color: '#ffd8b0', intensity: 2.2, hemi: { sky: '#c8c8e0', ground: '#8a6a5a', intensity: 1.0 }, shadowSize: 60 },
   ground: {
     size: 1000, segments: 220, flatRadius: 120, hillHeight: 35, undulation: 0.2,
     plaza: { center: [0, 900], size: [1, 1] },
@@ -115,8 +115,9 @@ export default {
   custom,
   clouds: { layers: [{ count: 22, distance: [350, 750], height: [80, 180], size: [40, 80], color: '#ffd8c0', shade: '#8a6a8a' }] },
   player: {
-    start: [1.6, 1.5],
-    lookAt: [-0.8, -9],
+    start: [1.0, 0.2],
+    lookAt: [-0.6, -9],
+    fov: 44,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

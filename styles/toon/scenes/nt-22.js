@@ -1,6 +1,6 @@
 // Luke 22:39-46: Jesus prays alone in the olive garden at night, an angel strengthening him, while Peter, James and John sleep.
 // x is east, z is south. Jerusalem lies north across the Kidron, the garden on the slope of the Mount of Olives.
-import { Batch, DAY_STYLE, angels, ball, city, flames, glow, makeRng, moon, olive, person, sleeper, stars, temple } from './lib/nt-19-kit.js';
+import { Batch, DAY_STYLE, ball, city, flames, glow, makeRng, moon, olive, person, sleeper, stars, temple } from './lib/nt-19-kit.js';
 
 const JESUS = [0, -12];
 const ROCK = [0, -13.6];
@@ -60,8 +60,24 @@ function custom(ctx) {
 
   // Jesus kneeling, the angel above him, the three asleep.
   person(ctx, { pos: JESUS, kneel: true, scale: 1.1, glow: 0.35, face: [ROCK[0], ROCK[1] - 5], colors: { ...CHRIST, arms: [0.25, 1.6] } }).rotation.x = 0.18;
-  glow(ctx, { pos: [JESUS[0], gy + 1.1, JESUS[1]], size: 4.5, color: '#fff0c8', opacity: 0.55 });
-  angels(ctx, [{ pos: [1.5, gy + 0.9, JESUS[1] - 0.9], face: JESUS, scale: 1.05 }], { glowSize: 6, glowOpacity: 0.6, light: { color: "#fff1c8", intensity: 14, distance: 14, pos: [0.8, gy + 3, JESUS[1] + 0.5] } });
+  glow(ctx, { pos: [JESUS[0], gy + 0.9, JESUS[1]], size: 3, color: '#fff0c8', opacity: 0.4 });
+  // The angel hovers just above and before him, leaning down with open arms.
+  const ANGEL = [1.3, gy + 3.4, JESUS[1] - 0.2];
+  const white = '#fbf7ee';
+  const angel = person(ctx, { pos: [ANGEL[0], ANGEL[2]], y: ANGEL[1], face: JESUS, glow: 0.7, colors: { robe: white, mantle: white, skin: white, hair: white, arms: [0.7, 0.9] } });
+  angel.rotation.order = 'YXZ';
+  angel.rotation.x = 0.2;
+  const halo = glow(ctx, { pos: [ANGEL[0], ANGEL[1] + 0.9, ANGEL[2]], size: 3.6, color: '#fff1c8', opacity: 0.5, pulse: 0.06 });
+  const beam = glow(ctx, { pos: [0.6, gy + 2.2, JESUS[1] - 0.1], size: 1, color: '#fff1c8', opacity: 0.3, pulse: 0 });
+  beam.scale.set(1.6, 4.4, 1);
+  ctx.onFrame((t) => {
+    const lift = Math.sin(t * 0.8) * 0.1;
+    angel.position.y = ANGEL[1] + lift;
+    halo.position.y = ANGEL[1] + 0.9 + lift;
+  });
+  const light = new ctx.THREE.PointLight('#fff1c8', 16, 14, 1.2);
+  light.position.set(ANGEL[0], ANGEL[1] + 1.5, ANGEL[2] + 1);
+  ctx.scene.add(light);
   for (const s of SLEEPERS) sleeper(ctx, s);
   // The other eight, farther back by the gate.
   const rest = [[-8, 18], [-6, 19.5], [-4.2, 18.4], [5, 18.8], [7, 19.6], [8.6, 17.8], [-10, 16.6], [10.4, 16.4]];
@@ -85,8 +101,9 @@ export default {
   custom,
   clouds: { layers: [{ count: 14, distance: [350, 700], height: [100, 200], size: [40, 80], color: '#4a5272', shade: '#1a1e30' }] },
   player: {
-    start: [-1.2, 0.5],
-    lookAt: [0, -12],
+    start: [-1.4, -5.2],
+    lookAt: [0.4, -12.5],
+    fov: 48,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };
