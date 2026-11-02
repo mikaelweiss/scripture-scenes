@@ -7,7 +7,7 @@ const W = 5;
 const N = -4.5;
 const S = 6;
 const CEIL = 3.4;
-const START = [-0.6, 2.8];
+const START = [2.2, 2.4];
 
 // Horizontal logs along one wall, skipping window and door openings. axis 'x' runs along x at fixed z.
 function logWall(geos, axis, fixed, from, to, openings = []) {
@@ -178,7 +178,7 @@ export default {
 
   player: {
     start: START,
-    lookAt: [0.3, -1.6],
+    lookAt: [2.2, -2.2],
     fov: 66,
     colors: { robe: '#3b3226', mantle: '#5a4a3a', skin: '#d9a77c', hair: '#4a3020', sash: '#2b1a12' },
   },

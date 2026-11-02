@@ -8,7 +8,7 @@ const H = 18;
 const SX = 40;
 const SZ = 110;
 const BOX = [-2, 0];
-const START = [-5.8, 4.4];
+const START = [1.6, 5.2];
 const WEST = -62;
 const EDGE_Z = 36;
 const EAST = 95;
@@ -182,7 +182,8 @@ export default {
 
   player: {
     start: START,
-    lookAt: [BOX[0] + 1, BOX[1] - 1],
+    fov: 44,
+    lookAt: [BOX[0] + 3.6, BOX[1] - 6],
     colors: { robe: '#3b3226', mantle: '#4a5a6a', skin: '#d9a77c', hair: '#4a3020', sash: '#2b1a12' },
   },
 };
