@@ -15,14 +15,14 @@ export default {
   sun: { direction: [-0.45, 0.5, -0.65], color: '#ffc98a', intensity: 3.1 },
   light: { sky: '#9fb2d8', ground: '#5e4a34', hemi: 1.0 },
   sky: { top: '#4f74b8', horizon: '#f4c890', ground: '#c9a882', sunColor: '#ffe0a8', glow: 1.2 },
-  fog: { color: '#dcc2a0', near: 90, far: 560 },
+  fog: { color: '#dcc2a0', near: 140, far: 900 },
   clouds: { count: 50, shadow: '#8a7e88', lit: '#ffdcae', rim: '#fff4dc', distance: [260, 900], altitude: [100, 240], hole: 0.3 },
   mountains: { count: 44, color: '#6a6458', radius: [520, 760], height: [50, 140], haze: 0.5 },
   bloom: { strength: 0.4, radius: 0.5, threshold: 0.86 },
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.42, shadowTint: '#30285e', highlightTint: '#ffe0b0' },
   shadow: { center: [2, 0], radius: 34 },
 
-  player: { start: [3.5, -19.5], yaw: Math.PI - 0.08, pitch: -0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [3.8, -18.2], yaw: Math.PI - 0.42, pitch: -0.16, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -33,7 +33,7 @@ export default {
     flats: [
       { x: CITY[0], z: CITY[1], r: 45, falloff: 40, height: -14 },
       { x: HILL[0], z: HILL[1], r: 21, falloff: 42, height: 14 },
-      { x: 3.5, z: -19.5, r: 2.5, falloff: 7, height: 16.4 },
+      { x: 3.8, z: -18.2, r: 2, falloff: 6, height: 16 },
     ],
     colors: { ground: '#9a8a5a', groundAlt: '#8a7c4c', grass: '#7a8040', high: '#8a8a52', rock: '#7e6c58' },
     patches: [{ x: ALMA[0], z: ALMA[1] + 8, r: 16, color: '#a08a60', strength: 0.5, rough: 0.6 }],

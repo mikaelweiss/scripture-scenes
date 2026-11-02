@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createFigure } from '../../engine/crowd.js';
+import { Batch } from '../../engine/world.js';
 
 export function block(ctx, { x, z, y = 0, w, h, d, rot = 0, color, collide = true, jitter = 0.04, glow = false, tilt = [0, 0] }) {
   (glow ? ctx.glow : ctx.solid).box(w, h, d, { position: [x, y + h / 2, z], rotation: [tilt[0], rot, tilt[1]], color, jitter });
@@ -251,4 +252,33 @@ export function house(ctx, { x, z, rot = 0, w = 7, d = 6, h = 3.4, color = '#d8c
   ctx.solid.box(1.1, 2.0, 0.08, { position: [dx, y + 1.2, dz], rotation: [0, rot, 0], color: '#2a1d14', jitter: 0 });
   const [bx, bz] = at(0, d / 2 + 0.02);
   ctx.solid.box(w + 0.02, 0.3, 0.06, { position: [bx, y + h * 0.75, bz], rotation: [0, rot, 0], color: trim, jitter: 0.03 });
+}
+
+
+// Open pit sunk below the terrain. The terrain mesh cannot be cut, so the pit and its contents draw
+// first, then an invisible lid at ground level writes depth only, which keeps the terrain from
+// painting over the opening. fill(pitCtx) places things inside: pitCtx.solid draws into the pit.
+export function pit(ctx, { x, z, L, W, depth = 0.9, wall = '#7a5a3a', floor = '#2e2014', fill }) {
+  const y0 = ctx.heightAt(x, z) - 0.03;
+  const batch = new Batch(ctx.rand);
+  const strips = 4, t = 0.2;
+  for (let k = 0; k < strips; k++) {
+    const h = depth / strips, cy = y0 - h * (k + 0.5);
+    const color = new THREE.Color(wall).lerp(new THREE.Color(floor), k / strips).getStyle();
+    for (const s of [-1, 1]) {
+      batch.box(L + 2 * t, h, t, { position: [x, cy, z + s * (W / 2 + t / 2)], color, jitter: 0.06 });
+      batch.box(t, h, W, { position: [x + s * (L / 2 + t / 2), cy, z], color, jitter: 0.06 });
+    }
+  }
+  batch.box(L, 0.1, W, { position: [x, y0 - depth - 0.05, z], color: floor, jitter: 0.06 });
+  fill?.({ ...ctx, solid: batch, floorY: y0 - depth });
+  const mesh = batch.build(new THREE.MeshLambertMaterial({ vertexColors: true, emissive: '#24180e' }));
+  mesh.renderOrder = -2;
+  mesh.receiveShadow = true;
+  ctx.scene.add(mesh);
+  const lid = new THREE.Mesh(new THREE.PlaneGeometry(L, W).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ colorWrite: false }));
+  lid.position.set(x, y0 + 0.05, z);
+  lid.renderOrder = -1;
+  ctx.scene.add(lid);
+  ctx.colliders.add({ x, z, w: L, d: W, bottom: y0 - depth - 1, top: y0 + 1.2 });
 }

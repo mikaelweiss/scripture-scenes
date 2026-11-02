@@ -26,7 +26,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.5, shadowTint: '#2e2448', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -8], radius: 26 },
 
-  player: { start: [2.2, 1], yaw: 0.1, pitch: 0.16, eye: 1.65, speed: 4 },
+  player: { start: [1.3, -0.6], yaw: 0.1, pitch: 0.25, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 800,
@@ -90,10 +90,10 @@ export default {
     });
     ctx.solid.box(1.5, 0.15, 1.5, { position: [sx, TOP + 0.07, sz], color: gold, jitter: 0.02 });
     ctx.colliders.add({ x: sx, z: sz, w: 1.5, d: 1.5, bottom: TOP - 0.2, top: TOP + 0.15 });
-    for (const [px, pz] of [[-0.68, -0.68], [0.68, -0.68], [-0.68, 0.68], [0.68, 0.68]]) ctx.solid.box(0.08, 0.9, 0.08, { position: [sx + px, TOP + 0.6, sz + pz], color: gold, jitter: 0 });
+    for (const [px, pz] of [[-0.68, -0.68], [0.68, -0.68], [-0.68, 0.68], [0.68, 0.68]]) ctx.solid.box(0.08, 0.55, 0.08, { position: [sx + px, TOP + 0.42, sz + pz], color: gold, jitter: 0 });
     for (const s of [-1, 1]) {
-      ctx.solid.box(1.4, 0.06, 0.06, { position: [sx, TOP + 1.0, sz + s * 0.68], color: gold, jitter: 0 });
-      ctx.solid.box(0.06, 0.06, 1.4, { position: [sx + s * 0.68, TOP + 1.0, sz], color: gold, jitter: 0 });
+      ctx.solid.box(1.4, 0.06, 0.06, { position: [sx, TOP + 0.68, sz + s * 0.68], color: gold, jitter: 0 });
+      ctx.solid.box(0.06, 0.06, 1.4, { position: [sx + s * 0.68, TOP + 0.68, sz], color: gold, jitter: 0 });
     }
     const steps = 14, rise = (TOP + 0.15) / steps, run = 0.5;
     for (let i = 0; i < steps; i++) {
@@ -101,7 +101,10 @@ export default {
     }
 
     // The worshiper on top, arms raised; the next waits on the stair.
-    figure(ctx, { x: sx, z: sz, y: TOP + 0.15, face: [sx, sz + 10], robe: '#e8dcc4', mantle: '#5a2a5a', skin: '#b5835e', arms: 'out', collide: false });
+    figure(ctx, { x: sx, z: sz, y: TOP + 0.15, face: [sx, sz + 10], scale: 1.3, robe: '#f2e6cc', mantle: '#7a2878', skin: '#b5835e', arms: 'out', collide: false });
+    const sunlit = new ctx.THREE.PointLight('#fff0d0', 14, 7, 1.5);
+    sunlit.position.set(sx, TOP + 3.2, sz + 1.6);
+    ctx.scene.add(sunlit);
     figure(ctx, { x: sx, z: sz - 0.75 - run * 6.5, y: TOP + 0.15 - rise * 6, face: [sx, sz], robe: '#7a1f2a', mantle: gold, skin: '#a87652', collide: false });
     figure(ctx, { x: sx, z: sz - 0.75 - run * 10.5, y: TOP + 0.15 - rise * 10, face: [sx, sz], robe: '#2f4a6a', mantle: '#e8e0d0', skin: '#b5835e', collide: false });
 

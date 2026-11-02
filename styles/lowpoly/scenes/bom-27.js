@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.38, shadowTint: '#2a3050', highlightTint: '#fff2dc' },
   shadow: { center: [0, -14], radius: 40 },
 
-  player: { start: [0, -1], yaw: 0, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [-2.8, -9.4], yaw: -0.3, pitch: 0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -73,8 +73,8 @@ export default {
     ctx.solid.box(19.5, 0.7, 8.6, { position: [sx, top + 5.75, sz - 0.2], color: stoneTrim, jitter: 0.03 });
     ctx.solid.box(18, 0.5, 7, { position: [sx, top + 6.3, sz - 0.4], color: '#b89a72', jitter: 0.03 });
 
-    const fill = new ctx.THREE.PointLight('#ffe2b8', 30, 20, 1.2);
-    fill.position.set(sx, top + 4, sz + 2.5);
+    const fill = new ctx.THREE.PointLight('#ffe2b8', 16, 18, 1.2);
+    fill.position.set(sx, top + 2.4, sz + 3.6);
     ctx.scene.add(fill);
 
     // Judgment seat with a high back.
@@ -84,16 +84,16 @@ export default {
 
     // Chief judge before his seat, Alma beside him, a scribe with a tablet.
     figure(ctx, { x: sx, z: sz - 0.6, y: top, face: [KORIHOR[0], KORIHOR[1]], scale: 1.04, robe: '#3a4a6a', mantle: '#e8dcc0', skin: '#b5835e' });
-    figure(ctx, { x: sx - 2.4, z: sz + 0.8, y: top, face: [KORIHOR[0], KORIHOR[1]], robe: '#f0e8d8', mantle: '#c9b48e', skin: '#a87652', arms: 'out' });
+    figure(ctx, { x: sx - 1.5, z: sz + 1.7, y: top, face: [KORIHOR[0], KORIHOR[1]], robe: '#f0e8d8', mantle: '#c9b48e', skin: '#a87652', arms: 'out' });
     figure(ctx, { x: sx + 3.4, z: sz + 0.2, y: top, face: [0, -15], robe: '#c4b090', skin: '#a87652', mantle: '#556246' });
     ctx.solid.box(0.35, 0.03, 0.45, { position: [sx + 3.4, top + 1.0, sz + 0.55], rotation: [0.6, 0, 0], color: '#e9dcc0', jitter: 0 });
 
     // Korihor alone on the plaza, a writing tablet in hand, and two officers behind him.
     const k = figure(ctx, { x: KORIHOR[0], z: KORIHOR[1], face: [sx, sz], robe: '#5a2a4a', mantle: '#c9a040', skin: '#b07a55' });
     ctx.solid.box(0.32, 0.03, 0.42, { position: [KORIHOR[0] + 0.18, k.y + 1.0, KORIHOR[1] - 0.35], rotation: [-0.7, 0.2, 0], color: '#e9dcc0', jitter: 0 });
-    for (const ox of [-1.6, 2.6]) {
-      const o = figure(ctx, { x: KORIHOR[0] + ox, z: KORIHOR[1] + 2.2, face: [sx, sz], robe: '#8a6a4a', mantle: '#3f4d5e', skin: '#9b6a46' });
-      spear(ctx, { x: KORIHOR[0] + ox + 0.3, y: o.y, z: KORIHOR[1] + 2.3, pitch: -Math.PI / 2 + 0.06, len: 2.5 });
+    for (const ox of [-1.9, 2.1]) {
+      const o = figure(ctx, { x: KORIHOR[0] + ox, z: KORIHOR[1] + 1.0, face: [sx, sz], robe: '#8a6a4a', mantle: '#3f4d5e', skin: '#9b6a46' });
+      spear(ctx, { x: KORIHOR[0] + ox + 0.3, y: o.y, z: KORIHOR[1] + 1.1, pitch: -Math.PI / 2 + 0.06, len: 2.5 });
     }
 
     // Houses of Zarahemla around the plaza.

@@ -20,7 +20,7 @@ const servants = [-1, 1].flatMap((side, k) => [
 export default {
   title: "Alma 22: Aaron teaches Lamoni's father",
   seed: 25,
-  fov: 62,
+  fov: 56,
   exposure: 1.05,
 
   sun: { direction: SUN, color: '#ffdcaa', intensity: 3.4 },
@@ -33,7 +33,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.45, shadowTint: '#3a2a40', highlightTint: '#ffe6c0' },
   shadow: { center: [0, -10], radius: 30 },
 
-  player: { start: [0, -3], yaw: 0, pitch: 0.02, eye: 1.65, speed: 4 },
+  player: { start: [-1.9, -11.6], yaw: -0.16, pitch: 0.07, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
@@ -120,8 +120,8 @@ export default {
     }
 
     // The king kneels on the dais; Aaron stands below him teaching; his brethren behind.
-    const king = figure(ctx, { x: dx, z: dz - 0.6, y: seatY, kneel: true, face: [0, 10], scale: 1.05, robe: '#e8dcc0', mantle: '#8e2a20', skin: '#8a5a3c', arms: 'out' });
-    crown(ctx, { x: dx, y: king.y, z: dz - 0.6, scale: 1.05 });
+    const king = figure(ctx, { x: dx, z: dz - 0.6, y: seatY, kneel: true, face: [0, 10], scale: 1.25, robe: '#e8dcc0', mantle: '#8e2a20', skin: '#8a5a3c', arms: 'out' });
+    crown(ctx, { x: dx, y: king.y, z: dz - 0.6, scale: 1.25 });
     figure(ctx, { x: -2.2, z: dz - 2.2, y: seatY, face: [0, -15], robe: '#d8cdb5', mantle: '#2f6f6a', skin: '#9b6a46' });
     figure(ctx, { x: 1.6, z: -16.6, face: [0, -21], robe: '#cdbb94', mantle: '#7d5c3e', skin: '#b5835e', arms: 'out' });
     figure(ctx, { x: 3.2, z: -14.8, face: [0, -21], robe: '#b59a72', mantle: '#5e4b3a', skin: '#a87652' });

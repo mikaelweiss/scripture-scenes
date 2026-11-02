@@ -1,6 +1,6 @@
 // Alma 24:15-19: the people of Anti-Nephi-Lehi bury their swords deep in the earth as a covenant.
 // Long trenches run east-west across a field; the people kneel around them, the king stands beyond.
-import { block, figure, crown, sword, spear, mound } from './lib/bom-25-kit.js';
+import { block, figure, crown, sword, spear, mound, pit } from './lib/bom-25-kit.js';
 
 const TRENCHES = [[-10, -14], [10, -14], [0, -24]];
 const KING = [0, -31];
@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.4, shadowTint: '#2e3050', highlightTint: '#ffe4b8' },
   shadow: { center: [0, -12], radius: 50 },
 
-  player: { start: [0, 2], yaw: 0, pitch: -0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [-0.6, -19.6], yaw: 0, pitch: -0.17, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -60,7 +60,7 @@ export default {
       {
         count: 900, center: [0, -18], ring: [7, 40], spacing: 0.9, face: [0, -18], children: 0.18, kneel: 0.45, seed: 31,
         avoid: [
-          ...TRENCHES.map(([x, z]) => ({ rect: [x, z, 18, 7] })),
+          ...TRENCHES.map(([x, z]) => ({ rect: [x, z, 18, 8] })),
           { rect: [0, -1, 44, 20] },
           { rect: [KING[0], KING[1] + 1, 12, 9] },
         ],
@@ -73,26 +73,25 @@ export default {
     const r = ctx.rand;
     for (const [tx, tz] of TRENCHES) {
       const L = 14, W = 3.2;
-      // Dark pit floor with sloped earthen sides.
-      ctx.solid.box(L, 0.05, W, { position: [tx, 0.02, tz], color: '#22170f', jitter: 0.06 });
-      for (const s of [-1, 1]) {
-        ctx.solid.box(L, 0.05, 0.9, { position: [tx, 0.08, tz + s * (W / 2 - 0.2)], rotation: [s * 0.5, 0, 0], color: '#4a3424', jitter: 0.08 });
-        ctx.solid.box(0.9, 0.05, W, { position: [tx + s * (L / 2 - 0.2), 0.08, tz], rotation: [0, 0, -s * 0.5], color: '#4a3424', jitter: 0.08 });
-      }
-      // Heaped earth along the north lip.
-      for (let i = 0; i < 8; i++) mound(ctx, { x: tx - L / 2 + 1 + i * 1.75 + r.range(-0.3, 0.3), z: tz - W / 2 - 1.1 + r.range(-0.3, 0.3), w: r.range(2, 3), h: r.range(0.5, 0.9), d: r.range(1.4, 2), rot: r() * 3 });
-      ctx.colliders.add({ x: tx, z: tz - W / 2 - 1.1, w: L, d: 1.6, bottom: -1, top: 0.6 });
-      // Swords, spears and clubs laid crosswise in the pit.
-      for (let i = 0; i < 40; i++) {
-        const sx = tx + r.range(-L / 2 + 0.8, L / 2 - 0.8), sz = tz + r.range(-0.7, 0.7);
-        if (r() < 0.75) sword(ctx, { x: sx, y: 0.1 + r() * 0.12, z: sz, yaw: r.range(-0.9, 0.9) + (r() < 0.5 ? Math.PI / 2 : 0), roll: r.range(-0.3, 0.3) });
-        else spear(ctx, { x: sx - 1, y: 0.12, z: sz, yaw: Math.PI / 2 + r.range(-0.3, 0.3), len: 2 });
-      }
+      // Swords, spears and clubs laid crosswise on the pit floor.
+      pit(ctx, {
+        x: tx, z: tz, L, W,
+        fill: (p) => {
+          for (let i = 0; i < 46; i++) {
+            const sx = tx + r.range(-L / 2 + 0.8, L / 2 - 0.8), sz = tz + r.range(-1.1, 1.1), sy = p.floorY + 0.06 + r() * 0.35;
+            if (r() < 0.75) sword(p, { x: sx, y: sy, z: sz, yaw: r.range(-0.9, 0.9) + (r() < 0.5 ? Math.PI / 2 : 0), roll: r.range(-0.3, 0.3) });
+            else spear(p, { x: sx - 1, y: sy, z: sz, yaw: Math.PI / 2 + r.range(-0.3, 0.3), len: 2 });
+          }
+        },
+      });
+      // Spoil heaped along the north lip.
+      for (let i = 0; i < 9; i++) mound(ctx, { x: tx - L / 2 + 0.5 + i * 1.65 + r.range(-0.3, 0.3), z: tz - W / 2 - 1.4 + r.range(-0.3, 0.3), w: r.range(2.2, 3.2), h: r.range(0.8, 1.2), d: r.range(1.6, 2.2), rot: r() * 3, color: r.pick(['#6e4c30', '#7a5636', '#5e4029']) });
+      ctx.colliders.add({ x: tx, z: tz - W / 2 - 1.4, w: L, d: 2, bottom: -1, top: 0.9 });
       // Digging sticks left standing in the earth.
       for (let i = 0; i < 2; i++) {
-        const px = tx + r.range(-5, 5), pz = tz - W / 2 - 1.3;
-        ctx.solid.box(0.07, 1.6, 0.07, { position: [px, 0.6, pz], rotation: [r.range(-0.3, 0.3), 0, r.range(-0.3, 0.3)], color: '#6a4a30' });
-        ctx.solid.box(0.25, 0.35, 0.03, { position: [px, 1.5, pz], rotation: [0, r() * 3, 0], color: '#6a4a30' });
+        const px = tx + r.range(-5, 5), pz = tz - W / 2 - 1.5;
+        ctx.solid.box(0.07, 1.6, 0.07, { position: [px, 1.0, pz], rotation: [r.range(-0.3, 0.3), 0, r.range(-0.3, 0.3)], color: '#6a4a30' });
+        ctx.solid.box(0.25, 0.35, 0.03, { position: [px, 1.9, pz], rotation: [0, r() * 3, 0], color: '#6a4a30' });
       }
     }
 
@@ -103,7 +102,7 @@ export default {
     }
 
     // People at the lip of the near trenches lowering their swords in.
-    for (const [px, pz, tx] of [[-6, -11.6, -6], [-13, -11.5, -13], [7, -11.6, 7], [13, -11.5, 13], [-3, -21.6, -3], [4, -21.6, 4]]) {
+    for (const [px, pz, tx] of [[-6, -11.6, -6], [-13, -11.5, -13], [7, -11.6, 7], [13, -11.5, 13], [-5.5, -21.6, -5.5], [5, -21.6, 5]]) {
       const p = figure(ctx, { x: px, z: pz, face: [tx, pz - 3], kneel: true, robe: r.pick(['#8b6b4a', '#a0825c', '#b59a72', '#7a4e36']), mantle: r.pick(['#5a3d2b', '#7d5c3e', '#556246']), skin: '#8a5a3c', arms: 'out' });
       sword(ctx, { x: px, y: p.y + 1.0, z: pz - 0.45, yaw: Math.PI, pitch: 0.9 });
     }

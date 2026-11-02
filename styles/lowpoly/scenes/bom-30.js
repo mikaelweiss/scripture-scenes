@@ -35,7 +35,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.07, vignette: 0.4, shadowTint: '#2a3050', highlightTint: '#ffe8c4' },
   shadow: { center: [0, -10], radius: 45 },
 
-  player: { start: [0, -1], yaw: 0, pitch: 0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [0.9, -4.6], yaw: 0.03, pitch: 0.17, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -66,7 +66,7 @@ export default {
       hoodChance: 0.2,
     },
     groups: [
-      { count: 700, center: MORONI, ring: [6.5, 34], arc: [-0.35, Math.PI + 0.35], spacing: 0.9, face: MORONI, children: 0.18, kneel: 0.3, seed: 101, avoid: [{ rect: [0, 6, 7, 26] }] },
+      { count: 700, center: MORONI, ring: [6.5, 34], arc: [-0.35, Math.PI + 0.35], spacing: 0.9, face: MORONI, children: 0.18, kneel: 0.3, seed: 101, avoid: [{ rect: [0, 4, 9, 30] }] },
       { count: 160, center: MORONI, ring: [7, 22], arc: [Math.PI + 0.5, 2 * Math.PI - 0.5], spacing: 1.0, face: MORONI, children: 0.1, seed: 102 },
     ],
   },
