@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { person, house, tufts } from './lib/ot-07-common.js';
 
 const CITY = [0, -112];
-const WIFE = [2.4, 7];
+const WIFE = [2.6, 10];
 
 const cityWall = Array.from({ length: 22 }, (_, i) => {
   const a = (i / 22) * Math.PI * 2;
@@ -86,17 +86,17 @@ export default {
   fov: 60,
   exposure: 1.05,
 
-  sun: { direction: [0.9, 0.2, 0.25], color: '#ffa060', intensity: 2.8 },
-  light: { sky: '#d07050', ground: '#5a3020', hemi: 1.35 },
+  sun: { direction: [0.85, 0.42, 0.3], color: '#ffa868', intensity: 3.2 },
+  light: { sky: '#e08a60', ground: '#9a5a36', hemi: 1.7 },
   sky: { top: '#1e0a0c', horizon: '#c44a24', ground: '#4a2216', sunColor: '#ffb070', glow: 1.0 },
   fog: { color: '#6e2a1a', near: 70, far: 470 },
   clouds: { count: 120, shadow: '#241012', lit: '#e8602a', rim: '#ffb070', distance: [200, 800], altitude: [70, 200], hole: 0.15, seed: 9 },
   mountains: { count: 44, color: '#3a2420', radius: [470, 700], height: [50, 150], haze: 0.45 },
   bloom: { strength: 0.9, radius: 0.6, threshold: 0.7 },
-  grade: { saturation: 1.15, contrast: 1.1, vignette: 0.5, shadowTint: '#2a0e1e', highlightTint: '#ffcf98' },
+  grade: { saturation: 1.15, contrast: 1.1, vignette: 0.3, shadowTint: '#3a1a1e', highlightTint: '#ffcf98' },
   shadow: { center: [0, 12], radius: 40 },
 
-  player: { start: [-2, 23], yaw: -0.05, pitch: -0.12, eye: 1.65, speed: 4.5 },
+  player: { start: [-2.6, 23], yaw: 0.05, pitch: -0.035, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -108,11 +108,13 @@ export default {
       { x: CITY[0], z: CITY[1], r: 64, falloff: 14, height: -8 },
       { x: 0, z: 24, r: 8, falloff: 50, height: 10 },
     ],
-    colors: { ground: '#8a6a4e', groundAlt: '#7a5c44', grass: '#6a6438', high: '#8a7058', rock: '#6a5040' },
+    colors: { ground: '#b08c66', groundAlt: '#a07e5a', grass: '#8a8048', high: '#b09070', rock: '#8a6c54' },
     patches: [
       { x: 0, z: 14, r: 4.5, color: '#a8885e', strength: 0.5, rough: 0.5 },
       { x: 0, z: 2, r: 5, color: '#a8885e', strength: 0.5, rough: 0.5 },
       { x: CITY[0], z: CITY[1], r: 70, color: '#3a2620', strength: 0.6, rough: 0.4 },
+      { x: -10, z: 18, r: 9, color: '#7a7040', strength: 0.55, rough: 0.7 },
+      { x: 9, z: 16, r: 8, color: '#8a6a48', strength: 0.5, rough: 0.7 },
     ],
   },
 
@@ -128,7 +130,7 @@ export default {
   custom(ctx) {
     burningCity(ctx);
     fireRain(ctx, {});
-    tufts(ctx, { center: [0, 16], ring: [3, 40], count: 160, colors: ['#6a6a38', '#5e5a32', '#7a6e3e'] });
+    tufts(ctx, { center: [0, 16], ring: [2, 30], count: 420, colors: ['#6a6a38', '#5e5a32', '#7a6e3e'] });
 
     const salt = '#ece9e2';
     person(ctx, { x: WIFE[0], z: WIFE[1], face: CITY, robe: salt, mantle: salt, skin: salt, hood: true, emissive: 0.12 });

@@ -23,19 +23,19 @@ export default {
   title: 'Genesis 24:10-27: Rebekah at the well',
   seed: 24,
   fov: 60,
-  exposure: 1.15,
+  exposure: 1.3,
 
-  sun: { direction: [-0.8, 0.12, -0.45], color: '#ffa860', intensity: 2.7 },
-  light: { sky: '#8a90c8', ground: '#6a4a38', hemi: 1.0 },
+  sun: { direction: [-0.85, 0.3, 0.45], color: '#ffa860', intensity: 3.0 },
+  light: { sky: '#9aa0d0', ground: '#8a6248', hemi: 1.4 },
   sky: { top: '#3c4a80', horizon: '#f4a868', ground: '#c89a78', sunColor: '#ffd090', glow: 1.3 },
   fog: { color: '#d8a07c', near: 70, far: 560 },
   clouds: { count: 60, shadow: '#5a4a68', lit: '#ffb878', rim: '#ffe8c0', distance: [240, 900], altitude: [80, 220], hole: 0.15 },
   mountains: { count: 44, color: '#6a5458', radius: [470, 700], height: [40, 120], haze: 0.5 },
   bloom: { strength: 0.6, radius: 0.55, threshold: 0.8 },
-  grade: { saturation: 1.12, contrast: 1.06, vignette: 0.42, shadowTint: '#30285e', highlightTint: '#ffd8a8' },
+  grade: { saturation: 1.12, contrast: 1.06, vignette: 0.32, shadowTint: '#30285e', highlightTint: '#ffd8a8' },
   shadow: { center: [2, -6], radius: 40 },
 
-  player: { start: [0.8, 5.5], yaw: -0.12, pitch: 0.0, eye: 1.65, speed: 4.5 },
+  player: { start: [-1.4, 0.6], yaw: -0.9, pitch: -0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -97,10 +97,10 @@ export default {
 
     const rebekah = person(ctx, { x: REBEKAH[0], z: REBEKAH[1], face: SERVANT, robe: '#2e5a8a', mantle: '#e8d8b8', skin: '#a87652', hood: true, arms: 'out' });
     const ry = rebekah.position.y;
-    jar(ctx, { x: REBEKAH[0] + 0.3, z: REBEKAH[1] + 0.35, y: ry + 1.15, tilt: 0.6, scale: 1.1 });
-    person(ctx, { x: SERVANT[0], z: SERVANT[1], face: REBEKAH, pose: 'bow', robe: '#6a5440', mantle: '#8a3a2a', skin: '#8a5a3c', hood: true });
+    jar(ctx, { x: REBEKAH[0] + 0.3, z: REBEKAH[1] + 0.42, y: ry + 0.92, tilt: 0.5, scale: 1.05 });
+    person(ctx, { x: SERVANT[0], z: SERVANT[1], face: REBEKAH, pose: 'bow', robe: '#c4ac84', mantle: '#8a3a2a', skin: '#8a5a3c' });
 
-    const women = [[-4, -24, '#8a3a4a'], [-6.5, -32, '#6a4a7a'], [-3.2, -40, '#b08a4a'], [-8, -47, '#4a6a5a'], [-1.5, -2.5, '#a05a3a']];
+    const women = [[-4, -24, '#8a3a4a'], [-6.5, -32, '#6a4a7a'], [-3.2, -40, '#b08a4a'], [-8, -47, '#4a6a5a'], [-3.6, -8.2, '#a05a3a']];
     women.forEach(([x, z, robe], i) => {
       const w = person(ctx, { x, z, face: i === 4 ? WELL : [x + 2, z + 10], robe, mantle: '#d8c8a8', skin: '#a87652', hood: true });
       jar(ctx, { x: x + 0.28, z, y: w.position.y + 1.55, color: '#a8603a' });

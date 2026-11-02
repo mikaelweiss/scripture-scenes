@@ -22,7 +22,7 @@ export default {
   exposure: 1.15,
 
   sun: { direction: [0.6, 0.35, 0.55], color: '#8fa6e0', intensity: 0.7 },
-  light: { sky: '#4a5c98', ground: '#2a2018', hemi: 0.85 },
+  light: { sky: '#4a5c98', ground: '#2a2018', hemi: 1.05 },
   sky: { top: '#02040f', horizon: '#16234a', ground: '#0a0c14', sunColor: '#6f80b0', glow: 0.25 },
   fog: { color: '#0d1428', near: 50, far: 460 },
   mountains: { count: 44, color: '#080a12', radius: [460, 680], height: [25, 80], haze: 0.25 },
@@ -30,7 +30,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.5, shadowTint: '#0c1640', highlightTint: '#ffd6a0' },
   shadow: { center: [0, -4], radius: 40 },
 
-  player: { start: [2.5, 4], yaw: 0.1, pitch: 0.3, eye: 1.65, speed: 4.5 },
+  player: { start: [2.8, -1.4], yaw: 0.16, pitch: 0.15, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -86,8 +86,8 @@ export default {
       ctx.scene.add(pl);
     }
 
-    person(ctx, { x: ABRAM[0], z: ABRAM[1], face: [-1.5, -60], robe: '#86684a', mantle: '#4e3a2a', skin: '#9b6a46', arms: 'out', hood: true, scale: 1.02 });
-    angel(ctx, { x: ABRAM[0] + 2.0, z: ABRAM[1] - 1.4, face: [ABRAM[0] - 1, ABRAM[1] + 1], arms: 'out', glow: 0.55, light: 18, halo: 5 });
+    person(ctx, { x: ABRAM[0], z: ABRAM[1], face: [-1.5, -60], robe: '#a8845c', mantle: '#6a4a32', skin: '#9b6a46', arms: 'out', hood: true, scale: 1.05 });
+    angel(ctx, { x: ABRAM[0] + 2.0, z: ABRAM[1] - 1.4, face: [ABRAM[0] - 1, ABRAM[1] + 1], arms: 'out', glow: 0.38, light: 18, halo: 3.2 });
     stars(ctx, { count: 3600, band: 4200, tilt: 0.45, brightness: 1.1 });
   },
 

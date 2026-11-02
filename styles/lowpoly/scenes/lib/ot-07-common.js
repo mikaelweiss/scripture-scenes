@@ -114,37 +114,71 @@ export function flock(ctx, { x, z, r = 6, count = 20, kind = 'sheep', goats = 0.
   }
 }
 
-// Dromedary camel, standing or kneeling, optionally saddled with a blanket and packs.
+// Tapered limb between two local points, radius r0 at a and r1 at b.
+function limb(k, a, b, r0, r1, color) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2];
+  const len = Math.hypot(dx, dy, dz);
+  k.add(new THREE.CylinderGeometry(r1, r0, len, 6), {
+    p: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2],
+    r: [Math.acos(Math.max(-1, Math.min(1, dy / len))), Math.atan2(dx, dz), 0],
+    color, jitter: 0.03,
+  });
+}
+
+const blob = (k, p, s, color, jitter = 0.03) => k.add(new THREE.IcosahedronGeometry(1, 1), { p, s, color, jitter });
+
+// Dromedary camel, standing or kneeling, optionally saddled with a blanket and packs. Faces local +z.
 export function camel(ctx, { x, z, rot = 0, kneel = false, color = '#c39a6b', blanket = null, packs = false }) {
   const k = kit(ctx, x, z, rot, ctx.heightAt(x, z) - 0.05);
-  const dark = new THREE.Color(color).multiplyScalar(0.7).getStyle();
-  const by = kneel ? 0.78 : 1.6;
-  k.add(new THREE.IcosahedronGeometry(1, 0), { p: [0, by, 0], s: [0.48, 0.45, 0.95], color, jitter: 0.04 });
-  k.add(new THREE.IcosahedronGeometry(1, 0), { p: [0, by + 0.42, -0.05], s: [0.36, 0.4, 0.45], color, jitter: 0.04 });
-  const neckA = [0, by + 0.05, 0.8], neckB = [0, by + 0.75, 1.3];
-  rod(k, neckA, neckB, 0.26, color);
-  k.box(0.22, 0.24, 0.55, { p: [0, by + 0.82, 1.5], r: [0.15, 0, 0], color });
-  for (const sx of [-1, 1]) k.box(0.05, 0.12, 0.05, { p: [sx * 0.08, by + 0.98, 1.35], color: dark });
-  rod(k, [0, by + 0.1, -0.92], [0, by - 0.45, -1.02], 0.06, dark);
+  const dark = new THREE.Color(color).multiplyScalar(0.72).getStyle();
+  const by = kneel ? 0.82 : 1.62;
+  blob(k, [0, by, 0], [0.46, 0.44, 0.92], color);
+  blob(k, [0, by + 0.05, 0.62], [0.4, 0.42, 0.42], color);
+  blob(k, [0, by + 0.36, -0.1], [0.3, 0.38, 0.46], color);
+  blob(k, [0, by + 0.62, -0.08], [0.17, 0.2, 0.24], color);
+
+  const neck = [[0, by + 0.12, 0.92], [0, by - 0.02, 1.35], [0, by + 0.28, 1.72], [0, by + 0.86, 1.82]];
+  const neckR = [0.24, 0.17, 0.13, 0.11];
+  for (let i = 0; i < 3; i++) {
+    limb(k, neck[i], neck[i + 1], neckR[i], neckR[i + 1], color);
+    if (i) blob(k, neck[i], [neckR[i], neckR[i], neckR[i]], color);
+  }
+  const hy = by + 0.94;
+  blob(k, [0, hy, 1.9], [0.14, 0.15, 0.2], color);
+  limb(k, [0, hy - 0.02, 1.98], [0, hy - 0.1, 2.28], 0.11, 0.08, color);
+  k.box(0.13, 0.06, 0.12, { p: [0, hy - 0.15, 2.22], color: dark });
+  for (const sx of [-1, 1]) {
+    k.box(0.04, 0.1, 0.05, { p: [sx * 0.09, hy + 0.15, 1.82], r: [0, 0, sx * 0.4], color: dark });
+    k.box(0.03, 0.04, 0.04, { p: [sx * 0.13, hy + 0.04, 2.0], color: '#1e1814', jitter: 0 });
+  }
+  limb(k, [0, by + 0.12, -0.88], [0, by - 0.42, -1.0], 0.05, 0.03, dark);
+
   if (kneel) {
+    blob(k, [0, 0.42, 0.05], [0.44, 0.34, 0.85], color);
     for (const sx of [-1, 1]) {
-      k.box(0.18, 0.2, 1.0, { p: [sx * 0.42, 0.12, 0.45], color: dark });
-      k.box(0.2, 0.22, 0.9, { p: [sx * 0.4, 0.13, -0.55], color: dark });
+      limb(k, [sx * 0.3, by - 0.15, 0.62], [sx * 0.3, 0.14, 1.02], 0.12, 0.09, color);
+      blob(k, [sx * 0.3, 0.12, 1.02], [0.1, 0.1, 0.11], dark);
+      limb(k, [sx * 0.29, 0.08, 1.02], [sx * 0.27, 0.07, 0.55], 0.08, 0.07, dark);
+      blob(k, [sx * 0.38, 0.4, -0.55], [0.17, 0.3, 0.42], color);
+      limb(k, [sx * 0.4, 0.12, -0.2], [sx * 0.36, 0.07, -1.0], 0.09, 0.07, dark);
+      k.box(0.15, 0.06, 0.22, { p: [sx * 0.35, 0.04, -1.05], color: dark });
     }
-    k.box(0.75, 0.3, 1.6, { p: [0, 0.2, 0], color });
   } else {
-    for (const [lx, lz] of [[-0.25, 0.6], [0.25, 0.6], [-0.25, -0.6], [0.25, -0.6]]) {
-      k.box(0.15, 0.75, 0.15, { p: [lx, by - 0.45 - 0.2, lz], color });
-      k.box(0.12, 0.7, 0.12, { p: [lx, 0.35, lz], color: dark });
+    for (const [sx, lz, front] of [[-1, 0.55, 1], [1, 0.55, 1], [-1, -0.55, 0], [1, -0.55, 0]]) {
+      const hip = [sx * 0.24, by - 0.2, lz], knee = [sx * 0.22, 0.75, lz + (front ? 0.06 : -0.12)], foot = [sx * 0.22, 0.06, lz];
+      limb(k, hip, knee, front ? 0.12 : 0.15, 0.07, color);
+      blob(k, knee, [0.075, 0.08, 0.075], dark);
+      limb(k, knee, foot, 0.06, 0.05, dark);
+      k.box(0.16, 0.07, 0.2, { p: [foot[0], 0.035, lz + 0.04], color: dark });
     }
   }
   if (blanket) {
-    k.add(new THREE.IcosahedronGeometry(1, 0), { p: [0, by + 0.28, -0.05], s: [0.52, 0.32, 0.6], color: blanket, jitter: 0.08 });
-    k.box(1.05, 0.08, 0.15, { p: [0, by + 0.08, 0.2], color: '#e0b04a' });
+    k.add(new THREE.IcosahedronGeometry(1, 1), { p: [0, by + 0.22, -0.08], s: [0.5, 0.36, 0.62], color: blanket, jitter: 0.08 });
+    k.box(0.98, 0.07, 0.14, { p: [0, by + 0.04, 0.24], color: '#e0b04a' });
   }
-  if (packs) for (const sx of [-1, 1]) k.box(0.3, 0.5, 0.7, { p: [sx * 0.6, by + 0.1, -0.1], r: [0, 0, sx * 0.15], color: sx > 0 ? '#7a5a3a' : '#9a7a50' });
-  const [cx, cz] = k.at(0, 0.2);
-  ctx.colliders.add({ x: cx, z: cz, w: 1.1, d: 2.6, rot, bottom: k.y, top: k.y + (kneel ? 1.2 : 2.2) });
+  if (packs) for (const sx of [-1, 1]) k.box(0.28, 0.48, 0.66, { p: [sx * 0.56, by + 0.08, -0.1], r: [0, 0, sx * 0.12], color: sx > 0 ? '#7a5a3a' : '#9a7a50' });
+  const [cx, cz] = k.at(0, 0.4);
+  ctx.colliders.add({ x: cx, z: cz, w: 1.1, d: 3.0, rot, bottom: k.y, top: k.y + (kneel ? 1.2 : 2.2) });
 }
 
 export function donkey(ctx, { x, z, rot = 0, color = '#857c72', load = true }) {

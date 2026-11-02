@@ -45,7 +45,7 @@ function ladder(ctx) {
     const w = half * (1 + 2 * f) * 0.5;
     const up = i % 2 === 0;
     const sx = up ? -w : w;
-    angel(ctx, { x: x + sx, z: z + 0.6, y: y + 0.1, face: up ? [x + sx, z - 20] : [x + sx, z + 20], arms: i % 3 === 0 ? 'out' : 'down', glow: 0.5, halo: 2 + f * 4, float: 0.12, scale: 1.4 });
+    angel(ctx, { x: x + sx, z: z + 0.6, y: y + 0.1, face: up ? [x + sx, z - 20] : [x + sx, z + 20], arms: i % 3 === 0 ? 'out' : 'down', glow: 0.32, halo: 1.6 + f * 4, float: 0.12, scale: 1.4 });
   });
 
   ctx.effects.halo({ position: [TOP[0], TOP[1] + 4, TOP[2]], size: 90, opacity: 0.7, color: '#fff2d0' });
@@ -70,7 +70,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.06, vignette: 0.5, shadowTint: '#0c1640', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -4], radius: 30 },
 
-  player: { start: [4, 1.5], yaw: 0.42, pitch: 0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [4.4, -2.2], yaw: 0.78, pitch: 0.02, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -95,8 +95,14 @@ export default {
     person(ctx, { x: JACOB[0], z: JACOB[1], face: [JACOB[0] - 0.3, JACOB[1] + 10], pose: 'lie', robe: '#b09070', mantle: '#6a5a8a', skin: '#a87652', hood: true });
     const k = kit(ctx, JACOB[0], JACOB[1] - 1.75, 0.2);
     k.add(new THREE.DodecahedronGeometry(0.3, 0), { p: [0, 0.14, 0], s: [1.2, 0.6, 0.9], color: '#8a8070' });
-    k.box(0.12, 0.6, 0.12, { p: [0.9, 0.3, 0.6], r: [0, 0, 0.9], color: '#5a4430' });
+    k.add(new THREE.CylinderGeometry(0.035, 0.04, 1.8, 5), { p: [-0.75, 0.05, 1.3], r: [Math.PI / 2, 0.1, 0], color: '#5a4430' });
     k.box(0.5, 0.3, 0.4, { p: [-0.8, 0.15, 0.4], color: '#6a5a44' });
+    const bed = kit(ctx, JACOB[0], JACOB[1] - 0.85, 0);
+    bed.box(0.95, 0.06, 2.0, { p: [0, 0.03, 0], color: '#7a3a2e', jitter: 0.06 });
+    bed.box(0.9, 0.05, 0.25, { p: [0, 0.07, 0.8], color: '#c8a868' });
+    const pl = new THREE.PointLight('#ffe2b0', 9, 9, 1.6);
+    pl.position.set(JACOB[0] + 0.8, 2.2, JACOB[1] - 1.5);
+    ctx.scene.add(pl);
     tufts(ctx, { center: [0, -4], ring: [3, 30], count: 100, colors: ['#4e5436', '#5a5a3a'] });
   },
 
