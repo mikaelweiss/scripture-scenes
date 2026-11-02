@@ -5,7 +5,7 @@ import { house, town, tongues, person, frame } from './lib/nt-25-kit.js';
 const HOUSE = [0, -14];
 const wall = '#d4c09a';
 
-const apostles = Array.from({ length: 11 }, (_, i) => [HOUSE[0] - 5.6 + i * 1.12, HOUSE[1] + 1.2 + (i % 2) * 0.7]);
+const apostles = Array.from({ length: 11 }, (_, i) => [HOUSE[0] - 5.6 + i * 1.12, HOUSE[1] + 2.2 + (i % 2) * 0.6]);
 const PETER = [HOUSE[0] + 0.5, HOUSE[1] + 6.2];
 
 function upperRoomHouse(ctx) {
@@ -34,7 +34,7 @@ function upperRoomHouse(ctx) {
   box(0, D / 2 - 0.3, W + 0.2, 0.5, 0.7, fy + H2 - 0.5, '#bba680', false);
   box(0, 0, W + 0.8, 0.35, D + 0.8, fy + H2, '#a8946e', false);
   box(0, 0, W, 0.4, D, fy + H2 + 0.35, wall, false);
-  box(0, D / 2 - 0.05, W - 1, 0.9, 0.15, fy, '#c8b48c', false);
+  box(0, D / 2 - 0.05, W - 1, 0.5, 0.15, fy, '#c8b48c', false);
   for (let i = 0; i < 9; i++) box(W / 2 + 1.1, D / 2 + 0.4 - i * 0.62, 1.8, 0.55 * (i + 1), 0.62, y0, '#c2ae88');
   box(W / 2 + 1.1, -D / 2 + 1.2, 1.8, H1 + 0.3, 2.2, y0, '#c2ae88');
   box(0, D / 2 + 1.6, 6, 1.6, 3.2, y0, '#bfa984');
@@ -78,7 +78,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.38, shadowTint: '#30305e', highlightTint: '#ffe8c8' },
   shadow: { center: [0, -6], radius: 40 },
 
-  player: { start: [2, 11], yaw: 0.0, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [2, 8], yaw: 0.07, pitch: 0.18, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -109,7 +109,7 @@ export default {
       hoodChance: 0.35,
     },
     groups: [
-      { count: 230, center: [0, -6], ring: [9.5, 30], arc: [0.15, Math.PI - 0.15], spacing: 0.95, face: [0, -12], children: 0.12, seed: 61, avoid: [{ rect: [2, 13, 5, 8] }, { rect: [0, -6, 8, 8] }, { rect: [8.1, -12, 3, 12] }] },
+      { count: 230, center: [0, -6], ring: [7, 30], arc: [0.15, Math.PI - 0.15], spacing: 0.95, face: [0, -12], children: 0.12, seed: 61, avoid: [{ rect: [2, 12.5, 4, 14] }, { rect: [0, -6, 8, 8] }, { rect: [8.1, -12, 3, 12] }] },
       { count: 24, center: [-16, -6], ring: [1, 8], spacing: 1.1, face: [0, -12], children: 0.1, seed: 62 },
     ],
   },

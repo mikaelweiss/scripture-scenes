@@ -3,8 +3,8 @@
 import { temple, person } from './lib/nt-25-kit.js';
 
 const GATE_Z = -20;
-const PETER = [-2.2, -6.6];
-const JOHN = [-3.4, -7.6];
+const PETER = [-0.85, -6.3];
+const JOHN = [-2.4, -7.3];
 const HEALED = [0.3, -6.4];
 
 const stoneC = '#dccaa4';
@@ -66,7 +66,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.38, shadowTint: '#30305e', highlightTint: '#ffe6c0' },
   shadow: { center: [0, -12], radius: 40 },
 
-  player: { start: [3.4, 5], yaw: 0.2, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [3, 2.2], yaw: 0.34, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,

@@ -2,7 +2,7 @@
 // still beside a pool, and he and Philip go down into the water for baptism.
 import { water, road, chariot, horse, person } from './lib/nt-25-kit.js';
 
-const POOL = [-6, -9];
+const POOL = [-4.2, -8.6];
 const CHARIOT = [5, -4];
 const ROAD = [[16, 140], [10, 80], [6, 30], [5, 6], [5, -10], [2, -40], [-10, -100], [-30, -180]];
 
@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.35, shadowTint: '#3a3060', highlightTint: '#fff0d0' },
   shadow: { center: [0, -6], radius: 36 },
 
-  player: { start: [6.5, 4.5], yaw: 0.62, pitch: -0.07, eye: 1.65, speed: 4.5 },
+  player: { start: [-0.8, 0.2], yaw: -0.08, pitch: -0.07, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -44,8 +44,8 @@ export default {
   objects: [],
 
   scatter: [
-    { type: 'tree', count: 7, center: POOL, ring: [8, 14], spacing: 3.5, seed: 21, avoid: [{ rect: [8, 4, 10, 30] }], props: { kind: 'palm', leaf: '#5e7a34', h: 7 } },
-    { type: 'tree', count: 3, center: POOL, ring: [9, 13], spacing: 4, seed: 22, avoid: [{ rect: [8, 4, 10, 30] }], props: { kind: 'broad', leaf: '#6a7c40', h: 4 } },
+    { type: 'tree', count: 7, center: POOL, ring: [8, 14], spacing: 3.5, seed: 21, avoid: [{ rect: [8, 4, 10, 30] }, { rect: [-1.5, -1, 7, 12] }], props: { kind: 'palm', leaf: '#5e7a34', h: 7 } },
+    { type: 'tree', count: 3, center: POOL, ring: [9, 13], spacing: 4, seed: 22, avoid: [{ rect: [8, 4, 10, 30] }, { rect: [-1.5, -1, 7, 12] }], props: { kind: 'broad', leaf: '#6a7c40', h: 4 } },
     { type: 'rock', count: 60, center: [0, 0], ring: [16, 260], spacing: 8, seed: 23, avoid: [{ rect: [8, 60, 16, 140] }], props: { size: 1.3, color: '#a88c6a' } },
     { type: 'rubble', count: 40, center: [0, 0], ring: [12, 120], spacing: 6, seed: 24, avoid: [{ rect: [8, 60, 12, 140] }], props: { radius: 1.4, count: 4, size: [0.2, 0.45], color: '#7f8448' } },
   ],
@@ -72,8 +72,8 @@ export default {
     person(ctx, { x: CHARIOT[0], z: CHARIOT[1] - 0.4, y: cy + 0.87, face: [CHARIOT[0], CHARIOT[1] - 6], robe: '#c8b48c', mantle: '#6a4a2a', skin: '#4a2e1e', hood: true });
 
     const wy = -0.2 - 0.55;
-    person(ctx, { x: POOL[0] + 0.7, z: POOL[1] + 0.4, y: wy, face: [POOL[0] - 0.5, POOL[1]], robe: '#d8ccb0', mantle: '#7a6a50', skin: '#a87652', arms: 'out' });
-    person(ctx, { x: POOL[0] - 0.5, z: POOL[1] + 0.2, y: wy - 0.2, face: [POOL[0] + 0.7, POOL[1] + 0.4], robe: '#f0e6cc', mantle: '#7a2e5a', skin: '#3e281c' });
+    person(ctx, { x: POOL[0] + 0.8, z: POOL[1] - 0.1, y: wy, face: [POOL[0] - 0.3, POOL[1] + 0.5], robe: '#d8ccb0', mantle: '#7a6a50', skin: '#a87652', arms: 'out' });
+    person(ctx, { x: POOL[0] - 0.3, z: POOL[1] + 0.5, y: wy - 0.2, face: [-0.8, 0.2], robe: '#f0e6cc', mantle: '#7a2e5a', skin: '#3e281c' });
     const ring = new ctx.THREE.Mesh(new ctx.THREE.RingGeometry(0.5, 0.75, 20).rotateX(-Math.PI / 2), new ctx.THREE.MeshBasicMaterial({ color: '#dff2f4', transparent: true, opacity: 0.5, depthWrite: false }));
     ring.position.set(POOL[0] + 0.1, -0.12, POOL[1] + 0.3);
     ring.scale.set(2.2, 1, 1.3);

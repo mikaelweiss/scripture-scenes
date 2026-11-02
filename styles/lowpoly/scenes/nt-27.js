@@ -3,7 +3,7 @@
 import { cityWall, temple, town, brightCloud, person } from './lib/nt-25-kit.js';
 
 const CHRIST = [0, -7, 8.5];
-const CITY = [-30, -250];
+const CITY = [-30, -190];
 
 const apostles = Array.from({ length: 11 }, (_, i) => {
   const a = Math.PI * (0.15 + (i / 10) * 0.7);
@@ -12,7 +12,7 @@ const apostles = Array.from({ length: 11 }, (_, i) => {
 });
 
 const cityRing = [
-  [-90, -310], [20, -320], [40, -250], [30, -190], [-50, -180], [-100, -220], [-90, -310],
+  [-90, -250], [20, -260], [40, -190], [30, -130], [-50, -120], [-100, -160], [-90, -250],
 ];
 
 export default {
@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.35, shadowTint: '#2a3460', highlightTint: '#fff2d8' },
   shadow: { center: [0, 0], radius: 45 },
 
-  player: { start: [3, 13], yaw: 0.1, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [2.6, 12.5], yaw: 0.07, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -40,8 +40,9 @@ export default {
     hills: 28,
     bumps: 0.3,
     flats: [
-      { x: 0, z: 5, r: 16, falloff: 42, height: 22 },
-      { x: CITY[0], z: CITY[1], r: 110, falloff: 90, height: -45 },
+      { x: -12, z: -80, r: 20, falloff: 40, height: -6 },
+      { x: 0, z: 3, r: 13, falloff: 36, height: 22 },
+      { x: CITY[0], z: CITY[1], r: 90, falloff: 60, height: 12 },
     ],
     colors: { ground: '#a89670', groundAlt: '#958660', grass: '#7c8448', high: '#9a8e6c', rock: '#857a66' },
     patches: [{ x: 0, z: 0, r: 16, color: '#9a8a64', strength: 0.5, rough: 0.5 }],
@@ -94,9 +95,9 @@ export default {
       ctx.solid.add(new ctx.THREE.DodecahedronGeometry(s, 0), { position: [x, ctx.heightAt(x, z) + s * 0.2, z], rotation: [ctx.rand(), ctx.rand(), 0], scale: [1.3, 0.6, 1], color: '#9a8c74', jitter: 0.1 });
     }
 
-    cityWall(ctx, { points: cityRing, h: 10, thick: 3, color: '#cdb88e', gaps: [{ x: 35, z: -220, r: 6 }] });
-    temple(ctx, { x: 0, z: -235, rot: -Math.PI / 2 + 0.2, s: 0.7 });
-    town(ctx, { center: [-40, -250], radius: 60, count: 70, seed: 27, spacing: 8, size: [5, 9], height: [3, 6], avoid: [{ x: 0, z: -235, r: 50 }] });
-    town(ctx, { center: [-60, -290], radius: 22, count: 12, seed: 28, spacing: 8, size: [5, 9], height: [3, 6] });
+    cityWall(ctx, { points: cityRing, h: 10, thick: 3, color: '#cdb88e', gaps: [{ x: 35, z: -160, r: 6 }] });
+    temple(ctx, { x: 0, z: -175, rot: -Math.PI / 2 + 0.2, s: 0.7 });
+    town(ctx, { center: [-40, -190], radius: 60, count: 70, seed: 27, spacing: 8, size: [5, 9], height: [3, 6], avoid: [{ x: 0, z: -175, r: 50 }] });
+    town(ctx, { center: [-60, -230], radius: 22, count: 12, seed: 28, spacing: 8, size: [5, 9], height: [3, 6] });
   },
 };

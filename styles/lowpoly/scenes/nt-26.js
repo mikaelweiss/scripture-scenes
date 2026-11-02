@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.4, shadowTint: '#2e2a5e', highlightTint: '#ffe0c0' },
   shadow: { center: [0, 4], radius: 40 },
 
-  player: { start: [5.5, 16], yaw: 0.36, pitch: -0.06, eye: 1.65, speed: 4 },
+  player: { start: [-0.8, 15], yaw: -0.08, pitch: -0.1, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000,
@@ -67,9 +67,9 @@ export default {
 
   figures: [
     {
-      x: CHRIST[0], z: CHRIST[1], face: [3, 2], scale: 1.08, robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', arms: 'out', emissive: 0.28,
-      light: { color: '#fff0cf', intensity: 10, distance: 12 },
-      halo: { size: 3.2, opacity: 0.35, color: '#fff3d6' },
+      x: CHRIST[0], z: CHRIST[1], face: [3, 2], scale: 1.08, robe: '#fbf7ee', mantle: '#f3ecdc', skin: '#a8754f', arms: 'out', emissive: 0.16,
+      light: { color: '#fff0cf', intensity: 5, distance: 10 },
+      halo: { size: 2.6, opacity: 0.16, color: '#fff3d6' },
     },
   ],
 

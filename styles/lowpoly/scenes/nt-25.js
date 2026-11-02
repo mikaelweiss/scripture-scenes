@@ -47,7 +47,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.45, shadowTint: '#2a2050', highlightTint: '#ffd0a0' },
   shadow: { center: [0, -6], radius: 50 },
 
-  player: { start: [2.6, 4.5], yaw: 0.1, pitch: -0.04, eye: 1.65, speed: 4 },
+  player: { start: [0.7, -1.4], yaw: 0.07, pitch: -0.12, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000,
@@ -106,7 +106,7 @@ export default {
     lamp(ctx, { x: ROOM[0] + 3.2, y: y + 1.68, z: ROOM[1] - 2.25, intensity: 4, range: 7 });
 
     person(ctx, {
-      x: ROOM[0], z: ROOM[1] - 1.45, y: y - 0.45, face: [ROOM[0], ROOM[1] + 10], robe: '#fbf7ee', mantle: '#f1e9d8', skin: '#a8754f', arms: 'out', emissive: 0.22,
+      x: ROOM[0], z: ROOM[1] - 1.45, y: y - 0.28, face: [ROOM[0], ROOM[1] + 10], robe: '#fbf7ee', mantle: '#f1e9d8', skin: '#a8754f', arms: 'out', emissive: 0.22,
       light: { color: '#fff0cf', intensity: 3, distance: 6 }, halo: { size: 2.2, opacity: 0.22, color: '#fff3d6' },
     });
     person(ctx, { x: ROOM[0] - 1.75, z: ROOM[1] - 0.4, y: y - 0.45, face: [ROOM[0], ROOM[1] - 1.2], robe: '#7a5a3c', mantle: '#4f5a6b', skin: '#9b6a46' });

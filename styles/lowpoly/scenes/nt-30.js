@@ -20,11 +20,11 @@ export default {
   fog: { color: '#b49c8a', near: 70, far: 520 },
   clouds: { count: 110, shadow: '#4a4656', lit: '#e8d0b0', rim: '#fff4d8', distance: [160, 800], altitude: [70, 200], hole: 0.22 },
   mountains: { count: 40, color: '#5e5a5a', radius: [480, 720], height: [40, 110], haze: 0.55 },
-  bloom: { strength: 0.7, radius: 0.6, threshold: 0.78 },
+  bloom: { strength: 0.5, radius: 0.5, threshold: 0.82 },
   grade: { saturation: 1.0, contrast: 1.08, vignette: 0.45, shadowTint: '#2a2850', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -6], radius: 40 },
 
-  player: { start: [6, 5], yaw: 0.36, pitch: 0.14, eye: 1.65, speed: 4.5 },
+  player: { start: [3.5, -0.5], yaw: 0.24, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -68,8 +68,8 @@ export default {
     { type: 'beam', at: STEPHEN, height: 320, radiusBottom: 1.8, radiusTop: 22, color: '#fff2d0', opacity: 0.55 },
     { type: 'halo', position: [STEPHEN[0], 1.2, STEPHEN[1]], size: 3.4, opacity: 0.45, color: '#fff2d0' },
     { type: 'motes', at: STEPHEN, radius: 3, height: 30, count: 120 },
-    { type: 'halo', position: VISION, size: 90, opacity: 0.85, color: '#fff2d6' },
-    { type: 'halo', position: VISION, size: 30, opacity: 0.45, color: '#ffffff' },
+    { type: 'halo', position: VISION, size: 70, opacity: 0.4, color: '#fff2d6' },
+    { type: 'halo', position: VISION, size: 22, opacity: 0.3, color: '#ffffff' },
   ],
 
   custom(ctx) {
@@ -79,24 +79,24 @@ export default {
     ctx.colliders.add({ x: STEPHEN[0], z: STEPHEN[1], w: 0.8, d: 0.8, bottom: sy - 1, top: sy + 1.5 });
 
     const vg = new THREE.Group();
-    const mat = new THREE.MeshBasicMaterial({ color: '#fffaf0', toneMapped: false, fog: false });
+    const mat = new THREE.MeshBasicMaterial({ color: '#efe6d2', fog: false });
     const robe = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 1.1, 4.4, 7), mat);
     robe.position.y = 2.2;
-    const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.45, 0), mat);
-    head.position.y = 4.9;
+    const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 0), mat);
+    head.position.y = 4.95;
     vg.add(robe, head);
-    vg.position.set(VISION[0] + 7, VISION[1] - 7, VISION[2] + 2);
-    vg.scale.setScalar(1.6);
+    vg.position.set(VISION[0] + 16, VISION[1] - 6, VISION[2] + 14);
+    vg.scale.setScalar(2.8);
     ctx.scene.add(vg);
     for (let i = 0; i < 18; i++) {
       const a = (i / 18) * Math.PI * 2;
-      const r = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 60).translate(0, 30, 0), new THREE.MeshBasicMaterial({ color: '#fff0c8', transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, side: THREE.DoubleSide }));
+      const r = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 60).translate(0, 30, 0), new THREE.MeshBasicMaterial({ color: '#fff0c8', transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, side: THREE.DoubleSide }));
       r.position.set(...VISION);
       r.rotation.z = a;
       ctx.scene.add(r);
     }
-    brightCloud(ctx, { x: VISION[0] - 22, y: VISION[1] - 12, z: VISION[2] + 10, size: 18, count: 8, seed: 3, glow: 0.35, color: '#f2e2c8' });
-    brightCloud(ctx, { x: VISION[0] + 30, y: VISION[1] - 10, z: VISION[2] + 6, size: 16, count: 8, seed: 4, glow: 0.35, color: '#f2e2c8' });
+    brightCloud(ctx, { x: VISION[0] - 22, y: VISION[1] - 12, z: VISION[2] + 10, size: 18, count: 8, seed: 3, glow: 0.16, color: '#d6c4a8' });
+    brightCloud(ctx, { x: VISION[0] + 30, y: VISION[1] - 10, z: VISION[2] + 6, size: 16, count: 8, seed: 4, glow: 0.16, color: '#d6c4a8' });
 
     const coatColors = ['#5a4a3a', '#3e3a40', '#6d3b2e', '#7a6a58', '#4a3e30', '#d8cdb5'];
     const cy = ctx.heightAt(SAUL[0] + 1, SAUL[1] + 0.8);
