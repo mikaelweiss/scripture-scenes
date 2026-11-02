@@ -98,7 +98,7 @@ function custom(ctx) {
   // Pharaoh's daughter and her maidens walking by the river's side.
   person(ctx, { pos: PRINCESS, y: ly + 0.3, face: BASKET, scale: 1.04, colors: { robe: '#fbf7ee', mantle: '#d9a441', skin: '#b5825a', hair: '#1f140e', sash: '#2f8f8a', arms: [0.35, 1.2] } });
   person(ctx, { pos: MAID, y: WATER_Y - 0.6, face: BASKET, colors: { robe: '#efe3c2', mantle: '#efe3c2', skin: '#9c6a45', hair: '#1f140e', sash: '#b5523b', arms: [0.2, 1.4] } });
-  const maids = [[1.4, -5.6], [4.6, -4.6], [-1.5, -4.0], [10.5, -4.4], [-3.6, -2.0]];
+  const maids = [[1.4, -5.6], [4.6, -4.6], [-1.5, -4.0], [12.5, -1.0], [-3.6, -2.0]];
   maids.forEach((p, i) => person(ctx, { pos: p, face: i < 2 ? BASKET : PRINCESS, colors: { robe: '#efe3c2', mantle: ['#efe3c2', '#2f8f8a', '#b5523b', '#c8912e', '#efe3c2'][i], skin: ['#9c6a45', '#a87650', '#8a5a3b'][i % 3], hair: '#1f140e', sash: '#c8912e' } }));
   for (const [x, z] of [[1.4, -5.6], [4.6, -4.6]]) {
     b.add('#c8912e', cyl(0.03, 0.03, 2.2, [x + 0.35, ly + 1.4, z], [0, 0, 0], 5));
@@ -115,7 +115,7 @@ function custom(ctx) {
     if (Math.abs(x) < 10 && z < 18) continue;
     palm(b, ctx, { pos: [x, z], height: 7 + rng() * 4, lean: 0.1 + rng() * 0.25, dir: rng() * 6, seed: i + 30 });
   }
-  for (const s of [-1, 1]) palm(b, ctx, { pos: [s * 8 + 5, -1.5], height: 8.5, lean: 0.25, dir: s > 0 ? 2.5 : 0.6, seed: s + 60 });
+  for (const s of [-1, 1]) palm(b, ctx, { pos: [s * 10 + 4, 0.5], height: 8.5, lean: 0.25, dir: s > 0 ? 2.5 : 0.6, seed: s + 60 });
   const px = 0, pz = 40, py = ctx.terrainHeight(px, pz) - 0.2;
   for (const s of [-1, 1]) {
     b.add('#e3cfa6', xf(new THREE.CylinderGeometry(4.2, 5.5, 14, 4), { pos: [px + s * 9, py + 7, pz], rot: [0, Math.PI / 4, 0], scale: [1.4, 1, 0.6] }));
@@ -158,8 +158,9 @@ export default {
   clouds: { layers: [{ count: 24, distance: [400, 800], height: [110, 200], size: [40, 80], color: '#fff6e4', shade: '#8a8aa0' }] },
   light: { glows: [{ at: BASKET, lift: 0.6, size: 2.6, color: '#fff3d0', opacity: 0.35 }] },
   player: {
-    start: [8, -3.2],
-    lookAt: [5.5, -10.5],
+    start: [7.6, -4.6],
+    lookAt: [4.6, -11],
+    fov: 42,
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -3,9 +3,9 @@
 import { Batch, DAY_STYLE, addSun, ball, box, camel, cyl, flock, frameAt, makeRng, person, rock, xf } from './lib/ot-13-kit.js';
 
 const PIT = [0, 0];
-const JOSEPH = [1.6, -1.4];
-const JUDAH = [-1.4, -3.4];
-const TRADER = [4.4, -4.2];
+const JOSEPH = [2.5, 1.5];
+const JUDAH = [0.4, -2.9];
+const TRADER = [5.6, -0.9];
 
 const BROTHER_ROBES = ['#a87b4f', '#8c5a3c', '#7a6a52', '#c8a97a', '#6f8a6a', '#9c6b4e', '#b5916a', '#5e4632', '#bfa27a', '#7d5a3c'];
 const BROTHER_MANTLES = ['#5e4632', '#c8912e', '#3e6e66', '#8c5a3c', '#a64b35', '#d9c7a3', '#6b5a4a', '#4f7f80', '#b5523b', '#7a6a52'];
@@ -27,7 +27,12 @@ function custom(ctx) {
   ctx.exclude({ kind: 'circle', x: PIT[0], z: PIT[1], r: 2.4 });
 
   // A rope drawn up over the rim to Joseph's hands.
-  b.add('#c9b07a', cyl(0.03, 0.03, 2.2, [0.8, py + 0.75, -0.7], [0.5, 0.85, 0.9], 4), { cast: false });
+  const ropeFrom = new THREE.Vector3(0.7, py + 0.2, 0.5);
+  const ropeTo = new THREE.Vector3(JOSEPH[0] + 0.25, ctx.terrainHeight(...JOSEPH) + 1.0, JOSEPH[1] - 0.15);
+  const rope = new THREE.CylinderGeometry(0.035, 0.035, ropeFrom.distanceTo(ropeTo), 4);
+  rope.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), ropeTo.clone().sub(ropeFrom).normalize()));
+  rope.translate(...ropeFrom.clone().add(ropeTo).multiplyScalar(0.5).toArray());
+  b.add('#c9b07a', rope, { cast: false });
 
   // The coat of many colours, stripped and lying on the ground.
   const cx = -2.6, cz = 1.4, cy = ctx.terrainHeight(cx, cz);
@@ -37,7 +42,7 @@ function custom(ctx) {
   b.add('#2f8f8a', box(0.5, 0.05, 1.2, [1.0, 0.05, 0], [0, -0.4, 0]), { frame: frameAt(cx, cy, cz, 0.5), cast: false });
 
   // The twenty pieces of silver.
-  const sx = 3.2, sz = -3.1, sy = ctx.terrainHeight(sx, sz);
+  const sx = 4.3, sz = 0.4, sy = ctx.terrainHeight(sx, sz);
   b.add('#6b4a33', box(0.5, 0.35, 0.4, [sx, sy + 0.18, sz]));
   for (let i = 0; i < 9; i++) b.add('#e6e2d6', cyl(0.07, 0.07, 0.02, [sx + (rng() - 0.5) * 0.5, sy + 0.38 + i * 0.012, sz + (rng() - 0.5) * 0.3], [0, 0, 0], 8), { emissive: '#3a3a3a' });
 
@@ -51,14 +56,14 @@ function custom(ctx) {
 
   // The Ishmeelite merchants.
   person(ctx, { pos: TRADER, face: JUDAH, scale: 1.04, colors: { robe: '#2e3a5c', mantle: '#efe3c2', skin: '#8a5a3b', hair: '#efe3c2', sash: '#b5523b', arms: [0.3, 1.0] } });
-  person(ctx, { pos: [6.2, -2.6], face: JOSEPH, colors: { robe: '#efe3c2', mantle: '#2e3a5c', skin: '#7a4e33', hair: '#e6d8b8', sash: '#c8912e' } });
-  person(ctx, { pos: [5.6, -6.4], face: JOSEPH, colors: { robe: '#5a3a5c', mantle: '#d9c7a3', skin: '#8a5a3b', hair: '#d9c7a3', sash: '#2f8f8a' } });
+  person(ctx, { pos: [7.4, 1.0], face: JOSEPH, colors: { robe: '#efe3c2', mantle: '#2e3a5c', skin: '#7a4e33', hair: '#e6d8b8', sash: '#c8912e' } });
+  person(ctx, { pos: [8.6, -2.4], face: JOSEPH, colors: { robe: '#5a3a5c', mantle: '#d9c7a3', skin: '#8a5a3b', hair: '#d9c7a3', sash: '#2f8f8a' } });
 
   // The caravan of camels on the road to Egypt, with spicery, balm and myrrh.
   const road = (t) => [26 - t * 3.1, -16 + t * 1.5];
   for (let i = 0; i < 9; i++) {
     const [x, z] = road(i);
-    if (Math.hypot(x - TRADER[0], z - TRADER[1]) < 4) continue;
+    if (Math.hypot(x - TRADER[0], z - TRADER[1]) < 6) continue;
     camel(b, ctx, { pos: [x, z], rot: Math.atan2(-3.1, 1.5), color: ['#c49a62', '#b5895a', '#d1a873'][i % 3], couched: i === 3 || i === 4, load: ['#b5523b', '#2f8f8a', '#c8912e', '#6b2f4a'][i % 4] });
     if (i % 2 === 0) person(ctx, { pos: [x + 1.6, z + 0.6], face: road(i + 3), colors: { robe: ['#efe3c2', '#2e3a5c', '#5a3a5c'][i % 3], mantle: '#d9c7a3', skin: '#8a5a3b', hair: '#efe3c2', sash: '#b5523b' } });
   }
@@ -116,8 +121,9 @@ export default {
   custom,
   clouds: { layers: [{ count: 30, distance: [350, 800], height: [90, 180], size: [40, 80], color: '#fff6e4', shade: '#7a7a92' }] },
   player: {
-    start: [0.5, 9],
-    lookAt: [0, -2],
+    start: [1.6, 5.6],
+    lookAt: [5.8, -0.6],
+    fov: 40,
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -113,11 +113,11 @@ function custom(ctx) {
   }
 
   // Joseph in Egyptian linen, arms open to his brothers.
-  person(ctx, { pos: JOSEPH, face: BENJAMIN, scale: 1.06, colors: { robe: '#fbf7ee', mantle: '#d9a441', skin: '#b5825a', hair: '#2e4f8a', sash: '#c8912e', arms: [0.7, 0.9] } });
+  person(ctx, { pos: JOSEPH, face: BENJAMIN, scale: 1.12, colors: { robe: '#fbf7ee', mantle: '#d9a441', skin: '#b5825a', hair: '#2e4f8a', sash: '#c8912e', arms: [0.7, 0.9] } });
   person(ctx, { pos: BENJAMIN, face: JOSEPH, scale: 0.97, colors: { robe: '#d9c7a3', mantle: '#4f7f80', skin: '#b5825a', hair: '#3a2418', sash: '#c8912e', arms: [0.25, 0.8] } });
 
   // Ten brothers, stunned and troubled. Some fall back, some bow.
-  const spots = [[-2.6, -12.4], [2.4, -12.6], [-4.4, -11.2], [4.4, -11.0], [-2.2, -9.8], [1.8, -10.0], [-5.6, -9.0], [3.8, -8.6], [-3.8, -8.0], [5.8, -12.6]];
+  const spots = [[-2.6, -12.9], [2.6, -12.9], [-3.5, -14.6], [3.5, -14.6], [-3.1, -11.0], [3.1, -11.0], [-4.6, -12.6], [4.6, -12.6], [-5.3, -14.6], [5.3, -14.6]];
   spots.forEach((p, i) => person(ctx, {
     pos: p,
     face: [JOSEPH[0] + (rng() - 0.5) * 2, JOSEPH[1]],
@@ -166,8 +166,9 @@ export default {
     glows: [{ at: JOSEPH, lift: 1.4, size: 4, color: '#fff3d0', opacity: 0.25 }],
   },
   player: {
-    start: [0.5, -5],
-    lookAt: JOSEPH,
+    start: [0.9, -8.6],
+    lookAt: [-0.3, -15.5],
+    fov: 42,
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

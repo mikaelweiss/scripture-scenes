@@ -2,7 +2,7 @@
 // x is east, z is south. A street runs north; the cutaway house on the west side shows a family at the meal.
 import { Batch, DAY_STYLE, ball, box, cyl, frameAt, glow, goat, makeRng, moon, palm, person, stars, xf } from './lib/ot-13-kit.js';
 
-const BLOOD = '#8a1c1c';
+const BLOOD = '#b02424';
 const MUD = ['#b08a5e', '#a07a50', '#bf9a6a', '#a8845a'];
 const OPEN = { x: -8, z: -4, w: 7, d: 8 };
 
@@ -135,8 +135,9 @@ export default {
   objects: [],
   custom,
   player: {
-    start: [-2.2, 5.5],
-    lookAt: [-7.5, -4],
+    start: [-3.4, 2.6],
+    lookAt: [-8.2, -4.4],
+    fov: 44,
     colors: { robe: '#7a6a52', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

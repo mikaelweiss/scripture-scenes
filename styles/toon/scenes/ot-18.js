@@ -6,7 +6,7 @@ import { Batch, DAY_STYLE, PALETTE, ball, box, cyl, flames, flock, glow, makeRng
 const HALF = 16;
 const WALL_H = 20;
 const PILLAR = [0, 62];
-const MOSES = [-3, -44];
+const MOSES = [-3.2, -43.2];
 
 function waterTexture(THREE) {
   const c = document.createElement('canvas');
@@ -129,7 +129,7 @@ function custom(ctx) {
   }
 
   // Moses at the head of the people, rod lifted over the sea.
-  person(ctx, { pos: MOSES, face: [8, 0], scale: 1.05, colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#a8724a', hair: '#e6d8b8', sash: '#c8912e', arms: [0.4, 2.3] } });
+  person(ctx, { pos: MOSES, face: [MOSES[0] + 1.5, MOSES[1] - 20], scale: 1.1, colors: { robe: '#8c5a3c', mantle: '#e3d6b8', skin: '#a8724a', hair: '#e6d8b8', sash: '#c8912e', arms: [0.4, 2.3] } });
   const my = ctx.terrainHeight(...MOSES);
   b.add('#6b4a33', cyl(0.045, 0.05, 2.4, [MOSES[0] + 0.15, my + 2.7, MOSES[1] - 0.25], [0.1, 0, -0.2], 6));
   ctx.exclude({ kind: 'circle', x: MOSES[0], z: MOSES[1], r: 3 });
@@ -178,8 +178,9 @@ export default {
     ],
   },
   player: {
-    start: [2, -46],
-    lookAt: [0, 40],
+    start: [1.6, -47.5],
+    lookAt: [-1.2, 40],
+    fov: 48,
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

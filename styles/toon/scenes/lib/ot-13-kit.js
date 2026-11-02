@@ -512,7 +512,7 @@ export function reeds(b, ctx, { points, height = [1.6, 2.8], color = '#5f8a3e', 
       const h = height[0] + rng() * (height[1] - height[0]);
       const px = x + (rng() - 0.5) * 0.9, pz = z + (rng() - 0.5) * 0.9;
       const tilt = [(rng() - 0.5) * 0.35, 0, (rng() - 0.5) * 0.35];
-      b.add(rng() < 0.5 ? color : dark, xf(new THREE.ConeGeometry(0.05, h, 4).translate(0, h / 2, 0), { pos: [px, by - 0.1, pz], rot: tilt }), { cast: false });
+      b.add(rng() < 0.5 ? color : dark, xf(new THREE.ConeGeometry(0.11, h, 5).translate(0, h / 2, 0), { pos: [px, by - 0.1, pz], rot: tilt }), { cast: false });
       if (rng() < papyrus) b.add(head, xf(new THREE.ConeGeometry(0.28, 0.45, 6).rotateX(Math.PI).translate(0, h + 0.15, 0), { pos: [px, by - 0.1, pz], rot: tilt }), { cast: false });
     }
   }

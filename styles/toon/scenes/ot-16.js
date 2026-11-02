@@ -3,7 +3,7 @@
 import { Batch, DAY_STYLE, ball, box, cyl, flames, flock, glow, makeRng, person, rock, xf } from './lib/ot-13-kit.js';
 
 const BUSH = [0, -9];
-const MOSES = [0.4, -4.6];
+const MOSES = [-2.6, -5.6];
 const PEAK = [10, -300];
 
 function custom(ctx) {
@@ -48,12 +48,12 @@ function custom(ctx) {
     fl.push({ pos: [BUSH[0] + Math.sin(a) * r, by + 0.6 + rng() * 0.9, BUSH[1] + Math.cos(a) * r], h: 0.6 + rng() * 1.3, w: 0.7 + rng() * 0.6, light: i === 0 });
   }
   fl.push({ pos: [BUSH[0], by + 1.1, BUSH[1]], h: 2.2, w: 1.6 });
-  flames(ctx, fl, { outer: '#ff8a2c', inner: '#ffe08a', light: { color: '#ffc870', intensity: 40, distance: 30 } });
-  glow(ctx, { pos: [BUSH[0], by + 1.6, BUSH[1]], size: 9, color: '#ffd890', opacity: 0.75, pulse: 0.06 });
-  glow(ctx, { pos: [BUSH[0], by + 1.8, BUSH[1]], size: 22, color: '#ffb35a', opacity: 0.3, pulse: 0.04 });
+  flames(ctx, fl, { outer: '#ff8a2c', inner: '#ffe08a', light: { color: '#ffc870', intensity: 22, distance: 24 } });
+  glow(ctx, { pos: [BUSH[0], by + 1.6, BUSH[1]], size: 6.5, color: '#ffd890', opacity: 0.55, pulse: 0.06 });
+  glow(ctx, { pos: [BUSH[0], by + 1.8, BUSH[1]], size: 15, color: '#ffb35a', opacity: 0.18, pulse: 0.04 });
 
   // Moses, his shoes put off, kneeling on holy ground with his staff laid down.
-  person(ctx, { pos: MOSES, face: BUSH, kneel: true, colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#a8724a', hair: '#3a2418', sash: '#c8912e', arms: [0.25, 1.1] } });
+  person(ctx, { pos: MOSES, face: BUSH, kneel: true, scale: 1.3, colors: { robe: '#8c5a3c', mantle: '#e3d6b8', skin: '#a8724a', hair: '#3a2418', sash: '#c8912e', arms: [0.25, 1.1] } });
   const my = ctx.terrainHeight(...MOSES);
   b.add('#6b4a33', cyl(0.045, 0.05, 2.3, [MOSES[0] + 1.1, my + 0.06, MOSES[1] + 0.5], [Math.PI / 2, 0.5, 0], 6));
   for (const s of [-1, 1]) {
@@ -103,8 +103,9 @@ export default {
   custom,
   clouds: { layers: [{ count: 30, distance: [350, 800], height: [80, 180], size: [40, 90], color: '#f6c8a0', shade: '#5a4a6a' }] },
   player: {
-    start: [1.8, 2],
-    lookAt: BUSH,
+    start: [1.8, -1.4],
+    lookAt: [-1.6, -8.6],
+    fov: 42,
     colors: { robe: '#8c5a3c', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
