@@ -1,6 +1,6 @@
 // John 5:2-9. The pool of Bethesda in Jerusalem: two pools ringed by four porches with a fifth between them,
 // the sick lying on mats in the shade. Christ stands on the middle porch over the man who has waited 38 years.
-import { person, createWater, house } from './lib/nt-13-kit.js';
+import { person, createWater, house, sickBed } from './lib/nt-13-kit.js';
 
 const FY = 1.5;
 const ROOF = FY + 5;
@@ -17,7 +17,7 @@ const lying = [];
 {
   let s = 7;
   const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
-  const add = (x, z, yaw) => (r() < 0.35 ? lying.push([x, z, yaw]) : sickPoints.push([x, z]));
+  const add = (x, z, yaw) => (r() < 0.55 ? lying.push([x, z, yaw]) : sickPoints.push([x, z]));
   for (let x = -19; x <= 19; x += 2.6) {
     if (Math.abs(x) < 2.5) continue;
     add(x + r() * 0.6, -15 + r() * 1.8, 0);
@@ -27,7 +27,8 @@ const lying = [];
     add(-18 + r() * 1.5, z + r() * 0.5, Math.PI / 2);
     if (z < -1 || z > 5) add(18 - r() * 1.5, z + r() * 0.5, -Math.PI / 2);
   }
-  for (let x = -12; x <= 12; x += 2.8) if (x < -3 || x > 4) add(x + r() * 0.5, (r() < 0.5 ? -1 : 1) * 1.25, 0);
+  lying.push([-3.9, 1.35, Math.PI / 2], [-7.0, -1.25, Math.PI / 2], [-10.4, -1.25, Math.PI / 2], [6.6, -1.25, -Math.PI / 2], [10.2, 1.3, -Math.PI / 2]);
+  sickPoints.push([-9.4, 1.2], [-12.2, -1.2], [4.6, 1.3], [8.4, 1.2], [12, -1.2]);
 }
 
 export default {
@@ -46,7 +47,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.38, shadowTint: '#3a3060', highlightTint: '#fff0d0' },
   shadow: { center: [0, 0], radius: 40 },
 
-  player: { start: [3.6, 16.4], yaw: 0.2, pitch: -0.06, eye: 1.65, speed: 3.5 },
+  player: { start: [-7.0, 1.2], yaw: -1.62, pitch: -0.15, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 1100,
@@ -144,9 +145,10 @@ export default {
 
     // The sick lying on mats.
     const robes = ['#8b6b4a', '#a0825c', '#6e5a44', '#b59a72', '#c4b090', '#94704e', '#d8cdb5'];
+    const blankets = ['#8c3a2a', '#4f5f78', '#6b6f3a', '#7a4e36', '#a0624a', '#5e4b6a', '#8a7a5a', '#3f5a52'];
+    const hair = ['#2e2018', '#4a3426', '#6a6058', '#d8d0c4'];
     lying.forEach(([x, z, yaw], i) => {
-      ctx.solid.box(0.9, 0.05, 2.0, { position: [x, FY + 0.08, z], rotation: [0, yaw, 0], color: i % 2 ? '#a8865a' : '#8d7350', jitter: 0.06 });
-      person(ctx, { x: x + Math.sin(yaw) * 0.8, z: z + Math.cos(yaw) * 0.8, y: FY, yaw: yaw + Math.PI, pose: 'supine', robe: robes[i % robes.length], skin: '#9b6a46', collide: false, hood: i % 3 === 0, mantle: i % 2 ? '#5a3d2b' : undefined });
+      sickBed(ctx, { x, z, y: FY, yaw, robe: robes[i % robes.length], blanket: blankets[(i * 3) % blankets.length], skin: i % 3 ? '#9b6a46' : '#a87652', mat: i % 2 ? '#a8865a' : '#8d7350', hair: hair[i % hair.length] });
     });
     for (const [x, z] of sickPoints) ctx.solid.box(1.0, 0.05, 1.6, { position: [x, FY + 0.08, z], rotation: [0, x * 0.3, 0], color: '#9c7c52', jitter: 0.08 });
 
@@ -159,7 +161,7 @@ export default {
       light: { color: '#fff0cf', intensity: 18, distance: 14 },
       halo: { size: 3.6, opacity: 0.4, color: '#fff3d6' },
     });
-    for (const [x, z, face] of [[3.6, 0.9, [1, 1.1]], [4.6, -1.0, [1, 1.1]], [-3.2, -1.0, [-0.9, 1.3]]]) {
+    for (const [x, z, face] of [[3.4, 0.9, [1, 1.1]], [3.0, -1.2, [1, 1.1]], [-0.4, -1.3, [-0.9, 1.3]]]) {
       person(ctx, { x, z, y: FY, face, robe: '#7a5d42', mantle: '#4f3f30', skin: '#8a5a3c', hood: true });
     }
 

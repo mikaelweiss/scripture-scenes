@@ -10,9 +10,9 @@ const disciples = [
   { x: -0.75, z: -2.7, pose: 'kneel', hood: true },
   { x: 0.55, z: -3.0, pose: 'stand', arms: 'out' },
   { x: 0.05, z: -3.7, pose: 'kneel', hood: true },
-  { x: -0.85, z: 0.7, pose: 'kneel' },
-  { x: 0.85, z: 1.05, pose: 'sit', hood: true },
-  { x: -1.0, z: 1.25, pose: 'stand' },
+  { x: -0.85, z: 0.9, pose: 'kneel' },
+  { x: 1.0, z: 1.2, pose: 'sit', hood: true },
+  { x: 0.95, z: -2.0, pose: 'kneel' },
   { x: -0.95, z: -1.6, pose: 'sit' },
 ];
 
@@ -35,7 +35,7 @@ export default {
   grade: { saturation: 0.95, contrast: 1.1, vignette: 0.5, shadowTint: '#1a2433', highlightTint: '#ffe6c8' },
   shadow: { center: [0, 0], radius: 20 },
 
-  player: { start: [-0.1, 3.9], yaw: 0.08, pitch: -0.04, eye: 1.65, speed: 2.5 },
+  player: { start: [0.0, 3.0], yaw: 0.04, pitch: -0.02, eye: 1.65, speed: 2.5 },
 
   terrain: {
     size: 1500,
@@ -62,17 +62,17 @@ export default {
 
     disciples.forEach((d, i) => {
       person(ctx, {
-        ...d, y: deck, parent: boat.group, face: [0.25, -0.6],
+        ...d, y: deck, parent: boat.group, face: [0.25, -0.4],
         robe: robes[i % robes.length], mantle: mantles[i % mantles.length], skin: skins[i % skins.length],
       });
       ctx.colliders.add({ x: d.x, z: d.z, w: 0.6, d: 0.6, bottom: deck, top: deck + 1.8 });
     });
     person(ctx, {
-      x: 0.25, z: -0.6, y: deck, parent: boat.group, face: [8, 2.5], robe: '#f6f1e6', mantle: '#ece3d0', skin: '#a8754f', arms: 'out', emissive: 0.35, scale: 1.05,
+      x: 0.25, z: -0.4, y: deck, parent: boat.group, face: [8, 3.5], robe: '#f6f1e6', mantle: '#ece3d0', skin: '#a8754f', arms: 'out', emissive: 0.35, scale: 1.05,
       light: { color: '#fff0d0', intensity: 14, distance: 14 },
       halo: { size: 3.2, opacity: 0.45, color: '#fff3d6' },
     });
-    ctx.colliders.add({ x: 0.25, z: -0.6, w: 0.6, d: 0.6, bottom: deck, top: deck + 1.9 });
+    ctx.colliders.add({ x: 0.25, z: -0.4, w: 0.6, d: 0.6, bottom: deck, top: deck + 1.9 });
 
     const others = [[-34, -52, 0.6], [46, -88, -0.4], [-70, 30, 1.2]].map(([x, z, rot], i) => {
       const b = createBoat(ctx, { len: 7.5, beam: 2.4, seed: 30 + i, sail: '#c9b896' });

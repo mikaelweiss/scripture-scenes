@@ -280,3 +280,111 @@ export function skyUniforms(scene) {
   });
   return found;
 }
+
+// A sick person lying on a mat under a blanket, head on a rolled cloth at local -z.
+export function sickBed(ctx, { x, z, y, yaw = 0, robe = '#8b6b4a', blanket = '#b59a72', skin = '#9b6a46', mat = '#9c7c52', hair = '#3a2a20' }) {
+  const base = y ?? ctx.heightAt(x, z);
+  const at = frame(x, z, yaw);
+  const put = (geo, lx, ly, lz, color, jitter = 0.05, rot = [0, 0, 0]) => {
+    const [px, pz] = at(lx, lz);
+    ctx.solid.add(geo, { position: [px, base + ly, pz], rotation: [rot[0], yaw + rot[1], rot[2]], color, jitter });
+  };
+  put(new THREE.BoxGeometry(1.0, 0.06, 2.15), 0, 0.04, 0.05, mat, 0.07);
+  put(new THREE.CylinderGeometry(0.12, 0.12, 0.62, 6).rotateZ(Math.PI / 2), 0, 0.17, -0.86, '#d8ccb0');
+  put(new THREE.IcosahedronGeometry(0.15, 0).scale(1, 0.95, 1.1), 0, 0.3, -0.74, skin, 0.03);
+  put(new THREE.IcosahedronGeometry(0.15, 0).scale(1.05, 0.7, 0.85), 0, 0.24, -0.84, hair, 0.04);
+  put(new THREE.BoxGeometry(0.56, 0.24, 0.3), 0, 0.17, -0.48, robe);
+  put(new THREE.BoxGeometry(0.66, 0.16, 1.25), 0, 0.13, 0.18, blanket, 0.06);
+  put(new THREE.BoxGeometry(0.48, 0.08, 1.1), 0, 0.24, 0.12, blanket, 0.06);
+  put(new THREE.BoxGeometry(0.66, 0.07, 0.14), 0, 0.28, -0.38, '#e2d6bc', 0.03);
+  put(new THREE.BoxGeometry(0.34, 0.16, 0.18), 0, 0.27, 0.74, blanket, 0.06);
+  for (const lz of [0.42, 0.56]) put(new THREE.BoxGeometry(0.68, 0.17, 0.06), 0, 0.135, lz, '#e6dcc4', 0.02);
+  for (const side of [-1, 1]) {
+    const spread = 0.32;
+    put(new THREE.CylinderGeometry(0.06, 0.065, 0.44, 5).rotateX(Math.PI / 2), side * 0.22, 0.31, -0.2, robe, 0.04, [0, -side * spread, 0]);
+    put(new THREE.BoxGeometry(0.11, 0.08, 0.14), side * (0.22 - 0.26 * Math.sin(spread)), 0.32, -0.2 + 0.26 * Math.cos(spread), skin, 0.03);
+  }
+}
+
+const UP = new THREE.Vector3(0, 1, 0);
+
+// A cylinder between two local points around an anchor, batched into ctx.solid.
+function limb(ctx, at, base, yaw, a, b, r0, r1, color, sides = 6) {
+  const va = new THREE.Vector3(...a), vb = new THREE.Vector3(...b);
+  const dir = vb.clone().sub(va);
+  const geo = new THREE.CylinderGeometry(r1, r0, dir.length(), sides);
+  geo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(UP, dir.normalize()));
+  const m = va.add(vb).multiplyScalar(0.5);
+  const [px, pz] = at(m.x, m.z);
+  ctx.solid.add(geo, { position: [px, base + m.y, pz], rotation: [0, yaw, 0], color, jitter: 0.05 });
+}
+
+// A person fallen on their face: kneeling, back bent, forehead and hands to the ground toward `face`.
+export function prostrate(ctx, { x, z, y, face, robe = '#7a5f44', mantle, skin = '#9b6a46', hair = '#3a2a20', scale = 1 }) {
+  const base = y ?? ctx.heightAt(x, z);
+  const yaw = Math.atan2(face[0] - x, face[1] - z);
+  const at = frame(x, z, yaw);
+  const s = scale;
+  const L = (p) => p.map((v) => v * s);
+  const put = (geo, p, color, rot = [0, 0, 0]) => {
+    const [px, pz] = at(p[0] * s, p[2] * s);
+    ctx.solid.add(geo, { position: [px, base + p[1] * s, pz], rotation: [rot[0], yaw + rot[1], rot[2]], scale: [s, s, s], color, jitter: 0.05 });
+  };
+  put(new THREE.BoxGeometry(0.42, 0.16, 0.62), [0, 0.08, -0.28], robe);
+  limb(ctx, at, base, yaw, L([0, 0.1, 0.02]), L([0, 0.62, -0.28]), 0.25 * s, 0.27 * s, robe, 7);
+  limb(ctx, at, base, yaw, L([0, 0.64, -0.24]), L([0, 0.42, 0.42]), 0.27 * s, 0.2 * s, robe, 7);
+  if (mantle) limb(ctx, at, base, yaw, L([0, 0.72, -0.18]), L([0, 0.52, 0.4]), 0.26 * s, 0.22 * s, mantle, 7);
+  put(new THREE.IcosahedronGeometry(0.14, 0).scale(1, 1.1, 1), [0, 0.17, 0.66], skin);
+  put(new THREE.IcosahedronGeometry(0.15, 0).scale(1.05, 1, 0.9), [0, 0.25, 0.6], mantle ?? hair);
+  for (const side of [-1, 1]) {
+    limb(ctx, at, base, yaw, L([side * 0.22, 0.44, 0.38]), L([side * 0.24, 0.07, 0.86]), 0.065 * s, 0.055 * s, mantle ?? robe, 5);
+    put(new THREE.BoxGeometry(0.11, 0.06, 0.17), [side * 0.24, 0.04, 0.96], skin);
+  }
+}
+
+// A jagged cluster of rock: one tall shard leaning out of a heap of smaller blocks.
+export function outcrop(ctx, { x, z, size = 2, color = '#8a8070', moss = null, collide = true }) {
+  const r = ctx.rand;
+  const y = ctx.heightAt(x, z);
+  const n = 3 + Math.floor(r() * 3);
+  for (let i = 0; i < n; i++) {
+    const a = r() * Math.PI * 2, d = i === 0 ? 0 : r.range(0.3, 0.9) * size;
+    const s = size * (i === 0 ? 1 : r.range(0.35, 0.6));
+    const px = x + Math.cos(a) * d, pz = z + Math.sin(a) * d;
+    ctx.solid.add(new THREE.DodecahedronGeometry(s * 0.6, 0), {
+      position: [px, ctx.heightAt(px, pz) + s * (i === 0 ? 0.45 : 0.15), pz],
+      rotation: [r.range(-0.25, 0.25), r() * 3, r.range(-0.25, 0.25)],
+      scale: [r.range(0.8, 1.1), i === 0 ? r.range(1.2, 1.7) : r.range(0.6, 0.9), r.range(0.7, 1)],
+      color: jitterRock(color, r),
+      jitter: 0.07,
+      shade: (c, ny) => (moss && ny > 0.75 ? c.set(moss) : darkenBottom(c, ny)),
+    });
+  }
+  if (collide) ctx.colliders.add({ x, z, w: size * 1.3, d: size * 1.3, bottom: y - 1, top: y + size * 1.2 });
+}
+
+function jitterRock(color, r) {
+  return new THREE.Color(color).offsetHSL(0, 0, r.range(-0.05, 0.05));
+}
+
+// Mountain grass: small clumps of blades, batched, with a few flowers.
+export function grassTufts(ctx, { center = [0, 0], radius = 12, inner = 0, count = 120, colors = ['#7c8a4a', '#6b7a3e', '#8e9656'], flowers = 0.1, avoid = [] }) {
+  const r = ctx.rand;
+  for (let i = 0; i < count; i++) {
+    const a = r() * Math.PI * 2, d = inner + Math.sqrt(r()) * (radius - inner);
+    const x = center[0] + Math.cos(a) * d, z = center[1] + Math.sin(a) * d;
+    if (avoid.some(([ax, az, ar]) => Math.hypot(x - ax, z - az) < ar)) continue;
+    const y = ctx.heightAt(x, z);
+    const h = r.range(0.25, 0.55);
+    const color = r.pick(colors);
+    for (let k = 0; k < 4; k++) {
+      ctx.solid.add(new THREE.ConeGeometry(0.06, h, 3), {
+        position: [x + r.range(-0.15, 0.15), y + h / 2 - 0.03, z + r.range(-0.15, 0.15)],
+        rotation: [r.range(-0.35, 0.35), r() * 3, r.range(-0.35, 0.35)],
+        color,
+        jitter: 0.08,
+      });
+    }
+    if (r() < flowers) ctx.solid.add(new THREE.OctahedronGeometry(0.06, 0), { position: [x, y + h + 0.02, z], color: r.pick(['#e8e0f0', '#f0d860', '#c890d0']), jitter: 0.05 });
+  }
+}

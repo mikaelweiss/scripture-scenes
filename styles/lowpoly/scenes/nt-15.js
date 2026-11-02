@@ -41,7 +41,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#2e3060', highlightTint: '#ffe4b8' },
   shadow: { center: [0, -10], radius: 70 },
 
-  player: { start: [5, 27], yaw: 0.1, pitch: -0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [3.6, 23.4], yaw: 0.3, pitch: -0.13, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1500,
@@ -109,7 +109,7 @@ export default {
 
     // Disciples standing near Christ and moving among the companies with bread.
     const robes = ['#7b5f45', '#5f6b72', '#8c6f4e', '#6d5a48', '#4f5a62', '#94704e', '#5d4a3a', '#8a5a40'];
-    const near = [[-3.5, 20], [3.6, 20.5], [-5, 17], [5.4, 17.3]];
+    const near = [[-3.5, 20], [-1.6, 21.6], [-5, 17], [5.8, 16.6]];
     near.forEach(([x, z], i) => person(ctx, { x, z, face: [0, -30], robe: robes[i], mantle: '#4a3a2c', skin: '#9b6a46', hood: i % 2 === 0 }));
     const walkers = [[-5.5, -6], [-5.5, -24], [-16.5, -15], [5.5, -42], [27, -8], [-38, -26], [16, -33], [-27, -52]];
     walkers.forEach(([x, z], i) => {

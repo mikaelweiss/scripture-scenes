@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.07, vignette: 0.4, shadowTint: '#3a2e5e', highlightTint: '#ffe6c0' },
   shadow: { center: [0, -8], radius: 40 },
 
-  player: { start: [2.6, 4.5], yaw: 0.14, pitch: 0.04, eye: 1.65, speed: 4 },
+  player: { start: [-1.9, -2.4], yaw: -0.36, pitch: 0.07, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1100,
@@ -96,7 +96,7 @@ export default {
     ctx.colliders.add({ x: tx - 3.2, z: faceZ + 2.1, w: 2.6, d: 0.6, bottom: 0, top: 2.7 });
 
     // Lazarus at the threshold, bound hand and foot with grave clothes and his face bound with a napkin.
-    const laz = person(ctx, { x: tx, z: faceZ + 1.7, y: 0, face: CHRIST, robe: '#ece6d6', skin: '#e4dccb', arms: 'down', scale: 1.0 });
+    const laz = person(ctx, { x: tx, z: faceZ + 2.5, y: 0, face: CHRIST, robe: '#ece6d6', skin: '#e4dccb', arms: 'down', scale: 1.0 });
     const bands = new THREE.MeshLambertMaterial({ color: '#c8bea6' });
     for (const [h, rad] of [[0.3, 0.29], [0.6, 0.255], [0.9, 0.225], [1.2, 0.2], [1.5, 0.15]]) {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.03, 3, 8), bands);
@@ -104,7 +104,7 @@ export default {
       ring.position.y = h;
       laz.add(ring);
     }
-    const lazLight = new THREE.PointLight('#fff2d8', 6, 6, 1.5);
+    const lazLight = new THREE.PointLight('#fff2d8', 12, 9, 1.5);
     lazLight.position.set(tx, 2.2, faceZ + 3);
     ctx.scene.add(lazLight);
 

@@ -3,8 +3,8 @@
 // in the stern; a gap in the starboard rail lets you step out onto the water too. -z is the bow.
 import { person, createWater, createBoat, boatColliders } from './lib/nt-13-kit.js';
 
-const CHRIST = [4.6, -11.5];
-const PETER = [3.4, -8.8];
+const CHRIST = [4.2, -8.4];
+const PETER = [3.0, -6.0];
 
 const disciples = [
   { x: -0.6, z: -3.3, pose: 'stand', arms: 'out' },
@@ -33,7 +33,7 @@ export default {
   grade: { saturation: 0.9, contrast: 1.08, vignette: 0.5, shadowTint: '#101a38', highlightTint: '#e8f0ff' },
   shadow: { center: [2, -6], radius: 22 },
 
-  player: { start: [-0.2, 3.7], yaw: -0.3, pitch: -0.02, eye: 1.65, speed: 3 },
+  player: { start: [0.5, 0.9], yaw: -0.5, pitch: 0.0, eye: 1.65, speed: 3 },
 
   terrain: {
     size: 1400,
@@ -66,9 +66,9 @@ export default {
     boat.group.add(lamp);
 
     const christ = person(ctx, {
-      x: CHRIST[0], z: CHRIST[1], y: 0, face: PETER, robe: '#fbf7ee', mantle: '#ece4d2', skin: '#a8754f', arms: 'out', emissive: 0.55, scale: 1.08,
+      x: CHRIST[0], z: CHRIST[1], y: 0, face: PETER, robe: '#fbf7ee', mantle: '#ece4d2', skin: '#a8754f', arms: 'out', emissive: 0.38, scale: 1.1,
       light: { color: '#f2f0ff', intensity: 40, distance: 26 },
-      halo: { size: 5, opacity: 0.6, color: '#f4f2ff' },
+      halo: { size: 4.2, opacity: 0.38, color: '#f4f2ff' },
     });
     ctx.effects.ring({ position: [CHRIST[0], 0.15, CHRIST[1]], radius: 1.4, width: 0.8, color: '#dfe6ff', opacity: 0.35 });
     const peter = person(ctx, { x: PETER[0], z: PETER[1], y: -0.75, face: CHRIST, robe: '#6e5a44', mantle: '#4a3a2c', skin: '#9b6a46', arms: 'out', collide: false });
