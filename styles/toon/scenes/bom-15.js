@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { BASE_STYLE, GROUND_COLORS, ROBES, boxes, figure, house, makeRng, between, raiseArm, water } from './lib/bom-13-kit.js';
 
 const RIVER = { x: 36, half: 10 };
-const MOSIAH = [-2.5, 6];
-const ZARAHEMLA = [2.5, -2];
+const MOSIAH = [-0.8, 4.2];
+const ZARAHEMLA = [2.2, -0.8];
 const MOSIAH_COLORS = { robe: '#efe3c2', mantle: '#2f6f8a', skin: '#a8724a', hair: '#3a2418', sash: '#c8912e' };
 const ZARA_COLORS = { robe: '#c8912e', mantle: '#7a3a2a', skin: '#9c6a45', hair: '#1f140e', sash: '#e6d8b8' };
 
@@ -135,8 +135,8 @@ export default {
   },
 
   player: {
-    start: [-7, 14],
-    lookAt: [8, -12],
+    start: [-3.8, 2.4],
+    lookAt: [6, -1.2],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

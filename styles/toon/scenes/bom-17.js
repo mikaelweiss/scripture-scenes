@@ -108,17 +108,17 @@ function hall(ctx) {
 }
 
 function people(ctx, floorY) {
-  const noah = kneeling(ctx, NOAH_COLORS, NOAH, { facing: [0, 0], scale: 1.15, bow: -0.05 });
+  const noah = kneeling(ctx, NOAH_COLORS, NOAH, { facing: [0, 0], scale: 1.5, bow: -0.05 });
   noah.position.y = floorY + 0.5 + 0.7 - 0.3;
-  const crown = addMesh(ctx, new THREE.CylinderGeometry(0.16, 0.15, 0.14, 10, 1, true), ctx.kit.toon(GOLD, { side: THREE.DoubleSide }));
-  crown.position.set(NOAH[0], noah.position.y + 1.13 * 1.15 + 0.08, NOAH[1]);
+  const crown = addMesh(ctx, new THREE.CylinderGeometry(0.21, 0.2, 0.18, 10, 1, true), ctx.kit.toon(GOLD, { side: THREE.DoubleSide }));
+  crown.position.set(NOAH[0], noah.position.y + 1.13 * 1.5 + 0.08, NOAH[1]);
 
   const ab = figure(ctx, ABINADI_COLORS, ABINADI, { facing: NOAH, scale: 1.05, clear: 1.5 });
   ab.children[2].material = ctx.kit.toon('#ffe9c0', { emissive: '#d8b070' });
   raiseArm(ctx, ab, ABINADI_COLORS, 1, 2.4);
   const by = ctx.groundHeight(...ABINADI);
-  glow(ctx, [ABINADI[0], by + 1.68, ABINADI[1]], 3.4, '#fff4d0', 1, 0.06);
-  glow(ctx, [ABINADI[0], by + 1.2, ABINADI[1]], 5, '#ffe6b0', 0.3, 0.04);
+  glow(ctx, [ABINADI[0], by + 1.68, ABINADI[1]], 2.6, '#fff4d0', 0.55, 0.06);
+  glow(ctx, [ABINADI[0], by + 1.2, ABINADI[1]], 5, '#ffe6b0', 0.2, 0.04);
   const pl = new THREE.PointLight('#fff0c8', 5, 7, 1.5);
   pl.position.set(ABINADI[0], by + 2.3, ABINADI[1]);
   ctx.scene.add(pl);
@@ -176,8 +176,8 @@ export default {
   },
 
   player: {
-    start: [1.2, -7],
-    lookAt: [0.2, -30],
+    start: [1.8, -10.5],
+    lookAt: [-1.2, -30],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

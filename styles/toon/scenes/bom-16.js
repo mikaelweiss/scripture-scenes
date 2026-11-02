@@ -3,7 +3,7 @@ import { BASE_STYLE, GROUND_COLORS, ROBES, Frame, figure, raiseArm, tents, makeR
 
 const TEMPLE = [0, -78];
 const TOWER = [-15, -34];
-const TOWER_H = 10;
+const TOWER_H = 8.5;
 const BENJAMIN_COLORS = { robe: '#efe3c2', mantle: '#8a2f3a', skin: '#a8724a', hair: '#d9d0c0', sash: '#c8912e' };
 
 function tower(ctx) {
@@ -15,21 +15,21 @@ function tower(ctx) {
   for (const x of [-s, s]) for (const z of [-s, s]) {
     f.box(wood, [0.45, TOWER_H, 0.45], [x, TOWER_H / 2, z], { collide: true });
   }
-  for (const y of [3, 6.5]) {
+  for (const y of [2.8, 5.8]) {
     for (const z of [-s, s]) f.box(dark, [s * 2, 0.22, 0.22], [0, y, z]);
     for (const x of [-s, s]) f.box(dark, [0.22, 0.22, s * 2], [x, y, 0]);
   }
   f.box(k.toon('#9c6b4e'), [s * 2 + 1.4, 0.35, s * 2 + 1.4], [0, TOWER_H + 0.17, 0]);
-  for (const z of [-1, 1]) f.box(k.fretMat('#8a2f3a', '#efe3c2'), [s * 2 + 1.4, 0.8, 0.12], [0, TOWER_H + 0.75, z * (s + 0.7)], { uv: { su: 2.4, sv: 0.8, oy: 0.4, local: true, flatCaps: true } });
-  for (const x of [-1, 1]) f.box(k.fretMat('#8a2f3a', '#efe3c2'), [0.12, 0.8, s * 2 + 1.4], [x * (s + 0.7), TOWER_H + 0.75, 0], { uv: { su: 2.4, sv: 0.8, oy: 0.4, local: true, flatCaps: true } });
-  for (let i = 0; i < 12; i++) f.box(dark, [1.2, 0.12, 0.12], [0, 0.8 * i + 0.5, s + 0.5]);
+  for (const z of [-1, 1]) f.box(k.fretMat('#8a2f3a', '#efe3c2'), [s * 2 + 1.4, 0.5, 0.12], [0, TOWER_H + 0.6, z * (s + 0.7)], { uv: { su: 2.4, sv: 0.5, oy: 0.25, local: true, flatCaps: true } });
+  for (const x of [-1, 1]) f.box(k.fretMat('#8a2f3a', '#efe3c2'), [0.12, 0.5, s * 2 + 1.4], [x * (s + 0.7), TOWER_H + 0.6, 0], { uv: { su: 2.4, sv: 0.5, oy: 0.25, local: true, flatCaps: true } });
+  for (let i = 0; i < TOWER_H / 0.8; i++) f.box(dark, [1.2, 0.12, 0.12], [0, 0.8 * i + 0.5, s + 0.5]);
   for (const x of [-0.6, 0.6]) f.box(dark, [0.12, TOWER_H, 0.12], [x, TOWER_H / 2, s + 0.5]);
   f.box(k.toon('#c8912e'), [0.15, 3, 0.15], [s + 0.5, TOWER_H + 1.8, -s - 0.5]);
   f.box(k.toon('#8a2f3a'), [1.4, 0.9, 0.05], [s + 1.2, TOWER_H + 2.8, -s - 0.5]);
   f.build();
   ctx.exclude({ kind: 'circle', x: TOWER[0], z: TOWER[1], r: 5 });
   const y = ctx.terrainHeight(TOWER[0], TOWER[1]) + TOWER_H + 0.35;
-  const b = figure(ctx, BENJAMIN_COLORS, [TOWER[0], TOWER[1] + 0.6], { facing: [5, 40], y, scale: 1.25, clear: 0 });
+  const b = figure(ctx, BENJAMIN_COLORS, [TOWER[0], TOWER[1] + 0.6], { facing: [-6, 40], y, scale: 1.7, clear: 0 });
   raiseArm(ctx, b, BENJAMIN_COLORS, 1, 2.3);
   raiseArm(ctx, b, BENJAMIN_COLORS, -1, 0.5);
 }
@@ -107,8 +107,8 @@ export default {
   },
 
   player: {
-    start: [-10.6, -4],
-    lookAt: [-10, -44],
+    start: [-11.4, -12],
+    lookAt: [-15.5, -40],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

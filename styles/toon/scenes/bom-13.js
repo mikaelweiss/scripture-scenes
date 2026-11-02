@@ -68,7 +68,7 @@ export default {
 
   custom(ctx) {
     houses(ctx);
-    const jacob = figure(ctx, JACOB_COLORS, JACOB, { facing: [0, 20], scale: 1.04 });
+    const jacob = figure(ctx, JACOB_COLORS, JACOB, { facing: [0, 20], scale: 1.12 });
     raiseArm(ctx, jacob, JACOB_COLORS, 1, 2.5);
     figure(ctx, SHEREM_COLORS, SHEREM, { facing: [8, -3], pose: 'lying', clear: 1.8 });
     const y = ctx.groundHeight(SHEREM[0], SHEREM[1]);
@@ -86,7 +86,7 @@ export default {
     minSpacing: 0.62,
     facing: SHEREM,
     colors: ROBES,
-    aisles: [{ from: [0, 30], to: [0, 2], width: 3.4 }],
+    aisles: [{ from: [-1, 30], to: [-1, 0], width: 6 }],
     keepClear: [{ kind: 'circle', x: 0.3, z: -4.5, r: 4.6 }, { kind: 'rect', x: 0, z: -9.5, hx: 3.4, hz: 2.6 }],
     groups: [
       { center: [0.3, -4.5], radius: [5, 20], angle: [-2.35, 2.35], count: 480, kneel: 0.08, children: 0.12 },
@@ -94,8 +94,8 @@ export default {
   },
 
   player: {
-    start: [0, 3.5],
-    lookAt: [0, -5],
+    start: [-1.9, 1.6],
+    lookAt: [-0.2, -8],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

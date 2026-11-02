@@ -71,7 +71,7 @@ export default {
 
   sky: { zenith: '#151c44', mid: '#4a4a7c', horizon: '#e8986a', ground: '#2e2a40', glowColor: '#ffc27a', glowDir: [-0.9, 0.08, 0.2] },
 
-  sun: { dir: [-0.85, 0.32, 0.25], color: '#ffb27a', intensity: 1.5, hemi: { sky: '#7b7cb8', ground: '#3b2e3a', intensity: 1.4 }, shadowSize: 45 },
+  sun: { dir: [-0.85, 0.32, 0.25], color: '#ffb27a', intensity: 1.9, hemi: { sky: '#9a9ccf', ground: '#5a4a50', intensity: 2.0 }, shadowSize: 45 },
 
   ground: {
     size: 900, segments: 220, flatRadius: 60, hillHeight: 26, undulation: 0.35,
@@ -88,17 +88,10 @@ export default {
   ],
 
   custom(ctx) {
-    kneeling(ctx, ENOS_COLORS, ENOS, { facing: [-20, -9], bow: 0.18 });
+    kneeling(ctx, ENOS_COLORS, ENOS, { facing: [-20, -9], bow: 0.18, scale: 1.2 });
     gear(ctx);
     stars(ctx, { count: 700, minY: 0.3 });
     moon(ctx);
-    let named = false;
-    ctx.onFrame(() => {
-      if (named) return;
-      const p = document.querySelector('.hud-title p');
-      if (p) p.textContent = 'Alone among the trees, from day into night';
-      named = !!p;
-    });
     const rng = makeRng(41);
     const ferns = [];
     for (let i = 0; i < 90; i++) {
@@ -123,7 +116,7 @@ export default {
   light: {
     beams: [{ from: [ENOS[0] - 4, 60, ENOS[1] - 6], to: { at: ENOS, lift: 0.5 }, width: [7, 2.6], color: '#fff2c9', intensity: 0.14, layers: 2, stripes: 18, fadeLow: 0.08 }],
     glows: [{ at: ENOS, lift: 0.9, size: 5, color: '#ffe9b8', opacity: 0.4 }],
-    pointLights: [{ at: ENOS, lift: 3, color: '#ffe6b0', intensity: 6, distance: 14 }],
+    pointLights: [{ at: ENOS, lift: 3, color: "#ffe6b0", intensity: 10, distance: 18 }],
   },
 
   clouds: {
@@ -134,8 +127,8 @@ export default {
   },
 
   player: {
-    start: [2.2, 0.5],
-    lookAt: [5, -9],
+    start: [-2.9, -5.6],
+    lookAt: [6.6, -8.6],
     colors: { robe: '#7a6a52', mantle: '#4f7f80', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

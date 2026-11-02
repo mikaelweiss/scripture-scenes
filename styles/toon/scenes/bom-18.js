@@ -5,8 +5,8 @@ import { BASE_STYLE, GROUND_COLORS, ROBES, boxes, figure, glow, raiseArm, water,
 const POOL = [0, -10];
 const POOL_R = 9;
 const WATER_Y = 0.24;
-const ALMA = [-0.7, -6.6];
-const HELAM = [0.5, -6.9];
+const ALMA = [-2.4, -4.4];
+const HELAM = [-1.2, -4.7];
 const ALMA_COLORS = { robe: '#e6d8b8', mantle: '#c8b48a', skin: '#a8724a', hair: '#8a7a6a' };
 const HELAM_COLORS = { robe: '#d9c7a3', mantle: '#8c5a3c', skin: '#9c6a45', hair: '#2b1a12' };
 
@@ -105,9 +105,9 @@ export default {
   custom(ctx) {
     pool(ctx);
     const sink = WATER_Y - 0.75;
-    const alma = figure(ctx, ALMA_COLORS, ALMA, { facing: [HELAM[0], HELAM[1] + 3], y: sink, clear: 0 });
+    const alma = figure(ctx, ALMA_COLORS, ALMA, { facing: [HELAM[0], HELAM[1] + 3], y: sink, clear: 0, scale: 1.1 });
     raiseArm(ctx, alma, ALMA_COLORS, 1, 2.6);
-    figure(ctx, HELAM_COLORS, HELAM, { facing: [ALMA[0], ALMA[1] + 2], y: sink, clear: 0 });
+    figure(ctx, HELAM_COLORS, HELAM, { facing: [ALMA[0], ALMA[1] + 2], y: sink, clear: 0, scale: 1.1 });
     glow(ctx, [(ALMA[0] + HELAM[0]) / 2, 1.6, ALMA[1]], 4, '#fff6d8', 0.3);
     ctx.exclude({ kind: 'circle', x: POOL[0], z: POOL[1], r: POOL_R + 1.4 });
   },
@@ -121,16 +121,16 @@ export default {
     minSpacing: 0.66,
     facing: ALMA,
     colors: ROBES,
-    aisles: [{ from: [0, 30], to: [0, 0], width: 3 }],
+    aisles: [{ from: [0.8, 30], to: [0.4, 0], width: 4.4 }],
     groups: [
       { center: POOL, radius: [POOL_R + 1.4, 20], angle: [-2.4, 2.4], count: 190, kneel: 0.12, children: 0.12 },
-      { center: [3.5, 0.4], radius: [0, 1.6], count: 6, insideClear: true, facing: ALMA },
+      { center: [4.6, 1.2], radius: [0, 1.6], count: 6, insideClear: true, facing: ALMA },
     ],
   },
 
   player: {
-    start: [1.5, 2],
-    lookAt: [-0.5, -8],
+    start: [0.6, -0.4],
+    lookAt: [-1.2, -8],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
