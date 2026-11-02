@@ -15,20 +15,17 @@ function fieryTeam(ctx, { x, y, z, yaw, pitch, scale = 1 }) {
   group.rotation.set(pitch, yaw, 0);
   group.scale.setScalar(scale);
   const geo = teamGeometry({ horses: 4, gallop: 0.7 });
-  group.add(new THREE.Mesh(geo, glowMaterial('#ff7a22', 1.4)));
-  const shell = new THREE.Mesh(geo, glowMaterial('#ffd060', 1.3, { transparent: true, opacity: 0.35, depthWrite: false }));
-  shell.scale.setScalar(1.08);
-  group.add(shell);
+  group.add(new THREE.Mesh(geo, glowMaterial('#ffb060', 1.0)));
   const cone = new THREE.ConeGeometry(0.22, 1, 4).translate(0, 0.5, 0);
   const flames = [];
   const r = ctx.rand;
-  const mats = ['#ff5a14', '#ff9a2a', '#ffd060'].map((c) => glowMaterial(c, 1.7));
-  for (let i = 0; i < 70; i++) {
+  const mats = ['#ff5a14', '#ff8a2a', '#ffb040'].map((c) => glowMaterial(c, 1.8, { transparent: true, opacity: 0.85, depthWrite: false }));
+  for (let i = 0; i < 60; i++) {
     const m = new THREE.Mesh(cone, mats[i % 3]);
     const row = r();
-    m.position.set(r.range(-0.9, 0.9), r.range(0.6, 2.2), row < 0.3 ? r.range(-0.4, 0.8) : r.range(2.6, 8));
+    m.position.set((r() < 0.5 ? -1 : 1) * r.range(0.4, 0.9), r.range(1.2, 2.2), row < 0.3 ? r.range(-0.8, 0.2) : r.range(2.6, 8));
     m.rotation.set(r.range(-0.6, -1.3), 0, r.range(-0.3, 0.3));
-    m.scale.setScalar(r.range(0.6, 1.6));
+    m.scale.setScalar(r.range(0.5, 1.1));
     group.add(m);
     flames.push({ m, s: m.scale.x, ph: r() * 9 });
   }
@@ -55,11 +52,11 @@ export default {
   fog: { color: '#9a8a7a', near: 80, far: 560 },
   clouds: { count: 110, shadow: '#2a2a38', lit: '#d08a5a', rim: '#ffd8a0', distance: [150, 800], altitude: [70, 200], hole: 0.15, seed: 33 },
   mountains: { count: 40, color: '#6a5e50', radius: [500, 720], height: [60, 140], haze: 0.5 },
-  bloom: { strength: 0.8, radius: 0.6, threshold: 0.8 },
+  bloom: { strength: 0.55, radius: 0.4, threshold: 0.9 },
   grade: { saturation: 1.12, contrast: 1.08, vignette: 0.45, shadowTint: '#2a2850', highlightTint: '#ffd8a8' },
   shadow: { center: [-6, -6], radius: 60 },
 
-  player: { start: [7, 11], yaw: 0.12, pitch: 0.26, eye: 1.65, speed: 4.5 },
+  player: { start: [8, 11], yaw: 0.24, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -108,14 +105,14 @@ export default {
     water(ctx, { y: -0.75, geometry: riverGeometry(RIVER, 22, 8), color: '#5a7a74', opacity: 0.9, amp: 0.06 });
     reeds(ctx, RIVER, { offset: 9.5, spread: 2.5, every: 4 });
     whirlwind(ctx, { x: ELIJAH[0], z: ELIJAH[1], y: ctx.heightAt(...ELIJAH), height: 44, radius: 3.2, color: '#f0d8b0', opacity: 0.13, motes: 400 });
-    const lift = figure(ctx, { x: ELIJAH[0], z: ELIJAH[1], y: 19, face: ELISHA, robe: '#5e4a36', skin: '#9b6a46', arms: 'out', emissive: 0.15, scale: 1.3, collide: false, halo: { size: 5, opacity: 0.4, color: '#ffe0b0' } });
+    const lift = figure(ctx, { x: ELIJAH[0], z: ELIJAH[1], y: 13, face: ELISHA, robe: '#5e4a36', skin: '#9b6a46', arms: 'out', emissive: 0.3, scale: 1.5, collide: false, halo: { size: 5, opacity: 0.4, color: '#ffe0b0' } });
     lift.traverse((m) => {
       if (!m.material) return;
       m.material.transparent = true;
       m.renderOrder = 20;
     });
-    ctx.onFrame((t) => (lift.position.y = 19 + Math.sin(t * 0.6) * 0.4));
-    fieryTeam(ctx, { x: -5, y: 6, z: -4, scale: 1.5, yaw: Math.PI / 2 + 0.25, pitch: -0.28 });
+    ctx.onFrame((t) => (lift.position.y = 13 + Math.sin(t * 0.6) * 0.4));
+    fieryTeam(ctx, { x: -12, y: 6.5, z: -12, scale: 1.8, yaw: Math.PI / 2 - 0.05, pitch: -0.2 });
     figure(ctx, { x: ELISHA[0], z: ELISHA[1], face: ELIJAH, robe: '#7a5c40', mantle: '#4f5a6b', skin: '#a87652', arms: 'reach', scale: 1.02 });
     const y = ctx.heightAt(2.8, -0.6);
     ctx.solid.add(new THREE.BoxGeometry(1.3, 0.06, 0.9), { position: [2.8, y + 0.04, -0.6], rotation: [0.03, 0.6, -0.02], color: '#3b2c20' });

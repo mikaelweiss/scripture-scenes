@@ -115,7 +115,7 @@ export default {
   grade: { saturation: 1.14, contrast: 1.08, vignette: 0.5, shadowTint: '#2a2050', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -10], radius: 40 },
 
-  player: { start: [0.8, -5], yaw: 0, pitch: 0.08, eye: 1.65, speed: 3.5 },
+  player: { start: [1.8, -11.5], yaw: 0.08, pitch: 0.07, eye: 1.65, speed: 3.5 },
 
   terrain: { size: 400, segments: 40, seed: 37, hills: 0, bumps: 0, colors: { ground: '#a08a68', groundAlt: '#a08a68', grass: '#a08a68', rock: '#a08a68' } },
 

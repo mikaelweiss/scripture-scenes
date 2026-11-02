@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { figure, water, channelFlats, riverGeometry, reeds, chariotGeometry, horseGeometry, instances } from './lib/ot-31-kit.js';
 
 const RIVER = [[-340, -6], [-140, -2], [-50, -10], [10, -6], [90, -14], [340, -6]];
-const NAAMAN = [0, -4];
+const NAAMAN = [0.5, -1.2];
 const WATER_Y = -0.7;
 
 function chariotTeam(ctx, { x, z, yaw }) {
@@ -36,7 +36,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.32, shadowTint: '#2a3050', highlightTint: '#fff2d8' },
   shadow: { center: [2, 0], radius: 50 },
 
-  player: { start: [-3, 13], yaw: -0.36, pitch: -0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [-2.6, 10.8], yaw: -0.42, pitch: -0.12, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,

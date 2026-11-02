@@ -84,11 +84,11 @@ export default {
   fog: { color: '#8e6656', near: 70, far: 520 },
   clouds: { count: 80, shadow: '#24222e', lit: '#c88060', rim: '#ffe0b0', distance: [200, 900], altitude: [90, 260], hole: 0.25, seed: 31 },
   mountains: { count: 36, color: '#5a5a52', radius: [560, 780], height: [30, 90], haze: 0.6 },
-  bloom: { strength: 0.75, radius: 0.6, threshold: 0.8 },
+  bloom: { strength: 0.6, radius: 0.5, threshold: 0.82 },
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.45, shadowTint: '#2a2450', highlightTint: '#ffd6a0' },
   shadow: { center: [-6, -8], radius: 60 },
 
-  player: { start: [1.5, 8], yaw: 0.16, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [4.8, 0.8], yaw: 0.74, pitch: 0.06, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -136,8 +136,8 @@ export default {
   },
 
   effects: [
-    { type: 'beam', at: ALTAR, height: 320, radiusBottom: 2.2, radiusTop: 14, color: '#ff8a2a', opacity: 0.95 },
-    { type: 'beam', at: ALTAR, height: 320, radiusBottom: 1.2, radiusTop: 6, color: '#ffd27a', opacity: 0.8 },
+    { type: 'beam', at: ALTAR, height: 320, radiusBottom: 1.8, radiusTop: 12, color: '#ff8a2a', opacity: 0.6 },
+    { type: 'beam', at: ALTAR, height: 320, radiusBottom: 0.9, radiusTop: 5, color: '#ffd27a', opacity: 0.6 },
     { type: 'motes', at: ALTAR, radius: 4, height: 60, count: 260, color: '#ffb050', size: 0.12 },
     { type: 'ring', at: ALTAR, lift: 0.1, radius: 3.4, width: 1.4, color: '#ff9a40', opacity: 0.7 },
     { type: 'smoke', at: ALTAR, lift: 2, count: 10, height: 40, size: 1.4, color: '#8a7a72', wind: [0.6, 0.2] },

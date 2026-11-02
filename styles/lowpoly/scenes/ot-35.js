@@ -3,6 +3,7 @@
 // The player stands with Elisha on the north gate tower looking out. -z is north.
 import * as THREE from 'three';
 import { figure, glowMaterial, teamGeometry, chariotGeometry, horseGeometry, instances } from './lib/ot-31-kit.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { rng } from '../engine/util.js';
 
 const CITY = [0, 20];
@@ -78,30 +79,52 @@ function syrianHost(ctx) {
   }
 }
 
+// Flame tongues in team space: over each wheel, along the horses' backs and manes, and streaming behind the car.
+function flameGeometry() {
+  const r = rng(38);
+  const cones = [];
+  const tongue = (x, y, z, h, w, lean) => cones.push(new THREE.ConeGeometry(w * 1.2, h * 1.3, 4).translate(0, h / 2, 0).rotateX(-lean).translate(x, y, z).toNonIndexed());
+  for (const side of [-1, 1]) {
+    for (let k = 0; k < 3; k++) tongue(side * 0.7, 1.0 + k * 0.1, -0.3 - k * 0.35, 0.9 - k * 0.15, 0.16, 0.9);
+    for (let k = 0; k < 3; k++) tongue(side * 0.42, 1.55, 2.6 + k * 0.5, 0.7, 0.12, 0.8);
+    tongue(side * 0.42, 1.95, 4.0, 0.8, 0.12, 0.9);
+  }
+  for (let k = 0; k < 5; k++) tongue(r.range(-0.5, 0.5), 1.3, -0.4 - k * 0.3, 1.1 - k * 0.12, 0.2, 1.1);
+  return mergeGeometries(cones.map((g) => { for (const a of Object.keys(g.attributes)) if (a !== 'position') g.deleteAttribute(a); return g; }));
+}
+
 function hostsOfFire(ctx) {
   const r = rng(37);
-  const list = [];
-  for (let i = 0; i < 200; i++) {
-    const a = -Math.PI / 2 + r.range(-2.2, 2.2), d = r.range(130, 280);
+  const spots = [];
+  for (let i = 0; i < 3000; i++) {
+    const a = -Math.PI / 2 + r.range(-1.3, 1.3), d = r.range(140, 280);
     const x = CITY[0] + Math.cos(a) * d, z = CITY[1] + Math.sin(a) * d;
-    list.push({ x, z, y: ctx.heightAt(x, z) + r.range(0, 4), yaw: Math.atan2(CITY[0] - x, CITY[1] - z) + r.range(-0.4, 0.4), scale: r.range(2.4, 3.4), pitch: r.range(-0.15, 0.05) });
+    spots.push({ x, z, d, y: ctx.heightAt(x, z) });
   }
-  const team = teamGeometry({ horses: 2, gallop: 0.8 });
-  const core = instances(ctx, team, glowMaterial('#ff7a20', 1.5), list, { shadow: false });
-  const halo = instances(ctx, team, glowMaterial('#ffd060', 1.2, { transparent: true, opacity: 0.35, depthWrite: false }), list.map((p) => ({ ...p, scale: p.scale * 1.15 })), { shadow: false });
-  const flame = new THREE.ConeGeometry(0.6, 3, 4).translate(0, 1.5, 0);
-  const tongues = [];
-  for (const p of list) for (let k = 0; k < 3; k++) tongues.push({ x: p.x + r.range(-2, 2), z: p.z + r.range(-2, 2), y: p.y + r.range(0, 2), yaw: r() * 3, scale: r.range(0.8, 1.8) });
-  const flames = instances(ctx, flame, glowMaterial('#ffb040', 1.7), tongues, { shadow: false });
+  spots.sort((p, q) => q.y - q.d * 0.05 - (p.y - p.d * 0.05));
+  const list = [];
+  for (const s of spots) {
+    if (list.length >= 20) break;
+    if (list.some((p) => Math.hypot(p.x - s.x, p.z - s.z) < 40)) continue;
+    const across = Math.atan2(CITY[0] - s.x, CITY[1] - s.z) + (r() < 0.5 ? 1 : -1) * Math.PI / 2;
+    list.push({ x: s.x, z: s.z, y: s.y + 1.5, yaw: across + r.range(-0.3, 0.3), scale: 6 + (s.d - 140) * 0.03 });
+  }
+  for (let tries = 0; tries < 2000 && list.length < 32; tries++) {
+    const a = -Math.PI / 2 + r.range(-1.2, 1.2), d = r.range(115, 175);
+    const x = CITY[0] + Math.cos(a) * d, z = CITY[1] + Math.sin(a) * d;
+    if (list.some((p) => Math.hypot(p.x - x, p.z - z) < 30)) continue;
+    const across = Math.atan2(CITY[0] - x, CITY[1] - z) + (r() < 0.5 ? 1 : -1) * Math.PI / 2;
+    list.push({ x, z, y: ctx.heightAt(x, z) + r.range(3, 9), yaw: across + r.range(-0.3, 0.3), scale: r.range(4.6, 5.4) });
+  }
+  const core = instances(ctx, teamGeometry({ horses: 2, gallop: 0.8 }), glowMaterial('#ffc27a', 1.0), list, { shadow: false });
+  const flames = instances(ctx, flameGeometry(), glowMaterial('#ff8a24', 1.35, { transparent: true, opacity: 0.85, depthWrite: false }), list, { shadow: false });
   ctx.onFrame((t) => {
-    const k = 0.92 + 0.08 * Math.sin(t * 9) * Math.sin(t * 5.3);
-    core.material.color.setRGB(1.5 * k, 0.72 * k, 0.19 * k);
-    flames.material.color.setRGB(1.7 * k, 1.2 * k, 0.4 * k);
-    halo.material.opacity = 0.3 + 0.1 * Math.sin(t * 3);
+    const k = 0.9 + 0.1 * Math.sin(t * 9) * Math.sin(t * 5.3);
+    flames.material.color.setRGB(2.0 * k, 0.95 * k, 0.25 * k);
   });
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 8; i++) {
     const p = list[Math.floor(r() * list.length)];
-    ctx.effects.halo({ position: [p.x, p.y + 6, p.z], size: 60, opacity: 0.35, color: '#ff9a40' });
+    ctx.effects.halo({ position: [p.x, p.y + 4, p.z], size: 40, opacity: 0.18, color: '#ff9a40' });
   }
 }
 
@@ -117,7 +140,7 @@ export default {
   fog: { color: '#a48078', near: 120, far: 640 },
   clouds: { count: 60, shadow: '#3a3450', lit: '#f0a080', rim: '#ffe0c0', distance: [250, 900], altitude: [100, 240], hole: 0.3, seed: 35 },
   mountains: { count: 40, color: '#4e4a52', radius: [520, 760], height: [50, 120], haze: 0.5 },
-  bloom: { strength: 0.8, radius: 0.65, threshold: 0.78 },
+  bloom: { strength: 0.5, radius: 0.35, threshold: 0.9 },
   grade: { saturation: 1.12, contrast: 1.08, vignette: 0.42, shadowTint: '#2a2858', highlightTint: '#ffd8b0' },
   shadow: { center: [0, -30], radius: 90 },
 

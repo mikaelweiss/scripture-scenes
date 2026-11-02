@@ -9,8 +9,8 @@ const rockColor = '#6e5648';
 function cave(ctx) {
   const { THREE, solid, rand: r } = ctx;
   const y0 = 0;
-  for (let z = -1.2; z <= 10; z += 1.25) {
-    const open = z < 0 ? 0.25 : 0;
+  for (let z = 0.8; z <= 10; z += 1.25) {
+    const open = z < 2 ? 0.3 : 0;
     for (let a = open; a <= Math.PI - open + 0.01; a += Math.PI / 7) {
       const rad = 5 + r.range(-0.2, 0.4) - (z > 8 ? (z - 8) * 0.6 : 0);
       solid.add(new THREE.DodecahedronGeometry(1.7, 0), {
@@ -26,7 +26,7 @@ function cave(ctx) {
     solid.add(new THREE.DodecahedronGeometry(2.2, 0), { position: [r.range(-3, 3), r.range(0.5, 4), 11 + r.range(-0.4, 0.4)], rotation: [r() * 3, r() * 3, 0], color: rockColor, jitter: 0.1 });
   }
   for (let i = 0; i < 14; i++) {
-    const z = r.range(-1, 10);
+    const z = r.range(1.6, 10);
     solid.add(new THREE.DodecahedronGeometry(1.8, 0), { position: [r.range(-2, 2), 6.4 + r.range(0, 1.5), z], rotation: [r() * 3, r() * 3, 0], scale: [2, 1, 1.4], color: '#5e483c', jitter: 0.1 });
   }
   for (const side of [-1, 1]) ctx.colliders.add({ x: side * 4.3, z: 4.5, w: 1.6, d: 12, bottom: -2, top: 6 });
@@ -96,7 +96,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.55, shadowTint: '#1e2050', highlightTint: '#ffe0c0' },
   shadow: { center: [0, -6], radius: 45 },
 
-  player: { start: [-0.6, 6], yaw: 0.04, pitch: 0.04, eye: 1.65, speed: 3.5 },
+  player: { start: [-1.1, 5.4], yaw: 0.07, pitch: -0.02, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 1000,
@@ -145,5 +145,8 @@ export default {
     const lamp = new ctx.THREE.PointLight('#d8d8ff', 18, 18, 1.3);
     lamp.position.set(0, 2.6, 0.5);
     ctx.scene.add(lamp);
+    const ember = new ctx.THREE.PointLight('#c89070', 14, 14, 1.2);
+    ember.position.set(-1.2, 2.2, 6.5);
+    ctx.scene.add(ember);
   },
 };
