@@ -116,8 +116,8 @@ function custom(ctx) {
   shaft(ctx, { from: [0, H, -12.2], to: [0, lordY, -12.2], radius: [0.8, 2.2], color: '#fff2c9', opacity: 0.22 });
 
   // Moses, Elias and Elijah.
-  for (const pos of [[-6.4, -12.2], [-6.4, -9.0], [6.4, -10.6]]) {
-    heavenly(ctx, { pos, face: [0, -6], scale: 1.08, glowAmt: 0.45, halo: 4.5, light: { color: '#fff0d0', intensity: 6, distance: 9 }, arms: [0.3, 0.2] });
+  for (const pos of [[-3.1, -10.4], [3.1, -10.4], [3.3, -7.9]]) {
+    heavenly(ctx, { pos, face: [0, 6], scale: 1.08, glowAmt: 0.45, halo: 4.5, light: { color: '#fff0d0', intensity: 6, distance: 9 }, arms: [0.3, 0.2] });
   }
 
   // Joseph Smith and Oliver Cowdery kneel in prayer before the pulpits.
@@ -151,7 +151,7 @@ export default {
   custom,
 
   player: {
-    start: [0, 3.2],
+    start: [0, 0.6],
     lookAt: [0, -12],
     colors: { robe: '#34302c', mantle: '#2e3640', skin: '#e8c4a0', hair: '#5a3a22', sash: '#e8e2d2' },
   },

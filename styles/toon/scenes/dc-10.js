@@ -107,8 +107,8 @@ export default {
   custom,
 
   player: {
-    start: [1.6, -0.2],
-    lookAt: [0.4, -4.4],
+    start: [-1.0, -1.4],
+    lookAt: [-2.2, -7],
     colors: { robe: '#2b2a2e', mantle: '#3a3328', skin: '#e8c4a0', hair: '#5a3a22', sash: '#4a3b2e' },
   },
 };

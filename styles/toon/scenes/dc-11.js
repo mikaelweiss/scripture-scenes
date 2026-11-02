@@ -2,8 +2,9 @@
 // the temple on the bluff to the east. x is east, z is south. The river wraps the west and south sides.
 import { Batch, SAINTS, baseStyle, box, cyl, frameHouse, gableGeo, glow, leafTree, logCabin, makeRng, saint, water, xf } from './lib/dc-08-kit.js';
 
-const BLUFF_X = 40, BLUFF_TOP = 58, BLUFF_H = 9;
-const TEMPLE = [112, 22];
+const BLUFF_X = 40, BLUFF_TOP = 54, BLUFF_H = 18;
+const FACE = [[40, 0], [43, 6], [50, 14.5], [54, 18]];
+const TEMPLE = [84, 22];
 const START = [-58, 70];
 const RIVER_W = -95, RIVER_S = 92;
 const STONE = '#ebe3cf';
@@ -43,31 +44,50 @@ function river(ctx) {
 
 function bluff(ctx, b) {
   const { THREE } = ctx;
-  const s = new THREE.Shape();
-  s.moveTo(BLUFF_X, 0);
-  s.lineTo(BLUFF_X + 6, BLUFF_H * 0.45);
-  s.lineTo(BLUFF_TOP, BLUFF_H);
-  s.lineTo(420, BLUFF_H);
-  s.lineTo(420, -1);
-  s.lineTo(BLUFF_X, -1);
-  s.closePath();
-  const g = new THREE.ExtrudeGeometry(s, { depth: 380, bevelEnabled: false });
-  g.translate(0, 0, -300);
-  const m = new THREE.Mesh(g, ctx.kit.toon('#8aa058'));
-  m.receiveShadow = m.castShadow = true;
-  ctx.scene.add(m);
-  // Walkable slope as a run of shallow steps.
-  const n = 24;
+  const slab = (points, color) => {
+    const s = new THREE.Shape();
+    s.moveTo(...points[0]);
+    for (const p of points.slice(1)) s.lineTo(...p);
+    s.closePath();
+    const g = new THREE.ExtrudeGeometry(s, { depth: 380, bevelEnabled: false });
+    g.translate(0, 0, -300);
+    const m = new THREE.Mesh(g, ctx.kit.toon(color));
+    m.receiveShadow = m.castShadow = true;
+    ctx.scene.add(m);
+  };
+  slab([...FACE, [BLUFF_TOP, -1], [BLUFF_X, -1]], '#76844c');
+  slab([[BLUFF_TOP, BLUFF_H], [420, BLUFF_H], [420, -1], [BLUFF_TOP, -1]], '#8aa058');
+  // Walkable face as a run of shallow steps.
+  const faceY = (x) => {
+    for (let k = 1; k < FACE.length; k++) {
+      const [ax, ay] = FACE[k - 1], [bx, by] = FACE[k];
+      if (x <= bx) return ay + ((x - ax) / (bx - ax)) * (by - ay);
+    }
+    return BLUFF_H;
+  };
+  const n = 48;
   for (let i = 0; i < n; i++) {
     const x0 = BLUFF_X + (i / n) * (BLUFF_TOP - BLUFF_X), x1 = BLUFF_X + ((i + 1) / n) * (BLUFF_TOP - BLUFF_X);
     const xm = (x0 + x1) / 2;
-    const t = (xm - BLUFF_X) / (BLUFF_TOP - BLUFF_X);
-    const y = t < 0.33 ? (t / 0.33) * BLUFF_H * 0.45 : BLUFF_H * 0.45 + ((t - 0.33) / 0.67) * BLUFF_H * 0.55;
+    const y = faceY(xm);
     ctx.addCollider({ x: xm, z: -110, hx: (x1 - x0) / 2, hz: 190, rot: 0, top: y, walkable: true });
   }
   ctx.addCollider({ x: (BLUFF_TOP + 420) / 2, z: -110, hx: (420 - BLUFF_TOP) / 2, hz: 190, rot: 0, top: BLUFF_H, walkable: true });
   // A path climbing the bluff toward the temple.
-  b.add('#c8aa78', xf(new THREE.PlaneGeometry(BLUFF_TOP - BLUFF_X + 2, 5), { pos: [(BLUFF_X + BLUFF_TOP) / 2, BLUFF_H / 2 + 0.12, TEMPLE[1]], rot: [-Math.PI / 2, 0, -Math.atan2(BLUFF_H, BLUFF_TOP - BLUFF_X)] }), { cast: false });
+  for (let k = 1; k < FACE.length; k++) {
+    const [ax, ay] = FACE[k - 1], [bx, by] = FACE[k];
+    const len = Math.hypot(bx - ax, by - ay);
+    b.add('#c8aa78', xf(new THREE.PlaneGeometry(len + 0.4, 5), { pos: [(ax + bx) / 2, (ay + by) / 2 + 0.12, TEMPLE[1]], rot: [-Math.PI / 2, 0, -Math.atan2(by - ay, bx - ax)] }), { cast: false });
+  }
+  // Pale limestone ledges breaking through the face.
+  const rng = makeRng(45);
+  for (let i = 0; i < 60; i++) {
+    const z = -280 + rng() * 355;
+    const len = 8 + rng() * 16;
+    if (Math.abs(z - TEMPLE[1]) < len / 2 + 3) continue;
+    const x = BLUFF_X + 2 + rng() * (BLUFF_TOP - BLUFF_X - 4);
+    b.add(['#c8bea4', '#b8ae96', '#d4cab0'][i % 3], box(2.2, 1 + rng() * 1.4, len, [x - 1.1, faceY(x) - 0.2, z]));
+  }
 }
 
 function temple(ctx, b) {
@@ -256,13 +276,14 @@ export default {
       street(-48, -42, -110, 62, 50),
       street(-18, -12, -110, 62, 40),
       street(-78, 18, -7, -3, 30),
-      { shape: 'rect', center: [TEMPLE[0] - 28, TEMPLE[1]], size: [14, 40], count: 60, children: 0.15, facing: TEMPLE, facingJitter: 0.8 },
+      { shape: 'rect', center: [TEMPLE[0] - 24, TEMPLE[1]], size: [7, 40], count: 50, children: 0.15, facing: TEMPLE, facingJitter: 0.8 },
     ],
   },
 
   player: {
     start: START,
     lookAt: TEMPLE,
+    fov: 58,
     colors: { robe: '#2e3640', mantle: '#4a3b2e', skin: '#e8c4a0', hair: '#5a3a22', sash: '#2b2420' },
   },
 };

@@ -376,24 +376,55 @@ export function logCabin(b, ctx, { pos, size = [6, 5], height = 2.4, rot = 0, lo
   return null;
 }
 
-// Rising toon smoke puffs from chimneys. sources: list of [x, y, z].
-export function smoke(ctx, sources, { color = '#cfcac4', puffs = 6, rise = 7, size = 0.7 } = {}) {
-  const geo = new THREE.IcosahedronGeometry(1, 1);
+// Soft smoke columns from chimneys, animated on the GPU. sources: list of [x, y, z].
+export function smoke(ctx, sources, { color = '#cfcac4', puffs = 16, rise = 9, size = 1.2, opacity = 0.5 } = {}) {
+  glowTex ??= glowTexture();
   const n = sources.length * puffs;
-  const inst = new THREE.InstancedMesh(geo, ctx.kit.toon(color), n);
-  inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  inst.frustumCulled = false;
-  ctx.scene.add(inst);
-  ctx.onFrame((t) => {
-    let i = 0;
-    for (const [x, y, z] of sources) {
-      for (let p = 0; p < puffs; p++) {
-        const k = ((t * 0.12 + p / puffs + x * 0.13) % 1);
-        const s = size * (0.4 + k * 1.4) * (1 - k * k * 0.6);
-        inst.setMatrixAt(i++, m4.compose(v3.set(x + k * 2.2 + Math.sin(t + p) * 0.2, y + k * rise, z + k * 0.8), qt.identity(), s3.set(s, s, s)));
-      }
+  const base = new Float32Array(n * 3), phase = new Float32Array(n);
+  let i = 0;
+  for (const [x, y, z] of sources) {
+    for (let p = 0; p < puffs; p++, i++) {
+      base.set([x, y, z], i * 3);
+      phase[i] = p / puffs + x * 0.013;
     }
-    inst.instanceMatrix.needsUpdate = true;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(base, 3));
+  geo.setAttribute('phase', new THREE.BufferAttribute(phase, 1));
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { map: { value: glowTex }, color: { value: new THREE.Color(color) }, uTime: { value: 0 }, uScale: { value: 400 }, uRise: { value: rise }, uSize: { value: size }, uOpacity: { value: opacity } },
+    vertexShader: /* glsl */ `
+      attribute float phase;
+      uniform float uTime, uScale, uRise, uSize;
+      varying float vAlpha;
+      void main() {
+        float k = fract(uTime * 0.07 + phase);
+        vec3 p = position + vec3(k * k * 3.0 + sin(uTime * 0.6 + phase * 20.0) * 0.15 * k, k * uRise, k * 1.2);
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_Position = projectionMatrix * mv;
+        gl_PointSize = uSize * (1.0 + k * 3.0) * uScale / -mv.z;
+        vAlpha = smoothstep(0.0, 0.08, k) * (1.0 - k) * (1.0 - smoothstep(250.0, 500.0, -mv.z));
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform sampler2D map;
+      uniform vec3 color;
+      uniform float uOpacity;
+      varying float vAlpha;
+      void main() {
+        float a = texture2D(map, gl_PointCoord).a * vAlpha * uOpacity;
+        if (a < 0.01) discard;
+        gl_FragColor = vec4(color, a);
+      }`,
+    transparent: true,
+    depthWrite: false,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.frustumCulled = false;
+  pts.layers.set(FX_LAYER);
+  ctx.scene.add(pts);
+  ctx.onFrame((t, dt, camera) => {
+    mat.uniforms.uTime.value = t;
+    mat.uniforms.uScale.value = (innerHeight * Math.min(devicePixelRatio || 1, 2)) / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
   });
 }
 

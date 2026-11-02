@@ -4,7 +4,7 @@
 import { Batch, SAINTS, baseStyle, box, campfire, logCabin, makeRng, pineTree, saint, smoke, wagon, water } from './lib/dc-08-kit.js';
 
 const RIVER_X = 92;
-const START = [-2, 42];
+const START = [-1, 13];
 
 function custom(ctx) {
   const { THREE } = ctx;
@@ -37,10 +37,10 @@ function custom(ctx) {
       if (rng() < 0.12) continue;
       const rot = z % 30 === 0 ? 0 : Math.PI;
       const c = logCabin(b, ctx, { pos: [x + (rng() - 0.5) * 2, z + (rng() - 0.5) * 2], size: [5 + rng() * 2, 4.4 + rng()], height: 2.2 + rng() * 0.4, rot, snow: true, log: ['#7a5636', '#6a4a30', '#86603c'][Math.floor(rng() * 3)] });
-      if (c && rng() < 0.75) chimneys.push(c);
+      if (c) chimneys.push(c);
     }
   }
-  smoke(ctx, chimneys, { color: '#eeedeb', puffs: 5, rise: 7, size: 0.45 });
+  smoke(ctx, chimneys, { color: '#9ea3ac', opacity: 0.7, size: 1.8 });
 
   // Wagons drawn up along the street and on the open ground by the river.
   const covers = ['#ece4cf', '#e4dac0', '#f0eadc', '#ddd2b8'];
@@ -52,7 +52,7 @@ function custom(ctx) {
   }
 
   // Campfires where companies gather.
-  for (const p of [[2.5, 4], [-3, -32], [70, -20]]) campfire(b, ctx, { pos: p });
+  for (const p of [[-6.5, 12], [-3, -32], [70, -20]]) campfire(b, ctx, { pos: p });
 
   // Bare cottonwoods along the river, snowy cedars on the bluffs behind the camp.
   for (let i = 0; i < 50; i++) pineTree(b, ctx, { pos: [RIVER_X - 4 - rng() * 12, -250 + rng() * 500], height: 8 + rng() * 6, bare: true });
@@ -64,8 +64,12 @@ function custom(ctx) {
   }
   b.flush();
 
-  // Brigham Young addresses a company in the street.
-  saint(ctx, { pos: [0, -6], face: [0, 10], colors: { robe: '#2b2a2e', mantle: '#3d3a44', skin: '#e8c4a0', hair: '#a07850', tall: true }, scale: 1.05 });
+  // Brigham Young addresses a company in the street from a wagon box.
+  const stand = new Batch(ctx);
+  stand.add('#7a5636', box(2.4, 0.9, 1.8, [0, 0.45, -6.4]));
+  stand.flush();
+  ctx.addCollider({ x: 0, z: -6.4, hx: 1.2, hz: 0.9, rot: 0, top: 0.9, walkable: true });
+  saint(ctx, { pos: [0, -6], y: 0.9, face: [0, 10], colors: { robe: '#2b2a2e', mantle: '#3d3a44', skin: '#e8c4a0', hair: '#a07850', tall: true }, scale: 1.05 });
 }
 
 export default {
@@ -110,9 +114,10 @@ export default {
     colors: SAINTS,
     keepClear: [{ kind: 'circle', x: 0, z: -6, r: 3 }],
     groups: [
-      { center: [0, -6], radius: [3.5, 12], angle: [-1.4, 1.4], count: 140, children: 0.2 },
-      { shape: 'rect', center: [0, 20], size: [10, 20], count: 30, children: 0.2, facingJitter: 3 },
-      { center: [2.5, 4], radius: [1.6, 3], count: 10, children: 0.2, facing: [2.5, 4], facingJitter: 0.3 },
+      { center: [0, -6], radius: [3.5, 12], angle: [-1.5, -0.32], count: 75, children: 0.2 },
+      { center: [0, -6], radius: [3.5, 12], angle: [0.32, 1.5], count: 75, children: 0.2 },
+      { shape: 'rect', center: [0, 34], size: [10, 16], count: 30, children: 0.2, facingJitter: 3 },
+      { center: [-6.5, 12], radius: [1.6, 3], count: 10, children: 0.2, facing: [-6.5, 12], facingJitter: 0.3 },
       { center: [-3, -32], radius: [1.6, 3], count: 10, children: 0.2, facing: [-3, -32], facingJitter: 0.3 },
       { center: [70, -20], radius: [1.6, 3.5], count: 14, children: 0.2, facing: [70, -20], facingJitter: 0.3 },
       { shape: 'rect', center: [0, -55], size: [8, 50], count: 40, children: 0.15, facingJitter: 3 },
@@ -121,7 +126,7 @@ export default {
 
   player: {
     start: START,
-    lookAt: [6, -20],
+    lookAt: [0, -14],
     colors: { robe: '#3a3328', mantle: '#6a3a34', skin: '#e8c4a0', hair: '#5a3a22', sash: '#2b2420' },
   },
 };

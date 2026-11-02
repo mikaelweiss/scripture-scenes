@@ -170,8 +170,8 @@ export default {
   },
 
   player: {
-    start: [19, 4.6],
-    lookAt: [-20, -0.5],
+    start: [-46, 10],
+    lookAt: [-34, -12],
     colors: { robe: '#3a3328', mantle: '#4a3b2e', skin: '#e8c4a0', hair: '#5a3a22', sash: '#2b2420' },
   },
 };
