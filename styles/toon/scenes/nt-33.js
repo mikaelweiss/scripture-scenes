@@ -111,7 +111,7 @@ export default {
     for (const [x, z, s] of [[-20, -60, 3], [-14, -64, 2], [-26, -58, 1.6], [40, -70, 2.4]]) b.add('#8a8070', new THREE.DodecahedronGeometry(s, 0).scale(1.4, 1, 1).translate(x, -0.6 + s * 0.4, z));
 
     // Peter kneeling in prayer, looking up at the vision.
-    const peter = person(ctx, { pos: PETER, y: y0 + ROOF + 0.15, face: [SHEET[0], SHEET[1]], colors: { robe: '#e6d8b8', mantle: '#4f6fa0', skin: '#a8724a', hair: '#cfc6b4', sash: '#8c5a3c', arms: [0.6, 1.9] }, kneel: true });
+    const peter = person(ctx, { pos: PETER, scale: 1.3, y: y0 + ROOF + 0.15, face: [SHEET[0], SHEET[1]], colors: { robe: '#e6d8b8', mantle: '#4f6fa0', skin: '#a8724a', hair: '#cfc6b4', sash: '#8c5a3c', arms: [0.6, 1.9] }, kneel: true });
     peter.rotation.x = -0.15;
 
     // Cornelius's messengers arrive at the gate below.
@@ -199,9 +199,9 @@ export default {
   },
 
   player: {
-    start: [3.5, 3.6],
+    start: [3.8, 1.8],
     y: ROOF,
-    lookAt: [-0.5, -9],
+    lookAt: [-1.6, -9],
     colors: { robe: '#4f7f80', mantle: '#d9c7a3', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

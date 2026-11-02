@@ -40,13 +40,13 @@ export default {
     boulders(ctx, [[-14, 6, 1.4], [-17, 9, 0.8], [15, -8, 1.8], [18, -4, 1], [-22, -26, 2.2], [26, 22, 1.6], [-28, 34, 1.2], [36, -40, 2.4], [-40, -60, 2.8], [12, 40, 0.9]], { colors: ['#c9a982', '#b89a78', '#d2b48e'] });
 
     // Saul fallen on his face in the road, his travelling bag spilled beside him.
-    fallen(ctx, { pos: SAUL, toward: [0.4, -3], colors: { robe: '#4f6f8a', mantle: '#8c5a3c', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e', arms: [1.2, 0.2] } });
+    fallen(ctx, { pos: SAUL, toward: [-3, -0.6], scale: 1.3, colors: { robe: '#2f4f74', mantle: '#7a3e2c', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e', arms: [1.2, 0.2] } });
     boulders(ctx, [[1.4, 1.2, 0.25]], { colors: ['#8c5a3c'], collide: false });
 
     // The men journeying with him stand speechless, shielding their eyes.
     const companions = [
       { pos: [-4.2, 4.5], arms: [0.3, 2.3], robe: '#7a6a52', mantle: '#5e4632' },
-      { pos: [-2.4, 6.8], arms: [0.5, 1.6], robe: '#a87b4f', mantle: '#3e6e66' },
+      { pos: [-4.8, 7.6], arms: [0.5, 1.6], robe: '#a87b4f', mantle: '#3e6e66' },
       { pos: [3.6, 5.2], arms: [0.25, 2.5], robe: '#8c5a3c', mantle: '#d9c7a3' },
       { pos: [5.6, 3.0], arms: [0.9, 0.6], robe: '#6f8a6a', mantle: '#5e4632' },
       { pos: [1.2, 8.4], arms: [0.3, 2.2], robe: '#c8a97a', mantle: '#a64b35' },
@@ -76,18 +76,18 @@ export default {
 
   light: {
     beams: [{ from: [0, 200, -4], to: { at: SAUL, lift: 0.3 }, width: [18, 6], color: '#fffdf0', intensity: 0.32, layers: 3, stripes: 26, fadeLow: 0.04 }],
-    rings: [{ at: SAUL, lift: 0, radius: 4.2, width: 0.4, height: 3.5, color: '#fff3c0', intensity: 0.9, wallIntensity: 0.6 }],
+    rings: [{ at: SAUL, lift: 0, radius: 4.2, width: 0.4, height: 2.5, color: '#fff3c0', intensity: 0.8, wallIntensity: 0.25 }],
     glows: [
-      { at: SAUL, lift: 1.2, size: 8, color: '#fffbe8', opacity: 0.55 },
+      { at: SAUL, lift: 1.6, size: 6, color: '#fffbe8', opacity: 0.3 },
       { pos: [0, 120, -5], size: 140, color: '#fffbe8', opacity: 0.9 },
       { pos: [0, 120, -5], size: 50, color: '#ffffff', opacity: 1 },
     ],
-    pointLights: [{ at: SAUL, lift: 3, color: '#fff2c8', intensity: 8, distance: 18 }],
+    pointLights: [{ at: SAUL, lift: 3, color: '#fff2c8', intensity: 4, distance: 18 }],
   },
 
   player: {
-    start: [-3, 22],
-    lookAt: [0, -4],
+    start: [-2.2, 13],
+    lookAt: [0.4, -2],
     colors: { robe: '#b5523b', mantle: '#d9c7a3', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

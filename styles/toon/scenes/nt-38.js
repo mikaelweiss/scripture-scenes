@@ -138,7 +138,7 @@ export default {
     });
 
     // John, an old man in exile, fallen at his feet as dead.
-    fallen(ctx, { pos: JOHN, toward: LORD, colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#a8724a', hair: '#e8e2d4', sash: '#3e6e66' } });
+    fallen(ctx, { pos: JOHN, toward: LORD, scale: 1.25, colors: { robe: '#a8402e', mantle: '#4a5e7a', skin: '#a8724a', hair: '#f2eee4', sash: '#3e6e66' } });
     b.add('#d9c7a3', box(0.5, 0.06, 0.35, [JOHN[0] + 1.2, ctx.terrainHeight(...JOHN) + 0.03, JOHN[1] + 1.4]));
     b.add('#c8a97a', cyl(0.06, 0.06, 0.5, [JOHN[0] + 1.2, ctx.terrainHeight(...JOHN) + 0.1, JOHN[1] + 1.15], [0, 0, Math.PI / 2], 8));
     b.flush();
@@ -157,8 +157,8 @@ export default {
   },
 
   player: {
-    start: [1.2, 6.5],
-    lookAt: [0, -6],
+    start: [4.2, 2.4],
+    lookAt: [-2.2, -4.6],
     colors: { robe: '#4f7f80', mantle: '#d9c7a3', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

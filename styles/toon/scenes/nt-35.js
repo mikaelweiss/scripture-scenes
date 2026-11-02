@@ -95,8 +95,8 @@ export default {
     b.add(wood, box(5.4, 0.08, 0.32, [0.2, 0.08, -12.35], [0, 0.08, 0]));
     for (const sx of [-1, 1]) b.add('#4a3020', box(0.24, 0.5, 0.4, [sx * 2.8, 0.25, -12.9]));
     ctx.addCollider({ x: 0, z: -12.9, hx: 2.9, hz: 0.3, rot: 0, top: 0.5 });
-    const paul = person(ctx, { pos: PAUL, face: [-0.6, 0], colors: { robe: '#d9c7a3', mantle: '#8c5a3c', skin: '#a8724a', hair: '#3a2418', sash: '#5e4632', arms: [0.35, 2.3] }, kneel: true });
-    const silas = person(ctx, { pos: SILAS, face: [0.6, 0], colors: { robe: '#c8a97a', mantle: '#3e6e66', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 1.9] }, kneel: true });
+    const paul = person(ctx, { pos: PAUL, scale: 1.15, face: [-0.6, 0], colors: { robe: '#d9c7a3', mantle: '#8c5a3c', skin: '#a8724a', hair: '#3a2418', sash: '#5e4632', arms: [0.35, 2.3] }, kneel: true });
+    const silas = person(ctx, { pos: SILAS, scale: 1.15, face: [0.6, 0], colors: { robe: '#c8a97a', mantle: '#3e6e66', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 1.9] }, kneel: true });
     paul.rotation.x = silas.rotation.x = -0.18;
     lamp(b, ctx, { pos: [-3.4, -15.6], y: 1.6, light: { color: '#ffb060', intensity: 9, distance: 14 } });
     b.add(stoneDark, box(0.6, 0.12, 0.5, [-3.4, 1.55, -16.2]));
@@ -106,9 +106,9 @@ export default {
     scene.add(song);
 
     // The keeper of the prison springs in with a torch.
-    const jailer = person(ctx, { pos: [2.6, -3], face: [0, -12], colors: { robe: '#7a2a22', mantle: '#4a3020', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e', arms: [0.4, 1.3] } });
+    const jailer = person(ctx, { pos: [2.4, -8.6], face: [0, -12], colors: { robe: '#7a2a22', mantle: '#4a3020', skin: '#b5825a', hair: '#2b1a12', sash: '#c8912e', arms: [0.4, 1.3] } });
     jailer.rotation.x = 0.1;
-    torch(b, ctx, { pos: [3.2, -2.6], height: 1.6, light: { color: '#ffa850', intensity: 9, distance: 16 } });
+    torch(b, ctx, { pos: [3.0, -8.2], height: 1.6, light: { color: '#ffa850', intensity: 9, distance: 16 } });
     torch(b, ctx, { pos: [-8.3, -4], light: { color: '#ffa850', intensity: 6, distance: 12 } });
     torch(b, ctx, { pos: [8.3, -8], light: null });
     b.flush();
@@ -148,8 +148,8 @@ export default {
   },
 
   player: {
-    start: [0, 0.5],
-    lookAt: [0, -14],
+    start: [-1, -6.5],
+    lookAt: [0.8, -14],
     colors: { robe: '#4f7f80', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

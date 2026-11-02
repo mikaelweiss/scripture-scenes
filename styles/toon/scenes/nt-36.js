@@ -11,11 +11,11 @@ const ACRO = [70, -150];
 
 function drop(x, z) {
   const d = Math.hypot(x, z);
-  return THREE.MathUtils.smoothstep(d, TOP - 2, TOP + 26) * 24;
+  return THREE.MathUtils.smoothstep(d, TOP - 2, TOP + 16) * 9 - THREE.MathUtils.smoothstep(d, 90, 230) * 5;
 }
 function acro(x, z) {
   const d = Math.hypot(x - ACRO[0], (z - ACRO[1]) * 1.8);
-  return (1 - THREE.MathUtils.smoothstep(d, 62, 80)) * 40;
+  return (1 - THREE.MathUtils.smoothstep(d, 62, 80)) * 28;
 }
 
 export default {
@@ -57,7 +57,7 @@ export default {
     for (let i = 0; i < 64; i++) {
       const a = (i / 64) * Math.PI * 2;
       const r = TOP - 1 + Math.sin(i * 1.7) * 1.5;
-      rim.push([Math.sin(a) * r, Math.cos(a) * r, 0.8 + ((i * 7) % 5) * 0.2]);
+      rim.push([Math.sin(a) * r, Math.cos(a) * r, 0.45 + ((i * 7) % 5) * 0.1]);
       ctx.addCollider({ x: Math.sin(a) * (TOP + 1), z: Math.cos(a) * (TOP + 1), hx: 2.6, hz: 2.6, rot: -a, top: 40 });
     }
     boulders(ctx, rim, { colors: ['#bfb39a', '#ada088', '#c9bea6'], collide: false, seed: 11 });
@@ -69,7 +69,7 @@ export default {
       b.add('#cdbfa4', box(w, h, d, [PAUL[0], py + h / 2 - 0.05, PAUL[1] + z]));
       ctx.addCollider({ x: PAUL[0], z: PAUL[1] + z, hx: w / 2, hz: d / 2, rot: 0, top: py + h - 0.05, walkable: true });
     }
-    const paul = person(ctx, { pos: PAUL, y: py + 1.45, face: [0, 6], scale: 1.05, colors: { robe: '#d9c7a3', mantle: '#8c5a3c', skin: '#a8724a', hair: '#3a2418', sash: '#5e4632', arms: [0.4, 0.3] } });
+    const paul = person(ctx, { pos: PAUL, y: py + 1.45, face: [0, 6], scale: 1.3, colors: { robe: '#d9c7a3', mantle: '#8c5a3c', skin: '#a8724a', hair: '#3a2418', sash: '#5e4632', arms: [0.4, 0.3] } });
     const arm = new THREE.Group();
     arm.position.set(-0.2, 1.32, 0);
     const sleeve = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.42, 4, 8), kit.toon('#8c5a3c'));
@@ -90,7 +90,7 @@ export default {
     for (const sx of [-1, 1]) b.add('#e8e0cc', cyl(0.16, 0.16, 1.2, [sx * 0.62, 1.66, 0], [Math.PI / 2, 0, 0], 10), { frame: af });
     ctx.addCollider({ x: ALTAR[0], z: ALTAR[1], hx: 0.9, hz: 0.7, rot: -0.3, top: ay + 1.6 });
     ctx.exclude({ kind: 'circle', x: ALTAR[0], z: ALTAR[1], r: 1.6 });
-    const tex = textTexture(['ΑΓΝΩΣΤΩ ΘΕΩ', 'TO THE UNKNOWN GOD'], { w: 512, h: 256, bg: '#efe8d6', fg: '#4a3420', font: 'bold 50px serif' });
+    const tex = textTexture(['ΑΓΝΩΣΤΩ ΘΕΩ', 'TO THE UNKNOWN GOD'], { w: 512, h: 256, bg: '#efe8d6', fg: '#4a3420', font: 'bold 40px serif' });
     const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 0.65), kit.toon('#ffffff', { map: tex }));
     plate.position.set(0, 0.82, 0.51);
     const altarGroup = new THREE.Group();
@@ -176,7 +176,7 @@ export default {
   },
 
   player: {
-    start: [3.2, 15.5],
+    start: [3, 12.5],
     lookAt: [1.5, -6],
     colors: { robe: '#4f7f80', mantle: '#d9c7a3', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
