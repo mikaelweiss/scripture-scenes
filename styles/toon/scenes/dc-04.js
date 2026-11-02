@@ -111,7 +111,7 @@ export default {
   },
 
   player: {
-    start: [0, 2.2],
+    start: [0, 0.2],
     lookAt: [0, -6],
     colors: { robe: '#3d3d3d', mantle: '#3d3d3d', skin: '#e0b48e', hair: '#5a3a22' },
   },

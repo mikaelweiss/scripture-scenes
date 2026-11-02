@@ -173,7 +173,7 @@ export function periodPerson(ctx, { pos, y, face, yaw, kind = 'man', pose = 'sta
 }
 
 // A divine messenger: faceless white figure with a soft halo of light.
-export function heavenly(ctx, { pos, y, face, scale = 1.1, arms = [0.35, 0.3], glow = 0.55, halo = 6, light = 10, color = '#fbf7ee' }) {
+export function heavenly(ctx, { pos, y, face, scale = 1.1, arms = [0.35, 0.3], glow = 0.55, halo = 6, haloOpacity = 0.8, light = 10, color = '#fbf7ee' }) {
   const fig = makeFigure({ robe: color, mantle: '#f4efe2', skin: '#fff6e6', hair: '#fff6e6', sash: '#efe6d0', arms }, ctx.kit, { glow });
   const [x, z] = pos;
   const baseY = y ?? ctx.groundHeight(x, z);
@@ -181,7 +181,7 @@ export function heavenly(ctx, { pos, y, face, scale = 1.1, arms = [0.35, 0.3], g
   fig.scale.setScalar(scale);
   if (face) fig.rotation.y = Math.atan2(face[0] - x, face[1] - z);
   ctx.scene.add(fig);
-  glowSprite(ctx, [x, baseY + 1.2 * scale, z], halo, '#fff3d0', 0.8);
+  glowSprite(ctx, [x, baseY + 1.2 * scale, z], halo, '#fff3d0', haloOpacity);
   if (light) {
     const l = new THREE.PointLight('#ffe8b8', light, 9, 1.5);
     l.position.set(x, baseY + 2.4, z);

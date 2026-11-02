@@ -7,7 +7,7 @@ import { makeRng } from '../engine/util.js';
 
 const W = 11, D = 8;
 const SEER = [0, -2.2];
-const VISION = [0, -70];
+const VISION = [0, -55];
 
 export default {
   title: 'D&C 76: The Vision',
@@ -75,7 +75,7 @@ export default {
     for (const [x, z] of [[-4.6, -1.6], [-2.0, 3.2], [4.4, 0.4]]) chair(ctx, { pos: [x, z + 0.05], rotY: Math.atan2(-x, -1.5 - z) });
 
     // The vision above: the Son on the right hand of God, then the three glories.
-    const vy = 21;
+    const vy = 15.5;
     const puffMat = kit.toon('#fff6e0', { emissive: '#b8a070' });
     for (let i = 0; i < 11; i++) {
       const a = (i / 11) * Math.PI * 2;
@@ -87,9 +87,9 @@ export default {
     const core = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 10).scale(10, 1.6, 4.5), puffMat);
     core.position.set(VISION[0], vy - 2.6, VISION[1]);
     scene.add(core);
-    heavenly(ctx, { pos: [VISION[0] - 3, VISION[1]], y: vy - 1.5, face: [0, 0], scale: 4, arms: [0.35, 0.25], halo: 26, light: 0, glow: 0.8 });
-    heavenly(ctx, { pos: [VISION[0] + 3.6, VISION[1] + 0.5], y: vy - 1.5, face: [0, 0], scale: 3.8, arms: [0.55, 0.35], halo: 24, light: 0, glow: 0.8 });
-    glowSprite(ctx, [VISION[0], vy + 4, VISION[1] - 2], 70, '#fff0c0', 0.55);
+    heavenly(ctx, { pos: [VISION[0] - 3, VISION[1]], y: vy - 1.5, face: [0, 12], scale: 5, arms: [0.35, 0.25], halo: 30, light: 0, glow: 0.8 });
+    heavenly(ctx, { pos: [VISION[0] + 3.6, VISION[1] + 0.5], y: vy - 1.5, face: [0, 12], scale: 4.8, arms: [0.55, 0.35], halo: 28, light: 0, glow: 0.8 });
+    glowSprite(ctx, [VISION[0], vy + 5, VISION[1] - 2], 60, '#fff0c0', 0.4);
 
     const disc = (pos, radius, color, emissive, halo, haloColor) => {
       const m = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 16), kit.basic(color));
@@ -100,7 +100,7 @@ export default {
       return m;
     };
     disc([-30, 15, -80], 7, '#ffd25a', null, 44, '#ffc040');
-    const moon = disc([0, 9, -88], 5, '#e8ecf4', null, 26, '#c8d4ff');
+    const moon = disc([0, 4.5, -95], 5, '#e8ecf4', null, 26, '#c8d4ff');
     const shade = new THREE.Mesh(new THREE.SphereGeometry(5.05, 24, 16, 0, Math.PI), kit.basic('#9aa6c8'));
     shade.position.copy(moon.position);
     shade.rotation.y = -Math.PI / 2 + 0.9;
@@ -140,7 +140,7 @@ export default {
   },
 
   player: {
-    start: [0, 2.4],
+    start: [0, 1.2],
     lookAt: [0, -6],
     colors: { robe: '#2c3a5a', mantle: '#2c3a5a', skin: '#e0b48e', hair: '#5a3a22' },
   },

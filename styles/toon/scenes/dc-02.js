@@ -1,6 +1,6 @@
 // D&C 27:12, 128:20: Peter, James, and John confer the Melchizedek Priesthood on Joseph Smith and Oliver Cowdery
 // in the wilderness by the Susquehanna River. x is east, z is south; the river runs north-south to the east.
-import { glowSprite, heavenly, periodPerson, pines, river, trackAvatar } from './lib/dc-01-kit.js';
+import { glowSprite, heavenly, lightShaft, periodPerson, pines, river, trackAvatar } from './lib/dc-01-kit.js';
 
 const MEET = [0, -10];
 
@@ -45,10 +45,11 @@ export default {
     periodPerson(ctx, { pos: [0.9, MEET[1] + 3.2], face: MEET, pose: 'kneel', colors: { body: '#4a3b2e', skin: '#e8c3a0', hair: '#3a2418' } });
 
     const gy = ctx.groundHeight(...MEET);
-    heavenly(ctx, { pos: MEET, y: gy + 0.4, face: [0, 10], scale: 1.12, arms: [0.3, 1.25], halo: 4.5, light: 5 });
-    heavenly(ctx, { pos: [-1.7, MEET[1] - 0.6], y: gy + 0.4, face: [0, 10], scale: 1.08, arms: [0.3, 0.25], halo: 4, light: 0 });
-    heavenly(ctx, { pos: [1.7, MEET[1] - 0.6], y: gy + 0.4, face: [0, 10], scale: 1.08, arms: [0.3, 0.25], halo: 4, light: 0 });
-    glowSprite(ctx, [MEET[0], gy + 2.2, MEET[1] - 0.3], 9, '#fff3d0', 0.4);
+    heavenly(ctx, { pos: MEET, y: gy + 0.4, face: [0, 10], scale: 1.12, arms: [0.3, 1.25], halo: 4.5, haloOpacity: 0.5, light: 5 });
+    heavenly(ctx, { pos: [-1.7, MEET[1] - 0.6], y: gy + 0.4, face: [0, 10], scale: 1.08, arms: [0.3, 0.25], halo: 4, haloOpacity: 0.5, light: 0 });
+    heavenly(ctx, { pos: [1.7, MEET[1] - 0.6], y: gy + 0.4, face: [0, 10], scale: 1.08, arms: [0.3, 0.25], halo: 4, haloOpacity: 0.5, light: 0 });
+    glowSprite(ctx, [MEET[0], gy + 2.2, MEET[1] - 0.3], 7, '#fff3d0', 0.25);
+    lightShaft(ctx, { at: [MEET[0], gy + 0.2, MEET[1] - 0.4], top: 70, radius: [2.6, 7], opacity: 0.03, layers: 2 });
 
     trackAvatar(ctx, { hat: true });
   },
@@ -61,7 +62,7 @@ export default {
   },
 
   player: {
-    start: [1.5, 1],
+    start: [0, -2],
     lookAt: MEET,
     colors: { robe: '#3a3530', mantle: '#3a3530', skin: '#e0b48e', hair: '#4a3020' },
   },

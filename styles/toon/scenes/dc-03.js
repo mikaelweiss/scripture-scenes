@@ -40,7 +40,7 @@ export default {
     const gy = ctx.groundHeight(...ANGEL);
 
     // The angel, the plates in his hands, and the sacred objects of D&C 17:1 on a table before him.
-    heavenly(ctx, { pos: ANGEL, y: gy + 0.5, face: [0, 10], scale: 1.15, arms: [0.22, 1.05], halo: 5, light: 6 });
+    heavenly(ctx, { pos: ANGEL, y: gy + 0.5, face: [0, 10], scale: 1.3, arms: [0.22, 1.05], halo: 5, haloOpacity: 0.5, light: 6 });
     const gold = kit.toon('#e8b84a', { emissive: '#6a4a10' });
     const plates = new THREE.Group();
     for (let i = 0; i < 6; i++) {
@@ -51,7 +51,7 @@ export default {
     const rings = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.2, 0.34), kit.toon('#b8862a'));
     rings.position.set(-0.21, 0.08, 0);
     plates.add(rings);
-    plates.position.set(ANGEL[0], gy + 0.5 + 1.2 * 1.15, ANGEL[1] + 0.62);
+    plates.position.set(ANGEL[0], gy + 0.5 + 1.2 * 1.3, ANGEL[1] + 0.7);
     plates.rotation.x = -0.5;
     scene.add(plates);
 
@@ -77,7 +77,7 @@ export default {
     const stones2 = stones.clone();
     stones2.position.x += 0.14;
     scene.add(sword, breast, liahona, stones, stones2);
-    glowSprite(ctx, [ANGEL[0], gy + 2.2, ANGEL[1]], 10, '#fff3d0', 0.5);
+    glowSprite(ctx, [ANGEL[0], gy + 2.2, ANGEL[1]], 7, '#fff3d0', 0.3);
     glowSprite(ctx, [T[0], ty + 0.2, T[1]], 3, '#ffe0a0', 0.5);
 
     const kneel = (pos, colors, arms) => periodPerson(ctx, { pos, face: ANGEL, pose: 'kneel', colors, arms });
@@ -114,8 +114,8 @@ export default {
   },
 
   player: {
-    start: [1.5, -4],
-    lookAt: [0, -10],
+    start: [-1, -5],
+    lookAt: [0, -11.5],
     colors: { robe: '#34302c', mantle: '#34302c', skin: '#e0b48e', hair: '#4a3020' },
   },
 };

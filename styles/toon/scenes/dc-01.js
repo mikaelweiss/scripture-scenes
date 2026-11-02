@@ -41,7 +41,6 @@ export default {
       stairWidth: 4, rise: 0.25, stairDepth: 0.45,
       colors: { stone: '#c9b48a', stair: '#bba57a', fret: ['#8c5a3c', '#e6d8b8'] },
     },
-    { type: 'trees', count: 150, ring: [62, 230], height: [6, 12], broken: 0, fallen: 0, trunkColor: '#5e4430', leafColors: ['#4f8a4a', '#5f9a52', '#3e7a46', '#6fa058'] },
     { type: 'stones', count: 300, ring: [10, 70], size: [0.12, 0.4], colors: ['#b8a888', '#a0927a', '#c9bc9a'] },
   ],
 
@@ -66,10 +65,14 @@ export default {
     scene.add(flame);
     ctx.onFrame((t) => (flame.scale.y = 0.8 + 0.2 * Math.sin(t * 8) * Math.sin(t * 3.1)));
 
+    // Keep the hillside behind the Lord open so His light does not bleach the trees.
+    ctx.exclude({ kind: 'rect', x: 0, z: -150, hx: 30, hz: 90 });
+    ctx.builders.trees({ count: 150, ring: [62, 230], height: [6, 12], broken: 0, fallen: 0, trunkColor: '#5e4430', leafColors: ['#4f8a4a', '#5f9a52', '#3e7a46', '#6fa058'] }, ctx);
+
     // The Lord appears above the congregation.
     const top = ctx.groundHeight(...LORD);
-    heavenly(ctx, { pos: LORD, y: top + 7, face: [0, 30], scale: 1.25, arms: [0.55, 0.45], halo: 11, light: 0 });
-    glowSprite(ctx, [LORD[0], top + 8.5, LORD[1]], 14, '#fff0c0', 0.35);
+    heavenly(ctx, { pos: LORD, y: top + 6, face: [0, 30], scale: 1.45, arms: [0.55, 0.45], halo: 11, light: 0 });
+    glowSprite(ctx, [LORD[0], top + 7.5, LORD[1]], 14, '#fff0c0', 0.3);
     lightShaft(ctx, { at: [LORD[0], top + 6.5, LORD[1]], top: 120, radius: [2.2, 14], opacity: 0.08 });
 
     river(ctx, { points: [[-260, 120], [-120, 95], [-40, 110], [40, 92], [130, 118], [260, 100]], width: 18, y: ctx.terrainHeight(0, 100) - 0.1 });
@@ -88,7 +91,7 @@ export default {
 
   figures: [
     {
-      pos: [ADAM[0], ADAM[1] - 1.2], facing: [0, 30], scale: 1.08, glow: 0.12, clearRadius: 1.2,
+      pos: [ADAM[0], ADAM[1] - 1.2], facing: [0, 30], scale: 1.2, glow: 0.18, clearRadius: 1.2,
       colors: { robe: '#efe6d2', mantle: '#b5823e', skin: '#c9946a', hair: '#f4f0e8', sash: '#8c5a3c', arms: [0.7, 1.25] },
     },
     elder([-2.6, -24.6], '#d9c7a3', '#5e4632'),
@@ -119,7 +122,7 @@ export default {
   },
 
   player: {
-    start: [0, -3],
+    start: [0, -10],
     lookAt: ADAM,
     colors: { robe: '#a87b4f', mantle: '#3e6e66', skin: '#b5825a', hair: '#3a2418', sash: '#c8912e' },
   },
