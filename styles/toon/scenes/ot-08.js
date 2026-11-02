@@ -2,11 +2,11 @@
 import { ANGEL, Batch, DAY_STYLE, DESERT_GROUND, PALETTE, addSun, camel, figure, flock, glow, oak, rocks, tent, box } from './lib/ot-07-kit.js';
 
 const TENT = [-3, -6];
-const VISITORS = [[8, 6], [9.6, 4.6], [9.9, 7.3]];
-const ABRAHAM = [3.6, 2.4];
+const VISITORS = [[6.4, 2.4], [7.6, 4.1], [9.1, 4.4]];
+const ABRAHAM = [3.7, 3.9];
 const SARAH = [-3, -1.6];
 
-const ABRAHAM_COLORS = { robe: '#d9c7a3', mantle: '#6b4a7a', skin: '#a8724a', hair: '#d8d2c4', sash: '#c8912e', arms: [0.55, 0.9] };
+const ABRAHAM_COLORS = { robe: '#d9c7a3', mantle: '#6b4a7a', skin: '#a8724a', hair: '#d8d2c4', sash: '#c8912e', arms: [0.45, 1.3] };
 const SARAH_COLORS = { robe: '#8c4a3c', mantle: '#e6d8b8', skin: '#b5825a', hair: '#e6d8b8', sash: '#c8912e' };
 
 export default {
@@ -58,8 +58,9 @@ export default {
     oak(b, ctx, { pos: [15, -4], height: 7, spread: 4.5, seed: 7 });
     oak(b, ctx, { pos: [22, 14], height: 7.5, spread: 4.8, seed: 9 });
 
+    camel(b, ctx, { pos: [-4.4, 7.4], rot: 1.5, couched: true, color: '#b4905e', load: '#8c3a2c' });
+    camel(b, ctx, { pos: [-6.4, 2.8], rot: 1.0, color: '#c49a62' });
     camel(b, ctx, { pos: [-22, -16], rot: 0.5, couched: true, color: '#b4905e' });
-    camel(b, ctx, { pos: [-24, -12], rot: 0.9, color: '#c49a62' });
     flock(b, ctx, { center: [-20, 16], radius: 9, count: 44, seed: 3 });
     // Calf tethered by the tent, soon to be dressed for the guests.
     const calf = [-9, -1];
@@ -76,10 +77,10 @@ export default {
     b.flush();
 
     for (const [i, p] of VISITORS.entries()) {
-      figure(ctx, { pos: p, face: ABRAHAM, colors: i === 0 ? { ...ANGEL, arms: [0.3, 0.7] } : ANGEL, scale: 1.08, glow: 0.35 });
+      figure(ctx, { pos: p, face: ABRAHAM, colors: i === 0 ? { ...ANGEL, arms: [0.3, 0.7] } : ANGEL, scale: 1.12, glow: 0.35 });
       glow(ctx, { pos: [p[0], ctx.groundHeight(...p) + 1.2, p[1]], size: 3, color: '#fff4d8', opacity: 0.35 });
     }
-    figure(ctx, { pos: ABRAHAM, face: VISITORS[0], colors: ABRAHAM_COLORS, scale: 1.06, lean: 0.32 });
+    figure(ctx, { pos: ABRAHAM, face: VISITORS[0], colors: ABRAHAM_COLORS, scale: 1.1, lean: 0.22 });
     figure(ctx, { pos: SARAH, face: VISITORS[0], colors: SARAH_COLORS, scale: 0.98 });
   },
 
@@ -89,14 +90,14 @@ export default {
     facing: VISITORS[0],
     colors: PALETTE,
     groups: [
-      { center: [-12, 0], radius: [0, 3], count: 4, children: 0.3 },
+      { center: [-12, -2], radius: [0, 2.5], count: 4, children: 0.3 },
       { center: [-9, -2], radius: [0, 1.2], count: 1, facing: [-9, -1] },
     ],
   },
 
   player: {
-    start: [-1.5, 12.5],
-    lookAt: [6, 3],
+    start: [0.6, 10.2],
+    lookAt: [5, 1.5],
     colors: { robe: '#8c5a3c', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

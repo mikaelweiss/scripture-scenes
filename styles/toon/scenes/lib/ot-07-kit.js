@@ -145,29 +145,86 @@ export function tent(b, ctx, { pos, size = [4, 4], height = 2.4, rot = 0, color 
   ctx.exclude({ kind: 'rect', x, z, hx: w / 2 + 0.8, hz: d / 2 + 0.8, rot });
 }
 
-// Camel, standing or couched, facing +z local.
+const UP = new THREE.Vector3(0, 1, 0);
+
+// Tapered cylinder from point a (radius ra) to point b (radius rb).
+function limb(a, bEnd, ra, rb, seg = 7) {
+  const A = new THREE.Vector3(...a), B = new THREE.Vector3(...bEnd);
+  const d = B.clone().sub(A);
+  const g = new THREE.CylinderGeometry(rb, ra, d.length(), seg);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(UP, d.normalize()));
+  g.translate((A.x + B.x) / 2, (A.y + B.y) / 2, (A.z + B.z) / 2);
+  return g;
+}
+
+// Smooth tube through a list of [x, y, z, radius] joints.
+function tube(b, color, joints, frame) {
+  for (let i = 0; i < joints.length - 1; i++) {
+    const [ax, ay, az, ar] = joints[i], [bx, by, bz, br] = joints[i + 1];
+    b.add(color, limb([ax, ay, az], [bx, by, bz], ar, br), { frame });
+    if (i) b.add(color, ball(ar, [ax, ay, az], [1, 1, 1], 8), { frame });
+  }
+}
+
+// Dromedary, standing or couched with legs folded under, facing +z local.
 export function camel(b, ctx, { pos, rot = 0, color = '#c49a62', couched = false, load = null }) {
   const [x, z] = pos;
   const y = ctx.terrainHeight(x, z);
   const f = frameAt(x, y, z, rot);
-  const lift = couched ? 0.55 : 1.55;
-  const dark = new THREE.Color(color).multiplyScalar(0.78).getStyle();
-  b.add(color, ball(0.62, [0, lift + 0.35, 0], [1, 0.75, 1.55]), { frame: f });
-  b.add(color, ball(0.42, [0, lift + 0.82, -0.05], [1, 1, 1.2]), { frame: f });
-  b.add(color, cyl(0.16, 0.22, 1.25, [0, lift + 0.85, 0.95], [0.75, 0, 0], 7), { frame: f });
-  b.add(color, box(0.26, 0.26, 0.6, [0, lift + 1.38, 1.38], [0.15, 0, 0]), { frame: f });
-  b.add(dark, box(0.08, 0.14, 0.08, [0.1, lift + 1.56, 1.2]), { frame: f });
-  b.add(dark, box(0.08, 0.14, 0.08, [-0.1, lift + 1.56, 1.2]), { frame: f });
+  const c = new THREE.Color(color);
+  const dark = c.clone().multiplyScalar(0.72).getStyle();
+  const hoof = '#4a3626';
+  const by = couched ? 0.66 : 1.62;
+
+  b.add(color, ball(0.6, [0, by, 0], [0.82, 0.78, 1.55], 12), { frame: f });
+  b.add(color, ball(0.44, [0, by + 0.05, 0.62], [0.95, 1.05, 1]), { frame: f });
+  b.add(color, ball(0.42, [0, by + 0.08, -0.7], [1, 1, 0.9]), { frame: f });
+  b.add(color, ball(0.42, [0, by + 0.5, -0.12], [0.85, 1.05, 1.25], 12), { frame: f });
+
+  const neck = couched
+    ? [[0, by + 0.3, 0.9, 0.24], [0, by + 0.18, 1.32, 0.18], [0, by + 0.5, 1.7, 0.15], [0, by + 1.0, 1.86, 0.14]]
+    : [[0, by + 0.3, 0.9, 0.25], [0, by - 0.05, 1.42, 0.18], [0, by + 0.25, 1.88, 0.15], [0, by + 0.82, 2.1, 0.14]];
+  tube(b, color, neck, f);
+  const [hx, hy, hz] = neck[neck.length - 1];
+  b.add(color, ball(0.2, [hx, hy + 0.08, hz + 0.04], [0.9, 0.95, 1.1]), { frame: f });
+  b.add(color, limb([0, hy + 0.08, hz + 0.1], [0, hy - 0.02, hz + 0.5], 0.15, 0.11), { frame: f });
+  b.add(dark, ball(0.11, [0, hy - 0.03, hz + 0.5], [1, 0.9, 1.1], 8), { frame: f });
+  for (const s of [-1, 1]) {
+    b.add(dark, limb([s * 0.12, hy + 0.2, hz - 0.04], [s * 0.2, hy + 0.34, hz - 0.1], 0.05, 0.02, 4), { frame: f });
+    b.add('#1e140e', ball(0.035, [s * 0.15, hy + 0.14, hz + 0.16], [1, 1, 1], 6), { frame: f });
+  }
+  b.add(dark, limb([0, by + 0.25, -1.0], [0, by - 0.4, -1.12], 0.05, 0.03, 5), { frame: f });
+  b.add(dark, ball(0.07, [0, by - 0.45, -1.13], [1, 1.6, 1], 6), { frame: f });
+
   if (couched) {
-    for (const s of [-1, 1]) b.add(dark, ball(0.2, [s * 0.45, 0.25, 0.5], [1, 0.6, 2.2]), { frame: f });
+    // Front legs folded with the knees forward, hind legs tucked along the flanks.
+    for (const s of [-1, 1]) {
+      b.add(color, ball(0.17, [s * 0.32, 0.17, 0.95], [1, 0.9, 1.1], 8), { frame: f });
+      b.add(color, limb([s * 0.32, 0.14, 0.95], [s * 0.36, 0.1, 0.3], 0.13, 0.1), { frame: f });
+      b.add(hoof, ball(0.13, [s * 0.36, 0.08, 0.26], [1.1, 0.5, 1.3], 8), { frame: f });
+      b.add(color, ball(0.32, [s * 0.36, 0.42, -0.62], [0.7, 0.9, 1.3], 10), { frame: f });
+      b.add(color, limb([s * 0.48, 0.14, -1.0], [s * 0.5, 0.12, -0.3], 0.11, 0.09), { frame: f });
+      b.add(color, ball(0.12, [s * 0.48, 0.15, -1.02], [1, 1, 1], 8), { frame: f });
+      b.add(hoof, ball(0.12, [s * 0.5, 0.08, -0.26], [1.1, 0.5, 1.3], 8), { frame: f });
+    }
+    b.add(dark, ball(0.5, [0, 0.12, 0.05], [0.95, 0.3, 1.6], 10), { frame: f, cast: false });
   } else {
-    for (const [lx, lz] of [[-0.3, 0.6], [0.3, 0.6], [-0.3, -0.6], [0.3, -0.6]]) b.add(color, cyl(0.08, 0.1, lift + 0.1, [lx, (lift + 0.1) / 2, lz], [0, 0, 0], 6), { frame: f });
+    for (const s of [-1, 1]) {
+      for (const [lz, hind] of [[0.6, false], [-0.62, true]]) {
+        const top = by + (hind ? 0.1 : 0.0), knee = hind ? 0.75 : 0.72;
+        b.add(color, limb([s * 0.26, top, lz], [s * 0.24, knee, lz + (hind ? -0.12 : 0.04)], hind ? 0.2 : 0.16, 0.08), { frame: f });
+        b.add(color, ball(0.085, [s * 0.24, knee, lz + (hind ? -0.12 : 0.04)], [1, 1, 1], 7), { frame: f });
+        b.add(color, limb([s * 0.24, knee, lz + (hind ? -0.12 : 0.04)], [s * 0.24, 0.08, lz + 0.02], 0.07, 0.06, 6), { frame: f });
+        b.add(hoof, ball(0.13, [s * 0.24, 0.05, lz + 0.06], [1, 0.45, 1.3], 8), { frame: f });
+      }
+    }
   }
+
   if (load) {
-    b.add(load, box(1.5, 0.45, 0.5, [0, lift + 0.55, 0.45]), { frame: f });
-    b.add('#8c5a3c', box(1.3, 0.5, 0.5, [0, lift + 0.55, -0.55]), { frame: f });
+    b.add(load, ball(0.47, [0, by + 0.47, -0.12], [0.95, 0.75, 1.3], 12), { frame: f });
+    for (const s of [-1, 1]) b.add('#8c5a3c', box(0.3, 0.5, 0.62, [s * 0.58, by + 0.08, -0.12], [0, 0, s * 0.12]), { frame: f });
   }
-  ctx.addCollider({ x, z, hx: 0.5, hz: 1.1, rot, top: y + lift + 1.2 });
+  ctx.addCollider({ x, z, hx: 0.55, hz: 1.2, rot, top: y + by + 1.0 });
   ctx.exclude({ kind: 'circle', x, z, r: 1.6 });
 }
 

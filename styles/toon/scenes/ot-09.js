@@ -109,16 +109,16 @@ export default {
     fireRain(ctx, { center: [60, -50], radius: 30, count: 25, top: 160, speed: 50, seed: 11 });
     glow(ctx, { pos: [CITY[0], 30, CITY[1]], size: 160, color: '#ff7a30', opacity: 0.35, pulse: 0.03 });
 
-    figure(ctx, { pos: [0.4, 7.6], face: [0.4, 40], colors: LOT, scale: 1.06, lean: 0.18 });
-    figure(ctx, { pos: [-0.9, 6.2], face: [-0.9, 40], colors: DAUGHTERS[0], scale: 0.94, lean: 0.16 });
-    figure(ctx, { pos: [1.6, 5.8], face: [1.6, 40], colors: DAUGHTERS[1], scale: 0.9, lean: 0.16 });
+    figure(ctx, { pos: [0.4, 7.6], face: [0.4, 40], colors: LOT, scale: 1.1, lean: 0.18 });
+    figure(ctx, { pos: [-0.9, 6.2], face: [-0.9, 40], colors: DAUGHTERS[0], scale: 0.98, lean: 0.16 });
+    figure(ctx, { pos: [1.6, 5.8], face: [1.6, 40], colors: DAUGHTERS[1], scale: 0.95, lean: 0.16 });
     figure(ctx, { pos: WIFE, face: CITY, colors: SALT, scale: 0.98 });
     glow(ctx, { pos: [WIFE[0], ctx.groundHeight(...WIFE) + 1, WIFE[1]], size: 2.6, color: '#ffffff', opacity: 0.25, pulse: 0 });
   },
 
   player: {
-    start: [3.2, 16],
-    lookAt: [0, -60],
+    start: [2.8, 12.6],
+    lookAt: [-1, -60],
     colors: { robe: '#7a6a52', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

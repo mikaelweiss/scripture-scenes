@@ -12,11 +12,11 @@ const ABRAHAM_COLORS = { robe: '#d9c7a3', mantle: '#6b4a7a', skin: '#a8724a', ha
 function milkyWay(ctx) {
   const rng = makeRng(31);
   const pos = [];
-  const axis = new THREE.Vector3(0.85, 0.3, 0.45).normalize();
+  const axis = new THREE.Vector3(0.75, 0.55, -0.15).normalize();
   const u = new THREE.Vector3(1, 0, 0).cross(axis).normalize();
   const w = axis.clone().cross(u);
   const p = new THREE.Vector3();
-  while (pos.length < 7000 * 3) {
+  while (pos.length < 9000 * 3) {
     const a = rng() * Math.PI * 2;
     const spread = (rng() - 0.5) * (rng() < 0.6 ? 0.18 : 0.42);
     p.copy(u).multiplyScalar(Math.cos(a)).addScaledVector(w, Math.sin(a)).addScaledVector(axis, spread).normalize();
@@ -80,8 +80,9 @@ export default {
     campfire(b, ctx, { pos: FIRE, light: { color: '#ffa850', intensity: 26, distance: 22 } });
     campfire(b, ctx, { pos: [12, -9], light: { color: '#ffa850', intensity: 16, distance: 16 } });
 
+    camel(b, ctx, { pos: [-9.5, 1.5], rot: 1.9, couched: true, color: '#b4905e', load: '#7a3a2c' });
+    camel(b, ctx, { pos: [-12.5, -0.5], rot: 1.6, couched: true, color: '#a88458' });
     camel(b, ctx, { pos: [-18, -12], rot: 0.6, couched: true, color: '#a88458' });
-    camel(b, ctx, { pos: [-20, -16], rot: 0.9, couched: true, color: '#b4905e', load: '#7a3a2c' });
     camel(b, ctx, { pos: [22, -9], rot: -1.2, couched: true, color: '#a07c50' });
     camel(b, ctx, { pos: [24, -13], rot: -0.8, couched: true, color: '#b89262' });
     flock(b, ctx, { center: [26, 10], radius: 9, count: 46, seed: 5 });
@@ -89,7 +90,11 @@ export default {
     rocks(b, ctx, { ring: [8, 110], count: 140, size: [0.2, 1.1], colors: ['#7a6e5e', '#6a5e50', '#857866'], avoid: (x, z) => Math.hypot(x, z - 10) < 9 });
     b.flush();
 
-    figure(ctx, { pos: ABRAHAM, face: [0, -30], colors: ABRAHAM_COLORS, scale: 1.08, lean: -0.12 });
+    figure(ctx, { pos: ABRAHAM, face: [0, -30], colors: ABRAHAM_COLORS, scale: 1.12, lean: -0.12 });
+    // Soft starlight on Abram so he reads against the dark camp.
+    const sl = new THREE.PointLight('#c8d4ff', 10, 9, 1.2);
+    sl.position.set(ABRAHAM[0] + 1.5, 4, ABRAHAM[1] + 2.5);
+    ctx.scene.add(sl);
   },
 
   crowd: {
@@ -104,8 +109,8 @@ export default {
   },
 
   player: {
-    start: [1.2, 6.8],
-    lookAt: [0, -8],
+    start: [2.7, 4.8],
+    lookAt: [-1.2, -6],
     colors: { robe: '#8c5a3c', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

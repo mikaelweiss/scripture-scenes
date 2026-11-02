@@ -2,11 +2,11 @@
 import { Batch, DAY_STYLE, DESERT_GROUND, PALETTE, addSun, camel, cityWall, figure, house, jar, makeRng, palm, rocks, well } from './lib/ot-07-kit.js';
 
 const WELL = [0, -3];
-const REBEKAH = [2.4, -0.4];
-const SERVANT = [-3.6, 2.2];
+const REBEKAH = [1.4, 0.6];
+const SERVANT = [-0.6, 2.4];
 
-const REBEKAH_COLORS = { robe: '#b5523b', mantle: '#4f7f80', skin: '#b5825a', hair: '#efe3c2', sash: '#c8912e', arms: [0.35, 0.75] };
-const SERVANT_COLORS = { robe: '#7a6a52', mantle: '#c8912e', skin: '#9c6a45', hair: '#e6d8b8', sash: '#5e4632', arms: [0.25, 0.4] };
+const REBEKAH_COLORS = { robe: '#b5523b', mantle: '#4f7f80', skin: '#b5825a', hair: '#efe3c2', sash: '#c8912e', arms: [0.3, 1.15] };
+const SERVANT_COLORS = { robe: '#7a6a52', mantle: '#c8912e', skin: '#9c6a45', hair: '#e6d8b8', sash: '#5e4632', arms: [0.3, 0.95] };
 
 function nahor(ctx, b) {
   const rng = makeRng(24);
@@ -52,8 +52,8 @@ export default {
     well(b, ctx, { pos: WELL, rot: Math.PI });
     nahor(ctx, b);
     const camels = [
-      [-6.5, 4.5, 0.9], [-8.8, 2.2, 1.1], [-10.6, -0.6, 1.3], [-11.6, -3.8, 1.5], [-6.8, 8.2, 0.7],
-      [-9.8, 6.4, 0.9], [-12.6, 3.4, 1.1], [-14.2, 0, 1.3], [-4, 7, 0.5], [-14.6, -4.6, 1.6],
+      [-5.2, 4.6, 0.9], [-6.4, 1.2, 1.1], [-7.4, -2.4, 1.3], [-9.6, 6.8, 0.8], [-10.4, 3.2, 1.0],
+      [-11.2, -0.4, 1.2], [-12.4, -4, 1.4], [-14.4, 5.6, 0.9], [-15.2, 1.8, 1.1], [-16, -2, 1.3],
     ];
     camels.forEach(([x, z, r], i) => camel(b, ctx, { pos: [x, z], rot: Math.PI * 0.5 + (r - 1.1) * 0.5, couched: true, color: ['#c49a62', '#b4905e', '#a88458', '#c8a46e'][i % 4], load: i % 3 === 0 ? '#8c3a2c' : null }));
     jar(b, ctx, { pos: [3.1, -1.6], color: '#b5653b' });
@@ -62,9 +62,11 @@ export default {
     rocks(b, ctx, { ring: [10, 120], count: 110, size: [0.2, 0.9], colors: ['#c9b08a', '#b89a70', '#d9c39a'], avoid: (x, z) => Math.abs(x) < 5 && z < 0 });
     b.flush();
 
-    const reb = figure(ctx, { pos: REBEKAH, face: SERVANT, colors: REBEKAH_COLORS, scale: 0.98 });
+    // She lets down her pitcher upon her hand and gives him drink.
+    const reb = figure(ctx, { pos: REBEKAH, face: SERVANT, colors: REBEKAH_COLORS, scale: 1.02 });
     const jb = new Batch(ctx);
-    jar(jb, ctx, { pos: [REBEKAH[0] + 0.24, REBEKAH[1]], y: reb.position.y + 1.42, color: '#c06a3c', scale: 0.8 });
+    const reach = 0.6 * 1.02;
+    jar(jb, ctx, { pos: [REBEKAH[0] + Math.sin(reb.rotation.y) * reach, REBEKAH[1] + Math.cos(reb.rotation.y) * reach], y: reb.position.y + 0.92, color: '#c06a3c', scale: 0.85 });
     jb.flush();
     figure(ctx, { pos: SERVANT, face: REBEKAH, colors: SERVANT_COLORS, scale: 1.04, lean: 0.06 });
   },
@@ -77,13 +79,13 @@ export default {
     groups: [
       { shape: 'rect', center: [0, -18], size: [3, 14], count: 5, facing: [0, 10] },
       { center: [-16, 6], radius: [0, 2], count: 3, facing: SERVANT },
-      { center: [5, -5.5], radius: [0, 1.4], count: 2, facing: WELL },
+      { center: [5.5, -4.5], radius: [0, 1.4], count: 2, facing: WELL },
     ],
   },
 
   player: {
-    start: [4, 8.5],
-    lookAt: [-3, -1],
+    start: [0.4, 7.6],
+    lookAt: [-4.6, -0.4],
     colors: { robe: '#8c5a3c', mantle: '#3e6e66', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };
