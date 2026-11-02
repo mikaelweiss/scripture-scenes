@@ -4,7 +4,7 @@ import { box, block, bed, chair, table, settler, candle, pointLight, flame } fro
 
 const F = 0.05;
 const W = 7, D = 6, H = 2.55;
-const START = [-1.1, 2.3];
+const START = [-0.75, 1.45];
 const TABLE = [0.55, -1.0];
 
 const plaster = '#d9ccb0';
@@ -143,7 +143,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.06, vignette: 0.5, shadowTint: '#2a2430', highlightTint: '#fff0d8' },
   shadow: { center: [0, 0], radius: 10 },
 
-  player: { start: START, yaw: Math.atan2(START[0] - TABLE[0], START[1] - TABLE[1]), pitch: -0.12, eye: 1.6, speed: 2.2 },
+  player: { start: START, yaw: Math.atan2(START[0] - (TABLE[0] + 0.25), START[1] - TABLE[1]), pitch: -0.14, eye: 1.6, speed: 2.2 },
 
   terrain: {
     size: 300,
@@ -167,5 +167,6 @@ export default {
       x: TABLE[0] + 1.1, z: TABLE[1], y: F, yaw: -Math.PI / 2, pose: 'sit', arms: 'write',
       coat: '#3a2e26', vest: '#6a5a3a', pants: '#4a4036', hair: '#2a1e16', skin: '#dcaa88', collide: false,
     });
+    pointLight(ctx, { x: TABLE[0] - 0.4, y: F + 1.7, z: TABLE[1] + 1.1, color: '#ffe2b8', intensity: 2.4, distance: 4 });
   },
 };

@@ -6,7 +6,7 @@ const F = 0.05;
 const W = 8, L = 10, KNEE = 1.0, RIDGE = 3.4;
 const JOSEPH = [-2.35, -1.3];
 const MORONI = [-0.55, -1.3];
-const START = [1.3, 3.9];
+const START = [0.7, 2.3];
 
 const logColor = ['#7a5a3e', '#6e5036', '#84654a'];
 const board = ['#8a6a48', '#7d5f40', '#94744f'];
@@ -114,7 +114,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.06, vignette: 0.55, shadowTint: '#2a2440', highlightTint: '#fff2d8' },
   shadow: { center: [0, 0], radius: 12 },
 
-  player: { start: START, yaw: Math.atan2(START[0] - (MORONI[0] - 0.6), START[1] - MORONI[1]), pitch: 0.02, eye: 1.6, speed: 2.2 },
+  player: { start: START, yaw: Math.atan2(START[0] - (MORONI[0] - 0.75), START[1] - MORONI[1]), pitch: -0.02, eye: 1.6, speed: 2.2 },
 
   terrain: {
     size: 300,
@@ -135,12 +135,12 @@ export default {
     furnishings(ctx);
     settler(ctx, {
       x: JOSEPH[0], z: JOSEPH[1], y: F + 0.12, yaw: Math.PI / 2, pose: 'sit', arms: 'lap',
-      coatOff: true, shirt: '#cfc2a8', vest: '#cfc2a8', pants: '#b8a88c', skin: '#d8a07a', hair: '#5a3a22', collide: false,
+      coatOff: true, shirt: '#d8ccb2', vest: '#a89676', pants: '#7a6a54', skin: '#d8a07a', hair: '#5a3a22', collide: false,
     });
     ctx.colliders.add({ x: JOSEPH[0], z: JOSEPH[1], w: 0.6, d: 0.6, bottom: F, top: F + 1.6 });
     messenger(ctx, {
       x: MORONI[0], z: MORONI[1], y: F + 0.35, face: JOSEPH, scale: 1.08, arms: 'out',
-      light: 30, distance: 12, color: '#fff4dc', halo: 3.4, haloOpacity: 0.6, emissive: 0.75,
+      light: 17, distance: 12, color: '#fff4dc', halo: 3.0, haloOpacity: 0.38, emissive: 0.95,
     });
     ctx.colliders.add({ x: MORONI[0], z: MORONI[1], w: 0.7, d: 0.7, bottom: F, top: F + 2.2 });
     const glowFloor = new ctx.THREE.Mesh(

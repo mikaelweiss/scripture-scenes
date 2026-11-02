@@ -3,15 +3,74 @@
 // Joseph and Oliver stand waist-deep in the river and baptize each other.
 import { hardwood, sapling, fern, log, settler, messenger, water, block } from './lib/pgp-07-kit.js';
 
-const START = [5, -2];
+const START = [4.4, -4.4];
 const JOSEPH = [-0.65, -14.8];
 const OLIVER = [0.65, -14.8];
 const JOHN = [-6, -8.2];
 const WATER = -0.35;
-const FOCUS = [-2.5, -14];
+const FOCUS = [-2.2, -11.4];
 const greens = ['#6f9a3c', '#7fa944', '#5f8a36', '#8db84e', '#557a32'];
 
 const riverFlats = Array.from({ length: 38 }, (_, i) => ({ x: -460 + i * 25, z: -100, r: 86, falloff: 10, height: -1.2 }));
+
+// Water's edge z for a given x: first point walking riverward where the ground dips under the surface.
+function shoreZ(ctx, x) {
+  for (let z = -3; z > -30; z -= 0.25) if (ctx.heightAt(x, z) < WATER + 0.05) return z;
+  return -12;
+}
+
+// Reeds, stones, and leaning trees along the near bank of the Susquehanna.
+function bank(ctx, view) {
+  const { THREE } = ctx;
+  const r = ctx.rand;
+  const reedColors = ['#7a9a44', '#8aa850', '#6a8a3a', '#a4a85a'];
+  for (let x = -60; x < 60; x += r.range(0.6, 1.6)) {
+    const zs = shoreZ(ctx, x);
+    const nearMen = Math.hypot(x - 0, zs + 14.8) < 3;
+    if (nearMen || Math.hypot(x - JOHN[0], zs - JOHN[1]) < 2.2 || Math.hypot(x - START[0], zs - START[1]) < 4.5) continue;
+    const cx = x + r.range(-0.4, 0.4), cz = zs + r.range(-0.6, 1.0);
+    const blades = 5 + Math.floor(r() * 6);
+    for (let i = 0; i < blades; i++) {
+      const h = r.range(0.7, 1.6);
+      const bx = cx + r.range(-0.35, 0.35), bz = cz + r.range(-0.35, 0.35);
+      ctx.solid.add(new THREE.ConeGeometry(0.035, h, 3).translate(0, h / 2, 0), {
+        position: [bx, Math.max(ctx.heightAt(bx, bz), WATER - 0.2), bz],
+        rotation: [r.range(-0.25, 0.25), r() * 3, r.range(-0.25, 0.25)],
+        color: r.pick(reedColors),
+        jitter: 0.1,
+      });
+    }
+    if (r() < 0.3) {
+      const h = r.range(1.1, 1.5);
+      const gy = Math.max(ctx.heightAt(cx, cz), WATER - 0.2);
+      ctx.solid.add(new THREE.CylinderGeometry(0.012, 0.015, h, 3), { position: [cx, gy + h / 2, cz], color: '#7a9a44' });
+      ctx.solid.add(new THREE.CylinderGeometry(0.05, 0.05, 0.22, 5), { position: [cx, gy + h - 0.08, cz], color: '#6a4a2e' });
+    }
+  }
+  for (let i = 0; i < 70; i++) {
+    const x = r.range(-45, 45);
+    const z = shoreZ(ctx, x) + r.range(-1.2, 1.8);
+    if (Math.hypot(x, z + 14.8) < 3 || Math.hypot(x - JOHN[0], z - JOHN[1]) < 2) continue;
+    if (Math.hypot(x - START[0], z - START[1]) < 4.5) continue;
+    const size = r.range(0.2, 0.6);
+    ctx.solid.add(new THREE.DodecahedronGeometry(size, 0), {
+      position: [x, ctx.heightAt(x, z) + size * 0.15, z],
+      rotation: [r() * 3, r() * 3, r() * 3],
+      scale: [1, r.range(0.45, 0.7), 1],
+      color: r.pick(['#7a7468', '#8a8478', '#6a665c', '#5e5a50']),
+      jitter: 0.1,
+    });
+  }
+  for (const [x, z, h] of [[9.5, -9.4, 14], [12.5, -8.2, 16], [-17, -9.6, 15], [-20, -7.4, 13], [8.6, -5.2, 12], [16, -9.6, 12], [-24, -9.2, 15], [-14, -4.2, 11]]) {
+    hardwood(ctx, { x, z, h, leaves: greens, canopy: 1.25, trunk: r.pick(['#5e5248', '#6b5e52', '#8a8478']) });
+  }
+  for (let i = 0; i < 40; i++) {
+    const x = r.range(-30, 30), z = r.range(-9.5, -3);
+    if (view(x, z) || ctx.heightAt(x, z) < WATER + 0.1) continue;
+    if (r() < 0.5) sapling(ctx, { x, z, leaf: r.pick(greens) });
+    else fern(ctx, { x, z, size: r.range(0.6, 1), color: r.pick(['#5f8f3a', '#6e9a42', '#4f7a32']) });
+  }
+}
 
 export default {
   title: 'Joseph Smith-History 1:68-73: John the Baptist restores the priesthood',
@@ -19,7 +78,7 @@ export default {
   fov: 62,
   exposure: 1.02,
 
-  sun: { direction: [-0.55, 0.5, -0.6], color: '#ffe6bc', intensity: 2.5 },
+  sun: { direction: [0.6, 0.5, 0.35], color: '#ffe6bc', intensity: 2.5 },
   light: { sky: '#a8c8e8', ground: '#4a5a30', hemi: 0.95 },
   sky: { top: '#5a8ccc', horizon: '#e4ecec', ground: '#a0b0a0', sunColor: '#fff0d0', glow: 1 },
   fog: { color: '#c4d2d4', near: 70, far: 520 },
@@ -29,7 +88,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.42, shadowTint: '#203040', highlightTint: '#fff2d8' },
   shadow: { center: [0, -8], radius: 40 },
 
-  player: { start: START, yaw: Math.atan2(START[0] - FOCUS[0], START[1] - FOCUS[1]), pitch: -0.02, eye: 1.65, speed: 4 },
+  player: { start: START, yaw: Math.atan2(START[0] - FOCUS[0], START[1] - FOCUS[1]), pitch: -0.1, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1200,
@@ -47,7 +106,7 @@ export default {
   },
 
   scatter: [
-    { type: 'rock', count: 26, center: [0, -9], ring: [2, 40], arc: [-0.1, -Math.PI + 0.1], spacing: 3, seed: 4, avoid: [{ r: 5, x: JOHN[0], z: JOHN[1] }, { r: 4, x: 0, z: -15 }, { rect: [0, -40, 300, 50] }], props: { color: '#7a7468', size: 0.6 } },
+    { type: 'rock', count: 26, center: [0, -9], ring: [2, 40], arc: [-0.1, -Math.PI + 0.1], spacing: 3, seed: 4, avoid: [{ r: 5, x: JOHN[0], z: JOHN[1] }, { r: 5, x: START[0], z: START[1] }, { r: 4, x: 0, z: -15 }, { rect: [0, -40, 300, 50] }], props: { color: '#7a7468', size: 0.6 } },
   ],
 
   custom(ctx) {
@@ -84,8 +143,10 @@ export default {
       else fern(ctx, { x, z, color: r.pick(['#5f8f3a', '#6e9a42', '#4f7a32']) });
     }
 
-    const L = [0.8, -4.2];
-    log(ctx, { x: L[0], z: L[1], len: 2.6, rot: 1.45, radius: 0.2, color: '#8a7458', y: ctx.heightAt(...L) - 0.08 });
+    bank(ctx, view);
+
+    const L = [-1.6, -5.4];
+    log(ctx, { x: L[0], z: L[1], len: 2.6, rot: 1.1, radius: 0.2, color: '#8a7458', y: ctx.heightAt(...L) - 0.08 });
     const ly = ctx.heightAt(...L) + 0.2;
     ctx.solid.box(0.55, 0.06, 0.8, { position: [L[0] - 0.5, ly + 0.04, L[1]], rotation: [0.1, 1.2, 0.2], color: '#2e2c2a' });
     ctx.solid.box(0.5, 0.06, 0.75, { position: [L[0] + 0.5, ly + 0.04, L[1] + 0.05], rotation: [-0.1, 1.5, -0.15], color: '#3a2e26' });
@@ -108,7 +169,7 @@ export default {
     }
 
     const jy = ctx.heightAt(...JOHN) + 0.7;
-    messenger(ctx, { x: JOHN[0], z: JOHN[1], y: jy, face: [0, -14.8], scale: 1.08, arms: 'out', light: 30, distance: 14, halo: 3, haloOpacity: 0.45, emissive: 0.45 });
+    messenger(ctx, { x: JOHN[0], z: JOHN[1], y: jy, face: [0, -14.8], scale: 1.08, arms: 'out', light: 18, distance: 12, halo: 3, haloOpacity: 0.32, emissive: 0.34 });
     ctx.colliders.add({ x: JOHN[0], z: JOHN[1], w: 0.8, d: 0.8, bottom: jy - 2, top: jy + 2 });
     const cloudMat = new ctx.THREE.MeshLambertMaterial({ color: '#fffaf0', emissive: '#fff4dc', emissiveIntensity: 0.4, transparent: true, opacity: 0.5, flatShading: true, depthWrite: false });
     const puffs = [];

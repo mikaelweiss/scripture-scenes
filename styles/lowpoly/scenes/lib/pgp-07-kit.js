@@ -150,16 +150,24 @@ export function settler(ctx, s) {
     parent.add(m);
     return m;
   };
-  const hip = { stand: 0.85, kneel: 0.5, sit: 0.47, sleep: 0.85 }[pose];
+  const hip = { stand: 0.85, kneel: 0.4, sit: 0.47, sleep: 0.85 }[pose];
+  const hipZ = pose === 'kneel' ? -0.08 : 0;
+  const waist = new THREE.Group();
+  waist.position.set(0, hip, hipZ);
+  waist.rotation.x = pose === 'kneel' ? 0.2 : 0;
+  g.add(waist);
   const upper = new THREE.Group();
-  upper.position.y = hip - 0.85;
-  g.add(upper);
+  upper.position.set(0, -0.85, -hipZ);
+  waist.add(upper);
   const legColor = kind === 'woman' ? dress : pants;
 
   if (kind === 'woman') {
     if (pose === 'stand') add(new THREE.CylinderGeometry(0.2, 0.36, 0.95, 8).translate(0, 0.475, 0), dress, 0, 0, 0);
     else if (pose === 'sit') add(new THREE.BoxGeometry(0.5, 0.2, 0.55), dress, 0, 0.5, 0.2);
-    else add(new THREE.BoxGeometry(0.5, 0.45, 0.5), dress, 0, 0.22, -0.05);
+    else {
+      add(new THREE.BoxGeometry(0.5, 0.4, 0.46), dress, 0, 0.2, -0.08);
+      add(new THREE.BoxGeometry(0.46, 0.14, 0.62), dress, 0, 0.07, -0.08);
+    }
     if (apron && pose === 'stand') add(new THREE.BoxGeometry(0.34, 0.7, 0.04), apron, 0, 0.55, 0.25, [-0.17, 0, 0]);
   } else if (pose === 'stand') {
     for (const sd of [-1, 1]) {
@@ -168,9 +176,9 @@ export function settler(ctx, s) {
     }
   } else if (pose === 'kneel') {
     for (const sd of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.15, 0.44, 0.17), legColor, sd * 0.1, 0.28, 0.02, [-0.15, 0, 0]);
-      add(new THREE.BoxGeometry(0.14, 0.13, 0.5), legColor, sd * 0.1, 0.07, -0.2);
-      add(new THREE.BoxGeometry(0.13, 0.08, 0.2), '#231d18', sd * 0.1, 0.06, -0.5);
+      add(new THREE.BoxGeometry(0.16, 0.4, 0.18), legColor, sd * 0.1, 0.24, 0.04, [-0.55, 0, 0]);
+      add(new THREE.BoxGeometry(0.15, 0.14, 0.52), legColor, sd * 0.1, 0.07, -0.08);
+      add(new THREE.BoxGeometry(0.13, 0.16, 0.1), '#231d18', sd * 0.1, 0.08, -0.36, [0.5, 0, 0]);
     }
   } else if (pose === 'sit') {
     for (const sd of [-1, 1]) {

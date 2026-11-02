@@ -3,7 +3,7 @@
 import { hardwood, sapling, settler, messenger, railFence, farmhouse, field, frame } from './lib/pgp-07-kit.js';
 
 const BOX = [-35, 0];
-const START = [-30, 3.4];
+const START = [-30.3, -0.6];
 const autumn = ['#6f8a3a', '#7d9440', '#c9a83a', '#d8b848', '#cf7a2e', '#b8562a', '#8a9a40'];
 
 function stoneBox(ctx) {
@@ -86,7 +86,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.4, shadowTint: '#283040', highlightTint: '#fff2d8' },
   shadow: { center: [-35, 0], radius: 40 },
 
-  player: { start: START, yaw: Math.atan2(START[0] - (BOX[0] - 0.4), START[1] - (BOX[1] - 0.3)), pitch: -0.22, eye: 1.65, speed: 4 },
+  player: { start: START, yaw: Math.atan2(START[0] - (BOX[0] - 0.6), START[1] - (BOX[1] - 0.1)), pitch: -0.16, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1300,
@@ -152,8 +152,8 @@ export default {
     const [hx, hz] = frame(BOX[0], BOX[1], 0)(1.1, 1.5);
     ctx.solid.add(new ctx.THREE.CylinderGeometry(0.24, 0.24, 0.02, 9), { position: [hx, ctx.heightAt(hx, hz) + 0.03, hz], color: '#1e1b1a' });
     ctx.solid.add(new ctx.THREE.CylinderGeometry(0.13, 0.14, 0.17, 9), { position: [hx, ctx.heightAt(hx, hz) + 0.12, hz], color: '#1e1b1a' });
-    const m = [BOX[0] - 1.6, BOX[1] - 1.4];
-    messenger(ctx, { x: m[0], z: m[1], y: ctx.heightAt(...m) + 0.25, face: [BOX[0] + 0.2, BOX[1] + 1.2], scale: 1.08, arms: 'out', light: 16, distance: 10, halo: 3.2, haloOpacity: 0.5, emissive: 0.55 });
+    const m = [BOX[0] - 1.2, BOX[1] - 2.4];
+    messenger(ctx, { x: m[0], z: m[1], y: ctx.heightAt(...m) + 0.25, face: [BOX[0] + 0.2, BOX[1] + 1.2], scale: 1.08, arms: 'out', light: 10, distance: 10, halo: 3.0, haloOpacity: 0.3, emissive: 0.32 });
     ctx.colliders.add({ x: m[0], z: m[1], w: 0.7, d: 0.7, bottom: ctx.heightAt(...m) - 1, top: ctx.heightAt(...m) + 2.2 });
   },
 };

@@ -4,7 +4,8 @@ import { hardwood, sapling, fern, log, settler, messenger, frame } from './lib/p
 
 const JOSEPH = [0, 0];
 const LIGHT = [0, -2.2];
-const START = [2.4, 9.5];
+const START = [4.4, 4.6];
+const VIEW = [0, -1.1];
 
 const greens = ['#7fa944', '#8db84e', '#6f9a3c', '#9cc25a', '#5f8a36'];
 
@@ -22,7 +23,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.5, shadowTint: '#203028', highlightTint: '#fff4d8' },
   shadow: { center: [0, 0], radius: 45 },
 
-  player: { start: START, yaw: Math.atan2(START[0] - LIGHT[0], START[1] - LIGHT[1]), pitch: 0.16, eye: 1.65, speed: 3.5 },
+  player: { start: START, yaw: Math.atan2(START[0] - VIEW[0], START[1] - VIEW[1]), pitch: 0.12, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 900,
@@ -39,8 +40,8 @@ export default {
   },
 
   effects: [
-    { type: 'beam', at: LIGHT, height: 120, radiusBottom: 3.4, radiusTop: 6, color: '#fff3d4', opacity: 0.42 },
-    { type: 'beam', at: LIGHT, height: 120, radiusBottom: 2.2, radiusTop: 3.5, color: '#fffaf0', opacity: 0.3 },
+    { type: 'beam', at: LIGHT, height: 120, radiusBottom: 3.4, radiusTop: 6, color: '#fff3d4', opacity: 0.26 },
+    { type: 'beam', at: LIGHT, height: 120, radiusBottom: 2.2, radiusTop: 3.5, color: '#fffaf0', opacity: 0.16 },
     { type: 'ring', position: [JOSEPH[0], 0.06, JOSEPH[1]], radius: 2.6, width: 1.6, color: '#fff0c4', opacity: 0.55 },
     { type: 'motes', at: LIGHT, radius: 4, height: 18, count: 260, color: '#fff6dc' },
   ],
@@ -83,13 +84,13 @@ export default {
       x: JOSEPH[0], z: JOSEPH[1], yaw: Math.PI, pose: 'kneel', arms: 'pray',
       coatOff: true, shirt: '#e6dcc6', vest: '#5a4636', pants: '#4a4038', hair: '#7a5634', skin: '#e0b090', scale: 0.95,
     });
-    const hatAt = frame(JOSEPH[0], JOSEPH[1], 0)(0.9, 0.7);
+    const hatAt = frame(JOSEPH[0], JOSEPH[1], 0)(-0.9, 0.6);
     ctx.solid.add(new ctx.THREE.CylinderGeometry(0.24, 0.24, 0.02, 9), { position: [hatAt[0], ctx.heightAt(...hatAt) + 0.03, hatAt[1]], color: '#2a2622' });
     ctx.solid.add(new ctx.THREE.CylinderGeometry(0.13, 0.14, 0.17, 9), { position: [hatAt[0], ctx.heightAt(...hatAt) + 0.12, hatAt[1]], color: '#2a2622' });
 
     for (const sx of [-0.85, 0.85]) {
-      const x = LIGHT[0] + sx, z = LIGHT[1] - 0.6;
-      messenger(ctx, { x, z, y: ctx.heightAt(x, z) + 2.3, face: [JOSEPH[0], JOSEPH[1] + 2], scale: 1.08, arms: sx > 0 ? 'out' : 'down', light: 22, distance: 16, halo: 3.2, haloOpacity: 0.45, emissive: 0.35 });
+      const x = LIGHT[0] + sx, z = LIGHT[1] - 0.3;
+      messenger(ctx, { x, z, y: ctx.heightAt(x, z) + 2.1, face: [JOSEPH[0], JOSEPH[1] + 2], scale: 1.12, arms: sx > 0 ? 'out' : 'down', light: 22, distance: 16, halo: 3.4, haloOpacity: 0.3, emissive: 0.22 });
     }
   },
 };
