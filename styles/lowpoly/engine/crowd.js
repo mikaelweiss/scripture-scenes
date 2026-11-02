@@ -212,7 +212,7 @@ export function createCrowd(people, time) {
     const mesh = new THREE.InstancedMesh(geometry[part][pose], material, items.length);
     items.forEach(([m, c], i) => {
       mesh.setMatrixAt(i, m);
-      mesh.setColorAt(i, c);
+      mesh.setColorAt(i, c?.isColor ? c : new THREE.Color(c));
     });
     mesh.castShadow = true;
     mesh.receiveShadow = true;
