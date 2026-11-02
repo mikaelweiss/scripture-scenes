@@ -36,7 +36,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.55, shadowTint: '#1a1430', highlightTint: '#ffe0a8' },
   shadow: { center: [0, 0], radius: 26 },
 
-  player: { start: [1.5, 12], yaw: 0.02, pitch: 0.08, eye: 1.65, speed: 3.5 },
+  player: { start: [1.1, 4.5], yaw: 0.03, pitch: 0.16, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 400,
@@ -112,8 +112,8 @@ export default {
     // The ring of fire that does not burn, and the brothers within it, faces shining.
     const fy = ctx.heightAt(...BRO);
     const N = 30;
-    const flames = new THREE.InstancedMesh(new THREE.ConeGeometry(0.22, 1.4, 5).translate(0, 0.7, 0), new THREE.MeshBasicMaterial({ color: '#ffb040', toneMapped: false, fog: false }), N);
-    const inner = new THREE.InstancedMesh(new THREE.ConeGeometry(0.12, 0.9, 5).translate(0, 0.45, 0), new THREE.MeshBasicMaterial({ color: '#fff0b0', toneMapped: false, fog: false }), N);
+    const flames = new THREE.InstancedMesh(new THREE.ConeGeometry(0.22, 1.05, 5).translate(0, 0.52, 0), new THREE.MeshBasicMaterial({ color: '#ffb040', toneMapped: false, fog: false }), N);
+    const inner = new THREE.InstancedMesh(new THREE.ConeGeometry(0.12, 0.7, 5).translate(0, 0.35, 0), new THREE.MeshBasicMaterial({ color: '#fff0b0', toneMapped: false, fog: false }), N);
     const seeds = Array.from({ length: N }, (_, i) => [(i / N) * Math.PI * 2, r() * 6, r.range(0.8, 1.3)]);
     const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
     ctx.scene.add(flames, inner);
@@ -146,7 +146,7 @@ export default {
 
     // Angels descending through the broken roof.
     for (const [x, y, z] of [[-3.4, 4.0, BRO[1] - 1.2], [3.4, 4.5, BRO[1] - 0.8]]) {
-      const angel = radiant(ctx, { x, y, z, face: [0, 12], halo: 5, light: 6, arms: 'out' }, createFigure);
+      const angel = radiant(ctx, { x, y, z, face: [1, 4.5], halo: 3, haloOpacity: 0.35, light: 6, arms: 'out', emissive: 0.45 }, createFigure);
       const y0 = y;
       ctx.onFrame((t) => (angel.position.y = y0 + Math.sin(t * 0.7 + x) * 0.12));
     }
@@ -157,7 +157,7 @@ export default {
       const x = r.range(-W / 2 + 1, W / 2 - 1), z = r.range(-D / 2 + 1, D / 2 - 1);
       const d = Math.hypot(x - BRO[0], z - BRO[1]);
       if (d < 4.5 || Math.hypot(x - 1.5, z - 12) < 2.6) continue;
-      if (Math.abs(x - 0.4 - (z - BRO[1]) * 0.07) < 1.3 && z > BRO[1]) continue;
+      if (z > BRO[1] && Math.abs(x - 0.4 - (z - BRO[1]) * 0.07) < 1.6 + (z - BRO[1]) * 0.25) continue;
       if ([-10, 10].some((cx) => [-7, 3].some((cz) => Math.hypot(x - cx, z - cz) < 1.1))) continue;
       if (pts.some(([px, pz]) => Math.hypot(px - x, pz - z) < 0.85)) continue;
       pts.push([x, z]);

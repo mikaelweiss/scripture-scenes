@@ -8,7 +8,7 @@ import { strut, makePeople, addCrowd, house } from './lib/bom-31-kit.js';
 const GARDEN = [-21, -8];
 const GW = 26, GD = 32;
 const TOWER = [-12, -8];
-const TH = 8.5;
+const TH = 6.5;
 const MARKET = [0, -96];
 
 const folk = {
@@ -53,7 +53,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.32, shadowTint: '#2a3050', highlightTint: '#fff0d0' },
   shadow: { center: [-6, -14], radius: 70 },
 
-  player: { start: [3, 10], yaw: 0.6, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [2, 4], yaw: 0.92, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -119,11 +119,11 @@ export default {
       const h = (k + 1) * (TH / 16);
       ctx.solid.box(1.1, 0.25, 0.6, { position: [TOWER[0] - 2.55, ty + h - 0.12, TOWER[1] + 1.8 - k * 0.24], color: '#a08a66' });
     }
-    for (let i = 0; i < 6; i++) ctx.solid.box(0.12, 0.6, 0.5, { position: [TOWER[0] + 2.02, ty + 1.5 + i * 1.2, TOWER[1] + r.range(-1, 1)], color: '#b8a480' });
+    for (let i = 0; i < 4; i++) ctx.solid.box(0.12, 0.6, 0.5, { position: [TOWER[0] + 2.02, ty + 1.5 + i * 1.2, TOWER[1] + r.range(-1, 1)], color: '#b8a480' });
 
     // Nephi on his knees, looking up in prayer.
     const top = ty + TH + 0.4;
-    const nephi = createFigure({ x: TOWER[0] + 1.9, y: top - 0.55, z: TOWER[1] + 0.3, scale: 1.35, face: [40, TOWER[1] - 6], robe: '#e2d6bc', mantle: '#3f5a8a', skin: '#9b6a46', arms: 'out' });
+    const nephi = createFigure({ x: TOWER[0] + 1.6, y: top - 0.3, z: TOWER[1] + 0.9, scale: 1.55, face: [30, 14], robe: '#e2d6bc', mantle: '#3f5a8a', skin: '#9b6a46', arms: 'out' });
     nephi.rotation.x = -0.12;
     ctx.scene.add(nephi);
 
@@ -132,7 +132,7 @@ export default {
     for (let tries = 0; pts.length < 260 && tries < 9000; tries++) {
       const x = r.range(-6.8, 16), z = r.range(-34, 18);
       if (x < -7) continue;
-      if (Math.hypot(x - 3, z - 10) < 3.5 || (z > 10 && Math.abs(x - 3) < 3)) continue;
+      if (Math.hypot(x - 2, z - 4) < 3.2) continue;
       if (x > 8 && Math.abs(z - TOWER[1]) > 22) continue;
       if (pts.some(([px, pz]) => Math.hypot(px - x, pz - z) < 0.8)) continue;
       pts.push([x, z]);

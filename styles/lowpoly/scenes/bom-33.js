@@ -6,8 +6,8 @@ import { createFigure } from '../engine/crowd.js';
 import { strut, formation, makePeople, addCrowd, arm, banner } from './lib/bom-31-kit.js';
 
 const YOUTHS = [0, -6];
-const HELAMAN = [0, -30];
-const HOST = [4, -74];
+const HELAMAN = [0, -30.5];
+const HOST = [2, -54];
 
 const youths = {
   robes: ['#e4dac2', '#d8ccb0', '#cfc2a2', '#e8e0cc', '#c8b898'],
@@ -40,7 +40,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.36, shadowTint: '#30285e', highlightTint: '#ffe8c0' },
   shadow: { center: [0, -40], radius: 90 },
 
-  player: { start: [-35, 23], yaw: -0.68, pitch: -0.07, eye: 1.65, speed: 4.5 },
+  player: { start: [-42, -26], yaw: -1.42, pitch: -0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -50,7 +50,7 @@ export default {
     bumps: 0.3,
     flats: [
       { x: 0, z: -45, r: 80, falloff: 50, height: 0 },
-      { x: -36, z: 24, r: 7, falloff: 20, height: 4 },
+      { x: -45, z: -26, r: 6, falloff: 20, height: 3.5 },
     ],
     colors: { ground: '#a8945e', groundAlt: '#9a8a52', grass: '#7a8040', high: '#8a7a54', rock: '#7a6a52' },
     patches: [{ x: 0, z: -55, r: 40, color: '#b8a070', strength: 0.6, rough: 0.6 }],
@@ -81,18 +81,14 @@ export default {
     banner(ctx, { x: 6, z: -24, h: 6.5, w: 1.5, len: 2.2, color: '#3f5a8a' });
 
     // The Lamanite host across the field.
-    const host = formation({ center: HOST, rows: 22, cols: 64, spacing: 1.05, rowSpacing: 1.2, jitter: 0.35, seed: 7, skip: 0.1 });
+    const host = formation({ center: HOST, rows: 28, cols: 50, spacing: 1.05, rowSpacing: 1.2, jitter: 0.35, seed: 7, skip: 0.1 });
     const lam = makePeople(host, { palette: lamanites, heightAt: ctx.heightAt, seed: 8, face: [0, 20], yawJitter: 0.25 });
     addCrowd(ctx, lam);
     arm(ctx, lam, { spear: 0.55, shield: 0.7, helmet: 0.3, bow: 0.4, pose: 'charge', shields: ['#5a2a1e', '#3a2a22', '#7a3a22'], helmetColor: '#6a3a2a', seed: 9 });
-    for (const x of [-28, -10, 8, 26]) banner(ctx, { x, z: HOST[1] - 6, h: 7, w: 1.4, len: 2, color: r.pick(['#8a2a1a', '#2a1e18', '#6a3a1a']), rot: Math.PI });
+    for (const x of [-20, -4, 12, 26]) banner(ctx, { x, z: HOST[1] - 6, h: 7, w: 1.4, len: 2, color: r.pick(['#8a2a1a', '#2a1e18', '#6a3a1a']), rot: Math.PI });
 
-    // Dust thrown up where the lines are about to meet and behind the marching host.
-    for (let i = 0; i < 6; i++) {
-      const x = -30 + i * 12 + r.range(-2, 2);
-      ctx.effects.smoke({ position: [x, 0.2, -52 + r.range(-3, 3)], count: 5, height: 6, size: 0.9, color: '#c8b088', wind: [0.6, -0.2], seed: 40 + i });
-    }
-    for (let i = 0; i < 5; i++) ctx.effects.smoke({ position: [-36 + i * 18, 0.3, HOST[1] - 22], count: 6, height: 14, size: 1.8, color: '#b8a07a', wind: [0.4, -0.3], seed: 60 + i });
+    // Dust thrown up behind the marching host.
+    for (let i = 0; i < 4; i++) ctx.effects.smoke({ position: [-27 + i * 18, 0.3, HOST[1] - 24], count: 4, height: 12, size: 1.5, color: '#b8a07a', wind: [0.4, -0.3], seed: 60 + i });
 
     // Trampled stubble and scattered stones across the field.
     for (let i = 0; i < 400; i++) {

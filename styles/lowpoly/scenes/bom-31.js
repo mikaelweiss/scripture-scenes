@@ -10,6 +10,7 @@ const BASE = 0.3;
 const RIDGE_H = 3.5;
 const TOP = BASE + RIDGE_H;
 const GAP = 0.075;
+const DITCH = -4.2;
 const earth = '#7a6a46';
 const timber = '#6b4a2c';
 
@@ -40,7 +41,7 @@ const polar = (a, r) => [C[0] + Math.sin(a) * r, C[1] + Math.cos(a) * r];
 function ridge(ctx) {
   const N = 120;
   const a0 = GAP, a1 = Math.PI * 2 - GAP;
-  const prof = [[R - 5, BASE - 0.4], [R - 1.3, TOP], [R + 1.3, TOP], [R + 5.5, BASE - 1.2]];
+  const prof = [[R - 5, BASE - 0.4], [R - 1.3, TOP], [R + 1.3, TOP], [R + 7, DITCH + 0.3]];
   const pos = [];
   const p3 = (a, [r, y]) => [C[0] + Math.sin(a) * r, y, C[1] + Math.cos(a) * r];
   for (let i = 0; i < N; i++) {
@@ -120,7 +121,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.32, shadowTint: '#2a3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, -10], radius: 95 },
 
-  player: { start: [6, 66], yaw: 0.06, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: [-16, 60], yaw: -0.4, pitch: 0.0, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -129,8 +130,9 @@ export default {
     hills: 22,
     bumps: 0.25,
     flats: [
-      { x: C[0], z: C[1], r: 62, falloff: 7, height: -2.2 },
-      { x: C[0], z: C[1], r: 55, falloff: 3, height: BASE },
+      { x: C[0], z: C[1], r: 66, falloff: 5, height: DITCH },
+      { x: C[0], z: C[1], r: 53, falloff: 3, height: BASE },
+      { x: -16, z: 63, r: 6, falloff: 12, height: 4.5 },
     ],
     colors: { ground: '#8a8048', groundAlt: '#7a7a42', grass: '#6a7e3a', high: '#7a7a50', rock: '#6e5a42' },
     patches: [
@@ -170,14 +172,17 @@ export default {
       else ctx.solid.add(new THREE.IcosahedronGeometry(0.7, 0), { position: [x, y + 0.3, z], rotation: [r() * 3, r() * 3, 0], scale: [1, 0.7, 1], color: r.pick(['#4e6a2e', '#5a7434']), jitter: 0.1 });
     }
 
+    // Dark mud along the ditch floor.
+    ctx.solid.add(new THREE.RingGeometry(R + 5, R + 17, 160, 1).rotateX(-Math.PI / 2), { position: [C[0], DITCH + 0.75, C[1]], color: '#3a2e1e', jitter: 0.06 });
+
     // Causeway over the ditch at the south gate.
-    for (let z = C[1] + 53; z < C[1] + 68; z += 0.7) {
+    for (let z = C[1] + 53; z < C[1] + 71; z += 0.7) {
       const y = BASE + 0.05;
       ctx.solid.box(4.6, 0.22, 0.62, { position: [C[0], y, z + 0.35], rotation: [0, 0, r.range(-0.02, 0.02)], color: '#8a6440', jitter: 0.08 });
       ctx.colliders.add({ x: C[0], z: z + 0.35, w: 4.6, d: 0.7, bottom: y - 3, top: y + 0.11 });
     }
-    for (const sx of [-1, 1]) for (let z = C[1] + 54; z < C[1] + 68; z += 3) strut(ctx.solid, [C[0] + sx * 2.3, -2.4, z], [C[0] + sx * 2.3, BASE + 1.1, z], 0.18, timber);
-    for (const sx of [-1, 1]) strut(ctx.solid, [C[0] + sx * 2.3, BASE + 1, C[1] + 53], [C[0] + sx * 2.3, BASE + 1, C[1] + 68], 0.1, '#5a3e24');
+    for (const sx of [-1, 1]) for (let z = C[1] + 54; z < C[1] + 71; z += 3) strut(ctx.solid, [C[0] + sx * 2.3, DITCH, z], [C[0] + sx * 2.3, BASE + 1.1, z], 0.18, timber);
+    for (const sx of [-1, 1]) strut(ctx.solid, [C[0] + sx * 2.3, BASE + 1, C[1] + 53], [C[0] + sx * 2.3, BASE + 1, C[1] + 71], 0.1, '#5a3e24');
 
     // Gate towers and the title of liberty.
     const gateTops = [-1, 1].map((sx) => {
@@ -224,11 +229,11 @@ export default {
     arm(ctx, allNephites, { spear: 0.75, shield: 0.85, helmet: 0.8, bow: 0.6, shields: ['#8a5a32', '#a07040', '#6e4a2c', '#b08850'], helmetColor: '#a89a80', seed: 14 });
 
     // The Lamanite host halts on the plain, astonished at the walls.
-    const host = formation({ center: [24, 36], rows: 10, cols: 26, spacing: 1.25, rowSpacing: 1.4, rot: Math.atan2(24 - C[0], 36 - C[1]), jitter: 0.3, seed: 8, skip: 0.06 });
+    const host = formation({ center: [16, 42], rows: 10, cols: 26, spacing: 1.25, rowSpacing: 1.4, rot: Math.atan2(16 - C[0], 42 - C[1]), jitter: 0.3, seed: 8, skip: 0.06 });
     const lam = makePeople(host, { palette: lamanites, heightAt: ctx.heightAt, seed: 15, face: C, yawJitter: 0.2 });
     addCrowd(ctx, lam);
     arm(ctx, lam, { spear: 0.5, shield: 0.7, helmet: 0.2, bow: 0.5, shields: ['#5a2a1e', '#3a2a22', '#7a3a22'], helmetColor: '#6a3a2a', seed: 16 });
-    banner(ctx, { x: 17, z: 44, h: 5.5, w: 1.3, len: 1.8, color: '#8a2a1a' });
-    banner(ctx, { x: 33, z: 37, h: 5.5, w: 1.3, len: 1.8, color: '#2a1e18' });
+    banner(ctx, { x: 8, z: 50, h: 5.5, w: 1.3, len: 1.8, color: '#8a2a1a' });
+    banner(ctx, { x: 25, z: 44, h: 5.5, w: 1.3, len: 1.8, color: '#2a1e18' });
   },
 };

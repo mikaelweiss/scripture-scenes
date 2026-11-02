@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.08, vignette: 0.5, shadowTint: '#1a2040', highlightTint: '#e4ecff' },
   shadow: { center: [0, -20], radius: 60 },
 
-  player: { start: [-3, -8], yaw: -0.3, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [3.5, -15], yaw: 0.14, pitch: 0.04, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -74,6 +74,9 @@ export default {
     ctx.scene.add(createFigure({ x: TEANCUM[0], y: ctx.heightAt(0, tz), z: tz, face: [KING[0], KING[1]], robe: '#2c2c34', mantle: '#3a3640', skin: '#8a5a3c' }));
     strut(ctx.solid, [0.38, 1.45, tz + 1.1], [0.32, 1.7, tz - 1.0], 0.04, '#4a3424');
     ctx.solid.add(new THREE.ConeGeometry(0.05, 0.3, 4).rotateX(-Math.PI / 2 - 0.12), { position: [0.32, 1.71, tz - 1.1], color: '#8a8a90' });
+    const moonFill = new THREE.PointLight('#a8bcff', 7, 7, 1.4);
+    moonFill.position.set(-1.2, 2.4, tz + 2.6);
+    ctx.scene.add(moonFill);
     ctx.scene.add(createFigure({ x: -3.6, y: ctx.heightAt(-3.6, -19), z: -19, face: [0, -24], robe: '#2a2a2e', mantle: '#34323a', skin: '#8a5a3c', scale: 0.96 }));
 
     // Tents of the sleeping army spread along the shore.

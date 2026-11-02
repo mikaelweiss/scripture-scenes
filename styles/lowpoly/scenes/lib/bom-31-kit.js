@@ -385,10 +385,10 @@ export function banner(ctx, { x, z, y, h = 6, w = 1.6, len = 2.4, color = '#c03a
 }
 
 // Glowing white faceless being, e.g. an angel, hovering or standing.
-export function radiant(ctx, { x, z, y, scale = 1, face, halo = 5, light = 0, arms = 'out' }, createFigure) {
-  const fig = createFigure({ x, y, z, face, scale, robe: '#fbf8f0', mantle: '#f4eedf', skin: '#f3e6cf', arms, emissive: 1.1 });
+export function radiant(ctx, { x, z, y, scale = 1, face, halo = 5, haloOpacity = 0.6, light = 0, arms = 'out', emissive = 1.1 }, createFigure) {
+  const fig = createFigure({ x, y, z, face, scale, robe: '#fbf8f0', mantle: '#f4eedf', skin: '#f3e6cf', arms, emissive });
   ctx.scene.add(fig);
-  if (halo) ctx.effects.halo({ position: [x, y + 1.2 * scale, z], size: halo, opacity: 0.6, color: '#fff3d6' });
+  if (halo) ctx.effects.halo({ position: [x, y + 1.2 * scale, z], size: halo, opacity: haloOpacity, color: '#fff3d6' });
   if (light) {
     const pl = new THREE.PointLight('#fff0cf', light, 24, 1.4);
     pl.position.set(x, y + 2, z + 0.5);
