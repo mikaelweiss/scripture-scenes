@@ -2,11 +2,13 @@
 // Missouri (to the east, +x) under light snow, smoke rising from every chimney.
 import { cabin, people, palettes, wagon, beast, water, snowfall } from './lib/dc-08-kit.js';
 
-const riverX = (z) => 140 + Math.sin(z * 0.006) * 25;
-const river = Array.from({ length: 30 }, (_, i) => {
-  const z = -420 + i * 30;
-  return { x: riverX(z) + 40, z, r: 62, falloff: 20, height: -5 };
+// Center line of the Missouri channel.
+const riverX = (z) => 118 + Math.sin(z * 0.006) * 12;
+const river = Array.from({ length: 60 }, (_, i) => {
+  const z = -440 + i * 15;
+  return { x: riverX(z), z, r: 24, falloff: 9, height: -4 };
 });
+const WATER_Y = -1.7;
 const STREETS = [-36, 0, 36];
 const ROWS = Array.from({ length: 12 }, (_, i) => 40 - i * 12);
 
@@ -25,28 +27,38 @@ export default {
   grade: { saturation: 0.85, contrast: 1.05, vignette: 0.4, shadowTint: '#28304a', highlightTint: '#f0f4ff' },
   shadow: { center: [0, 0], radius: 80 },
 
-  player: { start: [2, 52], yaw: 0.08, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [68, 50], yaw: -0.3, pitch: -0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1200, segments: 220, seed: 47, hills: 26, hillScale: 0.006, bumps: 0.3,
-    flats: [{ x: 0, z: -30, r: 120, falloff: 50, height: 2 }, ...river],
+    flats: [{ x: 0, z: -30, r: 120, falloff: 50, height: 2 }, { x: 68, z: 50, r: 5, falloff: 24, height: 7 }, ...river],
     colors: { ground: '#e8ecf0', groundAlt: '#dde3ea', grass: '#e2e6ec', high: '#eef2f6', rock: '#9a958e' },
-    patches: STREETS.flatMap((x) => Array.from({ length: 18 }, (_, i) => ({ x, z: 60 - i * 10, r: 5, color: '#b0a89e', strength: 0.7, rough: 0.5 }))),
+    patches: [
+      ...river.flatMap((f) => [-1, 1].map((s) => ({ x: f.x + s * 29, z: f.z, r: 7, color: '#6e6258', strength: 0.75, rough: 0.5 }))),
+      ...STREETS.flatMap((x) => Array.from({ length: 18 }, (_, i) => ({ x, z: 60 - i * 10, r: 5, color: '#b0a89e', strength: 0.7, rough: 0.5 }))),
+    ],
   },
 
   scatter: [
-    { type: 'tree', count: 120, center: [riverX(0) - 10, 0], ring: [0, 60], spacing: 6, seed: 3, props: { kind: 'burnt', h: 14 } },
+    { type: 'tree', count: 90, center: [riverX(0) + 70, -40], ring: [0, 70], spacing: 6, seed: 3, avoid: [{ rect: [riverX(0), 0, 75, 900] }], props: { kind: 'burnt', h: 14 } },
+    { type: 'tree', count: 30, center: [riverX(0) - 42, -120], ring: [0, 60], spacing: 6, seed: 7, avoid: [{ rect: [riverX(0), 0, 75, 900] }, { rect: [0, -40, 140, 230] }], props: { kind: 'burnt', h: 12 } },
     { type: 'tree', count: 80, center: [-200, -40], ring: [40, 220], spacing: 9, seed: 4, avoid: [{ rect: [0, -40, 140, 230] }], props: { kind: 'burnt', h: 12 } },
     { type: 'tree', count: 50, center: [-160, -150], ring: [0, 120], spacing: 8, seed: 5, avoid: [{ rect: [0, -40, 140, 230] }], props: { kind: 'broad', leaf: '#3e5040', h: 9 } },
   ],
 
   custom(ctx) {
     const { rand } = ctx;
-    water(ctx, { x: 200, z: 0, w: 260, d: 1200, y: -1.2, color: '#6a7c88', seg: 50, amp: 0.05, opacity: 1 });
-    for (let i = 0; i < 160; i++) {
-      const z = rand.range(-400, 400), x = riverX(z) + 20 + rand.range(0, 70);
-      if (ctx.heightAt(x, z) > -1.6) continue;
-      ctx.solid.box(rand.range(2, 7), 0.3, rand.range(2, 6), { position: [x, -1.15, z], rotation: [0, rand() * 3, 0], color: '#e6edf2', jitter: 0.04 });
+    water(ctx, { x: riverX(0), z: 0, w: 90, d: 900, y: WATER_Y, color: '#40596a', seg: 60, amp: 0.04, opacity: 1 });
+    // Shelf ice along both banks and floes drifting in the open channel.
+    for (let z = -440; z < 440; z += 3) {
+      for (const s of [-1, 1]) {
+        const w = rand.range(4, 8);
+        ctx.solid.box(w, 0.25, rand.range(3, 5), { position: [riverX(z) + s * (24 - w / 2 + rand.range(0, 2)), WATER_Y + 0.08, z], rotation: [0, rand.range(-0.2, 0.2), 0], color: rand.pick(['#e8eef3', '#dbe5ec', '#f2f6f8']), jitter: 0.05 });
+      }
+    }
+    for (let i = 0; i < 260; i++) {
+      const z = rand.range(-440, 440), x = riverX(z) + rand.range(-15, 15);
+      ctx.solid.box(rand.range(1.5, 5), 0.22, rand.range(1.2, 4), { position: [x, WATER_Y + 0.06, z], rotation: [0, rand() * 3, 0], color: rand.pick(['#e6edf2', '#d4e0e8', '#f0f4f6']), jitter: 0.06 });
     }
 
     // Trampled muddy lanes between the rows.
@@ -100,6 +112,15 @@ export default {
       { center: [0, 25], ring: [3, 26], count: 30, face: [0, 200], spacing: 2.2, children: 0.2, palette: palettes.men, seed: 65, avoid: [{ r: 4, x: fx, z: fz }, { r: 8, x: 2, z: 52 }, ...STREETS.flatMap((x) => [{ rect: [x - 10, -30, 7, 170] }, { rect: [x + 10, -30, 7, 170] }])] },
       { center: [0, -30], ring: [0, 80], count: 60, face: [0, 200], spacing: 2.5, children: 0.25, palette: palettes.men, seed: 62, avoid: [{ r: 4, x: fx, z: fz }, { r: 8, x: 2, z: 52 }, ...STREETS.flatMap((x) => [{ rect: [x - 10, -30, 7, 170] }, { rect: [x + 10, -30, 7, 170] }])] },
       { center: [0, -30], ring: [0, 80], count: 50, face: [0, -200], spacing: 2.5, children: 0.3, palette: palettes.women, seed: 63, avoid: [{ r: 4, x: fx, z: fz }, { r: 8, x: 2, z: 52 }, ...STREETS.flatMap((x) => [{ rect: [x - 10, -30, 7, 170] }, { rect: [x + 10, -30, 7, 170] }])] },
+    ]);
+
+    // A cabin and a few Saints on the bluff above the river.
+    cabin(ctx, { x: 57.5, z: 29.5, rot: Math.PI / 2, w: 5.2, d: 4.4, h: 2.4, snow: true, log: '#6a5038', roof: '#6a5a4a' });
+    wagon(ctx, { x: 59, z: 19.5, rot: 0.3, cover: '#e8e4da' });
+    beast(ctx, { x: 60.2, z: 15.3, rot: 0.3, kind: 'ox', color: '#6a4a32' });
+    people(ctx, [
+      { points: [[64.5, 38], [65.6, 37.2], [67.5, 31], [63.2, 29.5], [66.8, 30.2]], count: 5, face: [riverX(30), 30], children: 0.2, palette: palettes.women, seed: 66 },
+      { points: [[62.5, 40.5], [69.5, 35], [64, 26.5]], count: 3, face: [riverX(10), 10], children: 0, palette: palettes.men, seed: 67 },
     ]);
 
     cabin(ctx, { x: 0, z: -142, w: 14, d: 8, h: 3.4, snow: true, log: '#6a5038', roof: '#6a5a4a' });

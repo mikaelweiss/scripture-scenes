@@ -42,7 +42,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.06, vignette: 0.48, shadowTint: '#2e2a40', highlightTint: '#fff0cc' },
   shadow: { center: [0, 0], radius: 20 },
 
-  player: { start: [0, 2.4], yaw: 0, pitch: 0.1, eye: 1.65, speed: 3 },
+  player: { start: [0, 1.8], yaw: 0, pitch: 0.1, eye: 1.65, speed: 3 },
 
   terrain: {
     size: 400, segments: 60, seed: 4, hills: 8, bumps: 0.2,
@@ -107,9 +107,9 @@ export default {
     ctx.glow.box(2.2, 0.08, 1.3, { position: [0, fy - 0.02, fz], color: '#ffc23a', jitter: 0.05 });
     for (let k = -2; k <= 2; k++) ctx.glow.box(0.4, 0.09, 1.25, { position: [k * 0.44, fy, fz], color: k % 2 ? '#ffb52a' : '#ffd36a', jitter: 0.04 });
     glowFigure(ctx, {
-      x: 0, z: fz, y: fy + 0.04, face: [0, 10], scale: 1.18, emissive: 0.3, robe: '#fffaf0', skin: '#f2dcc0', arms: 'out',
+      x: 0, z: fz, y: fy + 0.04, face: [0, 10], scale: 1.18, emissive: 0.22, robe: '#fffaf0', skin: '#f2dcc0', arms: 'out',
       light: { color: '#fff3d6', intensity: 10, distance: 14, dz: 1.2 },
-      halo: { size: 5, opacity: 0.55, color: '#fff2cf' },
+      halo: { size: 4.2, opacity: 0.38, color: '#fff2cf' },
     });
     ctx.effects.motes({ position: [0, fy - 1.5, fz + 0.5], radius: 3.2, height: 6, count: 50, color: '#fff2c8', size: 0.04 });
 

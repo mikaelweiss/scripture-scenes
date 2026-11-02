@@ -22,7 +22,7 @@ export default {
   fov: 62,
   exposure: 1.02,
 
-  sun: { direction: [-0.55, 0.55, 0.45], color: '#ffe2b4', intensity: 2.8 },
+  sun: { direction: [-0.55, 0.55, -0.45], color: '#ffe2b4', intensity: 2.8 },
   light: { sky: '#a8c4e8', ground: '#6b6a3e', hemi: 1.0 },
   sky: { top: '#4f7fc0', horizon: '#dfe6e0', ground: '#a8a070', sunColor: '#fff0c8', glow: 0.9 },
   fog: { color: '#cdd6d0', near: 90, far: 620 },
@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.32, shadowTint: '#2a3048', highlightTint: '#fff2d0' },
   shadow: { center: [12, 0], radius: 60 },
 
-  player: { start: [0, 32], yaw: -0.45, pitch: -0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [19, -13], yaw: 2.72, pitch: -0.02, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000, segments: 250, seed: 34, hills: 22, hillScale: 0.0045, bumps: 0.25,
@@ -49,15 +49,15 @@ export default {
 
   custom(ctx) {
     const { THREE } = ctx;
-    const tuft = new THREE.ConeGeometry(0.16, 0.6, 4);
-    const bloom = new THREE.OctahedronGeometry(0.07, 0);
-    for (let i = 0; i < 3000; i++) {
-      const x = ctx.rand.range(-50, 60), z = ctx.rand.range(-70, 70);
+    const tuft = new THREE.ConeGeometry(0.07, 0.24, 4);
+    const bloom = new THREE.OctahedronGeometry(0.045, 0);
+    for (let i = 0; i < 4000; i++) {
+      const x = ctx.rand.range(-30, 50), z = ctx.rand.range(-50, 40);
       if (Math.abs(x - roadX(z)) < 3.5) continue;
       const y = ctx.heightAt(x, z);
-      const h = ctx.rand.range(0.6, 1.4);
-      ctx.solid.add(tuft, { position: [x, y + 0.3 * h - 0.05, z], rotation: [ctx.rand.range(-0.2, 0.2), ctx.rand() * 3, 0], scale: [1, h * 0.7, 1], color: ctx.rand.pick(['#7f9a42', '#94a64e', '#6d8a3a', '#a7a858']), jitter: 0.08 });
-      if (i % 4 === 0) ctx.solid.add(bloom, { position: [x + 0.15, y + 0.55 * h, z], color: ctx.rand.pick(['#e8d24a', '#c86ab0', '#f0f0e0', '#e89a3a']), jitter: 0.05 });
+      const h = ctx.rand.range(0.6, 1.3);
+      ctx.solid.add(tuft, { position: [x, y + 0.1 * h - 0.04, z], rotation: [ctx.rand.range(-0.25, 0.25), ctx.rand() * 3, 0], scale: [1, h, 1], color: ctx.rand.pick(['#7f9a42', '#94a64e', '#6d8a3a', '#a7a858']), jitter: 0.08 });
+      if (i % 5 === 0) ctx.solid.add(bloom, { position: [x + 0.08, y + 0.2 * h, z], color: ctx.rand.pick(['#e8d24a', '#c86ab0', '#f0f0e0', '#e89a3a']), jitter: 0.05 });
     }
 
     WAGONS.forEach((z, i) => {

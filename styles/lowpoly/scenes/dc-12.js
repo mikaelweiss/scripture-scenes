@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.06, vignette: 0.5, shadowTint: '#2e2838', highlightTint: '#ffe2b8' },
   shadow: { center: [0, 0], radius: 7 },
 
-  player: { start: [2.2, 1.85], yaw: 0.78, pitch: -0.08, eye: 1.62, speed: 1.6 },
+  player: { start: [1.05, 1.9], yaw: 0.6, pitch: -0.12, eye: 1.62, speed: 1.6 },
 
   terrain: {
     size: 300, segments: 40, seed: 5, hills: 4, bumps: 0.1,
@@ -78,16 +78,16 @@ export default {
     ctx.solid.add(new THREE.CylinderGeometry(0.05, 0.06, 0.12, 7), { position: [-0.95, 0.88, -1.15], color: '#d8d0bc' });
 
     chair(ctx, -0.5, -1.65, 0);
-    chair(ctx, 0.25, 0.95, -2.3);
+    chair(ctx, 0.5, -1.2, -0.6);
     chair(ctx, -1.45, -0.2, Math.PI / 2);
 
-    person(ctx, { x: -0.5, z: -1.6, y: 0.55, face: [0.6, 2], robe: '#3e3a36', mantle: '#2e2a26', skin: '#e2b896', hat: null, sink: 0.62 });
-    person(ctx, { x: 0.25, z: 0.95, y: 0.55, face: [-1.4, -0.4], robe: '#4a4038', mantle: '#3a322c', skin: '#e0b896', hat: null, sink: 0.62 });
-    person(ctx, { x: -1.4, z: -0.2, y: 0.55, face: [3, 0.6], robe: '#3a3e4a', mantle: '#2a2e38', skin: '#dcae8c', hat: null, sink: 0.62 });
-    person(ctx, { x: -2.05, z: 1.0, face: [1, 1.6], robe: '#4a3a30', mantle: '#3a2c24', skin: '#d4a684', hat: null, scale: 1.12 });
+    person(ctx, { x: -0.5, z: -1.6, y: 0.55, face: [0.6, 2], robe: '#46506a', mantle: '#353d52', skin: '#e2b896', hair: '#9a7448', hat: null, sink: 0.62 });
+    person(ctx, { x: 0.5, z: -1.2, y: 0.55, face: [-0.6, 0.4], robe: '#5e5040', mantle: '#4a3e32', skin: '#e0b896', hair: '#8a7a68', hat: null, sink: 0.62 });
+    person(ctx, { x: -1.4, z: -0.2, y: 0.55, face: [3, 0.6], robe: '#5a4c3e', mantle: '#4a3e32', skin: '#dcae8c', hair: '#7a5a3a', hat: null, sink: 0.62 });
+    person(ctx, { x: -2.05, z: 1.0, face: [1, 1.6], robe: '#5e544a', mantle: '#4a423a', skin: '#d4a684', hair: '#a88a60', hat: null, scale: 1.12 });
 
     ctx.effects.motes({ position: [-1.2, 0.2, 0], radius: 1.4, height: 2.2, count: 40, color: '#ffe2b0', size: 0.012 });
     pointLight(ctx, [-1.8, 2.0, 0], '#ffcf96', 2.5, 6, 1.4);
-    pointLight(ctx, [1.2, 2.2, 1.2], '#ffe0b8', 2.2, 6, 1.4);
+    pointLight(ctx, [1.0, 2.2, 1.4], '#ffe0b8', 4, 7, 1.3);
   },
 };

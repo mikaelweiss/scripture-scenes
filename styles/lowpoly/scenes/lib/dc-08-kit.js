@@ -91,57 +91,83 @@ export function room(ctx, { x = 0, z = 0, y = 0, w, d, h, rot = 0, thick = 0.35,
   }
 }
 
-// Instanced period people. Groups take the engine's crowd options plus: palette, sink, hats.
+const HAIR = ['#6a4a2e', '#8a6440', '#a07a4c', '#4e3624', '#b8a080', '#c8b48a', '#7a5a3a', '#9a8a78'];
+const BONNETS = ['#e6dcc6', '#d8c8a8', '#c9d0d8', '#e8d8c0', '#b8a888', '#d0b8a0'];
+const COLLARS = ['#f4f0e6', '#ece6d8', '#f8f6f0'];
+
+// Hair over the crown and back of the head, leaving the face clear.
+function hairGeometry() {
+  const crown = new THREE.SphereGeometry(0.142, 8, 3, 0, Math.PI * 2, 0, Math.PI * 0.32);
+  const back = new THREE.SphereGeometry(0.142, 8, 4, Math.PI - 0.35, Math.PI + 0.7, 0, Math.PI * 0.66);
+  return mergeTwo(crown.scale(1, 1.1, 1).translate(0, 1.54, -0.01), back.scale(1, 1.1, 1).translate(0, 1.54, -0.01));
+}
+const collarGeometry = () => new THREE.CylinderGeometry(0.1, 0.145, 0.07, 7).translate(0, 1.415, 0);
+
+// Matches the lean createCrowd bakes into each body so hats and hair stay on the heads.
+function leaning(material) {
+  material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader.replace(
+      '#include <begin_vertex>',
+      `#include <begin_vertex>
+      float ph = instanceMatrix[3].x * 0.37 + instanceMatrix[3].z * 0.61;
+      transformed.x += sin(ph) * 0.03 * position.y;
+      transformed.z += cos(ph * 1.3) * 0.02 * position.y;`,
+    );
+  };
+  return material;
+}
+
+function instanced(ctx, geo, list, colorOf) {
+  const mesh = new THREE.InstancedMesh(geo, leaning(new THREE.MeshLambertMaterial({ flatShading: true })), list.length);
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), v = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+  list.forEach((p, i) => {
+    m.compose(v.set(p.x, p.y, p.z), q.setFromAxisAngle(up, p.yaw), s.setScalar(p.scale));
+    mesh.setMatrixAt(i, m);
+    mesh.setColorAt(i, new THREE.Color(colorOf(p, i)));
+  });
+  mesh.castShadow = true;
+  mesh.computeBoundingSphere();
+  ctx.scene.add(mesh);
+}
+
+// Instanced period people. Groups take the engine's crowd options plus: palette, sink, hats, bonnets.
 export function people(ctx, groups) {
   const standAt = (x, z) => ctx.colliders.ground(x, z, 1000, ctx.heightAt(x, z), { radius: 0 });
   const all = [];
   const hatted = [];
+  const r = rng(77);
   for (const g of groups) {
     const placed = placeCrowd([{ ...g, palette: g.palette ?? palettes.men }], ctx.heightAt, standAt);
     for (const p of placed) {
       if (!g.points && all.some((q) => (q.x - p.x) ** 2 + (q.z - p.z) ** 2 < 0.36)) continue;
       p.y -= g.sink ?? 0;
+      if (p.hood && (g.bonnets ?? true)) p.mantle = new THREE.Color(r.pick(BONNETS));
+      p.hair = r.pick(HAIR);
+      p.collar = r.pick(COLLARS);
       all.push(p);
       if ((g.hats ?? true) && !p.hood) hatted.push(p);
     }
   }
   if (!all.length) return all;
   ctx.scene.add(createCrowd(all, { value: 0 }));
+  instanced(ctx, hairGeometry(), all.filter((p) => !p.hood), (p) => p.hair);
+  instanced(ctx, collarGeometry(), all, (p) => p.collar);
   if (hatted.length) {
     const brim = new THREE.CylinderGeometry(0.2, 0.21, 0.025, 8).translate(0, 1.645, 0);
     const crown = new THREE.CylinderGeometry(0.11, 0.125, 0.15, 7).translate(0, 1.73, 0);
-    const geo = mergeTwo(brim, crown);
-    const mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial({ flatShading: true }), hatted.length);
-    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), v = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
-    const r = rng(77);
-    const hatColors = ['#1c1a18', '#26221e', '#3a3026', '#4a3c2c', '#8a7550', '#1c1a18'].map((c) => new THREE.Color(c));
-    hatted.forEach((p, i) => {
-      m.compose(v.set(p.x, p.y, p.z), q.setFromAxisAngle(up, p.yaw), s.setScalar(p.scale));
-      mesh.setMatrixAt(i, m);
-      mesh.setColorAt(i, r.pick(hatColors));
-    });
-    mesh.castShadow = true;
-    mesh.computeBoundingSphere();
-    ctx.scene.add(mesh);
+    const hatColors = ['#1c1a18', '#26221e', '#3a3026', '#4a3c2c', '#8a7550', '#1c1a18'];
+    instanced(ctx, mergeTwo(brim, crown), hatted, () => r.pick(hatColors));
   }
   return all;
 }
 
-function mergeTwo(a, b) {
-  const pa = a.toNonIndexed().attributes.position.array, pb = b.toNonIndexed().attributes.position.array;
-  const geo = new THREE.BufferGeometry();
-  const arr = new Float32Array(pa.length + pb.length);
-  arr.set(pa);
-  arr.set(pb, pa.length);
-  geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-  geo.computeVertexNormals();
-  return geo;
-}
-
 // A single person with hat, for hand-placed figures.
-export function person(ctx, { x, z, y, face, robe = '#2f2b27', mantle, skin = '#d9ad8a', hat = '#1f1c19', bonnet = false, arms = 'down', scale = 1, sink = 0 }) {
+export function person(ctx, { x, z, y, face, robe = '#2f2b27', mantle, skin = '#d9ad8a', hat = '#1f1c19', bonnet = false, hair = '#6a4a2e', collar = '#f2eee4', arms = 'down', scale = 1, sink = 0 }) {
   const base = (y ?? ctx.colliders.ground(x, z, 1000, ctx.heightAt(x, z), { radius: 0 })) - sink;
   const fig = createFigure({ x, y: base, z, face, robe, mantle, skin, arms, scale, hood: bonnet });
+  const lambert = (color) => new THREE.MeshLambertMaterial({ color, flatShading: true });
+  if (!bonnet && hair) fig.add(new THREE.Mesh(hairGeometry(), lambert(hair)));
+  if (collar) fig.add(new THREE.Mesh(collarGeometry(), lambert(collar)));
   if (hat && !bonnet) {
     const mat = new THREE.MeshLambertMaterial({ color: hat, flatShading: true });
     const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.21, 0.025, 8).translate(0, 1.645, 0), mat);
@@ -312,4 +338,15 @@ export function pointLight(ctx, [x, y, z], color, intensity, distance = 20, deca
   l.position.set(x, y, z);
   ctx.scene.add(l);
   return l;
+}
+
+function mergeTwo(a, b) {
+  const pa = a.toNonIndexed().attributes.position.array, pb = b.toNonIndexed().attributes.position.array;
+  const geo = new THREE.BufferGeometry();
+  const arr = new Float32Array(pa.length + pb.length);
+  arr.set(pa);
+  arr.set(pb, pa.length);
+  geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+  geo.computeVertexNormals();
+  return geo;
 }

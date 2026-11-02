@@ -12,14 +12,14 @@ export default {
   exposure: 1.0,
 
   sun: { direction: [0.9, 0.32, 0.25], color: '#cfe0ff', intensity: 2.4 },
-  light: { sky: '#7d8cab', ground: '#4a4038', hemi: 0.7 },
+  light: { sky: '#8a96b2', ground: '#5a4c40', hemi: 0.85 },
   sky: { top: '#7f8ea8', horizon: '#c9d2dc', ground: '#e8ecf0', sunColor: '#e8f0ff', glow: 0.4 },
   fog: { color: '#2a2a30', near: 30, far: 200 },
   bloom: { strength: 0.6, radius: 0.5, threshold: 0.82 },
   grade: { saturation: 0.92, contrast: 1.1, vignette: 0.6, shadowTint: '#1c2238', highlightTint: '#ffe0b0' },
   shadow: { center: [0, 0], radius: 8 },
 
-  player: { start: [-1.5, 1.7], yaw: -0.7, pitch: -0.12, eye: 1.55, speed: 1.6 },
+  player: { start: [-1.45, 0.45], yaw: -1.08, pitch: -0.2, eye: 1.55, speed: 1.6 },
 
   terrain: {
     size: 300, segments: 40, seed: 3, hills: 4, bumps: 0.1,
@@ -83,11 +83,11 @@ export default {
     // Joseph writing at a rough table by candlelight.
     box(ctx, { x: 0.65, y: 0.1, z: -1.0, w: 0.9, h: 0.65, d: 0.6, color: '#5a4430' });
     ctx.solid.box(0.32, 0.01, 0.24, { position: [0.62, 0.76, -1.0], rotation: [0, 0.2, 0], color: '#ece4d0', jitter: 0.02 });
-    ctx.solid.box(0.24, 0.01, 0.2, { position: [0.38, 0.76, -0.85], rotation: [0, -0.3, 0], color: '#e0d6bc', jitter: 0.02 });
-    ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 0.14, 6), { position: [0.85, 0.82, -1.15], color: '#efe6cc' });
-    ctx.glow.add(new THREE.OctahedronGeometry(0.03, 0), { position: [0.85, 0.92, -1.15], scale: [1, 1.8, 1], color: '#ffc060' });
-    ctx.effects.halo({ position: [0.85, 0.93, -1.15], size: 0.9, opacity: 0.8, color: '#ffbe6a' });
-    const candle = pointLight(ctx, [0.85, 1.05, -1.15], '#ffb060', 4.5, 7, 1.6);
+    ctx.solid.box(0.24, 0.01, 0.2, { position: [0.62, 0.76, -0.8], rotation: [0, -0.3, 0], color: '#e0d6bc', jitter: 0.02 });
+    ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 0.14, 6), { position: [0.32, 0.82, -1.22], color: '#efe6cc' });
+    ctx.glow.add(new THREE.OctahedronGeometry(0.03, 0), { position: [0.32, 0.92, -1.22], scale: [1, 1.8, 1], color: '#ffc060' });
+    ctx.effects.halo({ position: [0.32, 0.93, -1.22], size: 0.6, opacity: 0.6, color: '#ffbe6a' });
+    const candle = pointLight(ctx, [0.32, 1.05, -1.22], '#ffb060', 4.5, 7, 1.6);
     ctx.onFrame((t) => (candle.intensity = 4.2 + Math.sin(t * 9) * 0.3 + Math.sin(t * 23) * 0.2));
     box(ctx, { x: 1.4, y: 0.1, z: -1.0, w: 0.4, h: 0.4, d: 0.4, color: '#4a3826' });
     person(ctx, { x: 1.4, z: -1.0, y: 0.5, face: [-3, -1], robe: '#3a3632', mantle: '#2a2724', skin: '#e2b896', hat: null, sink: 0.62, arms: 'down' });

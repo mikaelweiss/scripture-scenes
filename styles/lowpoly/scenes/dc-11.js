@@ -12,6 +12,12 @@ const TEMPLE = [168, -6];
 const limestone = '#e6dfcd';
 
 const streetsX = [-60, -20, 20, 60];
+const START = [0, 21.5];
+// Keeps trees out of the view from the start up to the temple.
+const sightline = Array.from({ length: 16 }, (_, i) => {
+  const t = (i + 1) / 16;
+  return { r: 7, x: START[0] + (TEMPLE[0] - START[0]) * t, z: START[1] + (TEMPLE[1] - START[1]) * t };
+});
 const streetsZ = [-100, -60, -20, 20, 60, 100];
 
 function brickHouse(ctx, { x, z, rot = 0, w = 7, d = 6, h = 5.5, wall = '#9a4a34', roof = '#4e4640', trim = '#efe8da', stories = 2 }) {
@@ -131,7 +137,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.3, shadowTint: '#2a3048', highlightTint: '#fff2d0' },
   shadow: { center: [40, 10], radius: 130 },
 
-  player: { start: [-14, 22.5], yaw: -1.43, pitch: 0.1, eye: 1.65, speed: 5 },
+  player: { start: START, yaw: -1.53, pitch: 0.07, eye: 1.65, speed: 5 },
 
   terrain: {
     size: 1500, segments: 240, seed: 18, hills: 7, bumps: 0.12,
@@ -148,7 +154,7 @@ export default {
   },
 
   scatter: [
-    { type: 'tree', count: 90, center: [20, 0], ring: [10, 140], spacing: 9, seed: 3, avoid: [...streetsX.map((x) => ({ rect: [x, 0, 12, 260] })), ...streetsZ.map((z) => ({ rect: [10, z, 200, 12] })), { rect: [-14, 22, 20, 12] }], props: { kind: 'broad', leaf: '#4f7034', h: 7 } },
+    { type: 'tree', count: 90, center: [20, 0], ring: [10, 140], spacing: 9, seed: 3, avoid: [...streetsX.map((x) => ({ rect: [x, 0, 12, 260] })), ...streetsZ.map((z) => ({ rect: [10, z, 200, 12] })), { rect: [-4, 22, 44, 12] }, ...sightline], props: { kind: 'broad', leaf: '#4f7034', h: 7 } },
     { type: 'tree', count: 120, center: [300, 0], ring: [190, 380], spacing: 9, seed: 4, avoid: [{ rect: [TEMPLE[0], TEMPLE[1], 70, 50] }], props: { kind: 'broad', leaf: '#56743a' } },
     { type: 'tree', count: 140, center: [-560, 0], ring: [0, 300], spacing: 10, seed: 5, props: { kind: 'broad', leaf: '#4c6a34' } },
   ],
@@ -196,7 +202,7 @@ export default {
       { center: [20, 20], ring: [0, 50], count: 40, face: [20, -200], spacing: 2.5, children: 0.2, palette: palettes.men, seed: 53 },
       { center: [20, -20], ring: [0, 50], count: 30, face: [20, 200], spacing: 2.5, children: 0.2, palette: palettes.women, seed: 54 },
       { center: [130, -6], ring: [10, 40], count: 50, face: TEMPLE, spacing: 1.6, children: 0.1, palette: palettes.men, seed: 55, avoid: [street(TEMPLE[0], TEMPLE[1], 46, 34)] },
-    ].map((g) => ({ ...g, avoid: [...(g.avoid ?? []), { r: 9, x: -8, z: 22 }, ...lots.map((l) => ({ r: 6, x: l.x, z: l.z }))] })));
+    ].map((g) => ({ ...g, avoid: [...(g.avoid ?? []), { r: 9, x: -4, z: 21.5 }, { rect: [12, 21.5, 30, 3] }, ...lots.map((l) => ({ r: 6, x: l.x, z: l.z }))] })));
 
     // Stonecutters' blocks beside the temple.
     for (let i = 0; i < 24; i++) {

@@ -1,7 +1,7 @@
 // D&C 138: the spirit world. The Savior appears among the great congregation of the righteous dead and
 // organizes messengers, who go out toward the spirits waiting in darkness to the north (-z).
 // Symbolic setting: a pale luminous plain under a sea of cloud.
-import { glowFigure } from './lib/dc-08-kit.js';
+import { glowFigure, people } from './lib/dc-08-kit.js';
 
 const CHRIST = [0, 0];
 const DARK = [0, -230];
@@ -14,6 +14,26 @@ const lanes = [-0.5, -0.2, 0.15, 0.45].flatMap((spread, li) =>
     return [CHRIST[0] + Math.sin(spread) * t + Math.sin(i * 1.7 + li) * 0.8, CHRIST[1] - Math.cos(spread) * t];
   }),
 );
+
+// Placed through the kit so every spirit gets hair and a collar.
+const congregation = {
+  palette: {
+    robes,
+    mantles: ['#f6f2ea', '#e8e2d6', '#dcd4c6', '#f0ead8'],
+    skins: ['#e0b896', '#c99a78', '#a87652', '#8a5a3c', '#e8c4a4'],
+    mantleChance: 0.5,
+    hoodChance: 0.15,
+  },
+  groups: [
+    { count: 1700, center: CHRIST, ring: [7, 60], arc: [-0.15, Math.PI + 0.15], spacing: 0.95, face: CHRIST, children: 0.12, kneel: 0.12, seed: 1, avoid: [{ rect: [0, 30, 3.2, 50] }, { r: 4, x: 0, z: 14 }] },
+    { count: 160, center: CHRIST, ring: [7, 24], arc: [Math.PI + 0.25, Math.PI * 2 - 0.25], spacing: 1.0, face: CHRIST, children: 0.1, seed: 2, avoid: lanes.map(([x, z]) => ({ r: 2.2, x, z })) },
+    { count: lanes.length, points: lanes, face: DARK, children: 0, seed: 3 },
+    {
+      count: 420, center: DARK, ring: [8, 70], arc: [0.2, Math.PI - 0.2], spacing: 1.2, face: CHRIST, children: 0.1, seed: 4,
+      palette: { robes: ['#5a5670', '#4a4660', '#625e78', '#3e3c52'], mantles: ['#3a384c', '#4e4a62'], skins: ['#8a7a80', '#9a8a88', '#7a6a70'], mantleChance: 0.5, hoodChance: 0.5 }, bonnets: false,
+    },
+  ],
+};
 
 export default {
   title: 'D&C 138: The redemption of the dead',
@@ -30,35 +50,16 @@ export default {
   grade: { saturation: 1.05, contrast: 1.1, vignette: 0.38, shadowTint: '#3a3460', highlightTint: '#fff4e0' },
   shadow: { center: [0, 10], radius: 70 },
 
-  player: { start: [0, 34], yaw: 0, pitch: 0.06, eye: 1.65, speed: 4 },
+  player: { start: [0, 14], yaw: 0, pitch: 0.08, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900, segments: 160, seed: 21, hills: 10, bumps: 0.2,
-    flats: [{ x: 0, z: 10, r: 60, falloff: 40, height: 0 }, { x: 0, z: 0, r: 4.5, falloff: 9, height: 3 }],
+    flats: [{ x: 0, z: 10, r: 60, falloff: 40, height: 0 }, { x: 0, z: 0, r: 4.5, falloff: 7, height: 1.2 }],
     colors: { ground: '#b8b0c8', groundAlt: '#aca4c0', grass: '#bab2cc', high: '#c8c0d6', rock: '#9a92b0' },
     patches: [
-      { x: 0, z: 0, r: 14, color: '#fff4dc', strength: 0.8, rough: 0.3 },
+      { x: 0, z: 0, r: 14, color: '#f6ead6', strength: 0.6, rough: 0.3 },
       { x: DARK[0], z: DARK[1], r: 120, color: '#4a4866', strength: 0.85, rough: 0.4 },
       { x: 0, z: -110, r: 60, color: '#8a86a8', strength: 0.5, rough: 0.5 },
-    ],
-  },
-
-  crowd: {
-    palette: {
-      robes,
-      mantles: ['#f6f2ea', '#e8e2d6', '#dcd4c6', '#f0ead8'],
-      skins: ['#e0b896', '#c99a78', '#a87652', '#8a5a3c', '#e8c4a4'],
-      mantleChance: 0.5,
-      hoodChance: 0.15,
-    },
-    groups: [
-      { count: 1700, center: CHRIST, ring: [7, 60], arc: [-0.15, Math.PI + 0.15], spacing: 0.95, face: CHRIST, children: 0.12, kneel: 0.12, seed: 1, avoid: [{ rect: [0, 30, 3.2, 50] }, { r: 4, x: 0, z: 34 }] },
-      { count: 160, center: CHRIST, ring: [7, 24], arc: [Math.PI + 0.25, Math.PI * 2 - 0.25], spacing: 1.0, face: CHRIST, children: 0.1, seed: 2, avoid: lanes.map(([x, z]) => ({ r: 2.2, x, z })) },
-      { count: lanes.length, points: lanes, face: DARK, children: 0, seed: 3 },
-      {
-        count: 420, center: DARK, ring: [8, 70], arc: [0.2, Math.PI - 0.2], spacing: 1.2, face: CHRIST, children: 0.1, seed: 4,
-        palette: { robes: ['#5a5670', '#4a4660', '#625e78', '#3e3c52'], mantles: ['#3a384c', '#4e4a62'], skins: ['#8a7a80', '#9a8a88', '#7a6a70'], mantleChance: 0.5, hoodChance: 0.5 },
-      },
     ],
   },
 
@@ -71,10 +72,12 @@ export default {
   ],
 
   custom(ctx) {
+    const { palette, groups } = congregation;
+    people(ctx, groups.map((g) => ({ palette, hats: false, ...g })));
     glowFigure(ctx, {
-      x: CHRIST[0], z: CHRIST[1], face: [0, 40], scale: 1.3, emissive: 0.2, arms: 'out', robe: '#fffaf0', skin: '#e6caa8',
-      light: { color: '#fff0d4', intensity: 14, distance: 24, dz: 1.5 },
-      halo: { size: 5, opacity: 0.3, color: '#fff3d6' },
+      x: CHRIST[0], z: CHRIST[1], face: [0, 40], scale: 1.3, emissive: 0.1, arms: 'out', robe: '#fffaf0', skin: '#e6caa8',
+      light: { color: '#fff0d4', intensity: 8, distance: 20, dz: 1.5 },
+      halo: { size: 4.5, opacity: 0.2, color: '#fff3d6' },
     });
     // Each messenger carries a small light out toward the darkness.
     for (const [x, z] of lanes) {
