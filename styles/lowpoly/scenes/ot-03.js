@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.07, vignette: 0.45, shadowTint: '#2a2258', highlightTint: '#ffd8a8' },
   shadow: { center: [0, -20], radius: 70 },
 
-  player: { start: [-3, 10], yaw: -0.06, pitch: 0.07, eye: 1.65, speed: 4.5 },
+  player: { start: [-1.5, 5.5], yaw: -0.12, pitch: 0.1, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 900,
@@ -45,8 +45,8 @@ export default {
   ],
 
   figures: [
-    { x: 2.6, z: -1, face: [6, 30], robe: '#8a6440', mantle: '#6a4a2e', skin: '#a8744e', arms: 'down' },
-    { x: 4.2, z: -0.3, face: [12, 30], robe: '#9a7450', mantle: '#7a5636', skin: '#b58258', hood: true, scale: 0.95, arms: 'down' },
+    { x: 2.0, z: -1, face: [5, 30], robe: '#8a6440', mantle: '#6a4a2e', skin: '#a8744e', arms: 'down' },
+    { x: 3.5, z: -0.4, face: [10, 30], robe: '#9a7450', mantle: '#7a5636', skin: '#b58258', hood: true, scale: 0.95, arms: 'down' },
   ],
 
   effects: [

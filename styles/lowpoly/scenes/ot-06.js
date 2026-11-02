@@ -64,6 +64,7 @@ export default {
     groups: [
       { count: stairWorkers.length, points: stairWorkers, face: TOWER, children: 0, onStructures: true, seed: 11 },
       { count: 260, center: [0, -30], ring: [18, 95], arc: [-0.2, Math.PI + 0.2], spacing: 1.6, face: TOWER, children: 0.1, seed: 12, avoid: [{ rect: [TOWER[0], TOWER[1], W + 4, W + 4] }, { rect: [14, 36, 26, 26] }, { r: 9, x: 42, z: -30 }, { r: 9, x: -44, z: -22 }, { r: 9, x: 52, z: -62 }] },
+      { count: 9, points: [[5.5, 25.5], [9.2, 25.8], [2.4, 25], [7.2, 20.8], [10.6, 22.6], [21, 26.6], [24, 27.4], [3.2, 29], [18.6, 25.2]], face: [12, 26], children: 0, seed: 14 },
       { count: 80, center: TOWER, ring: [W * 0.72, W * 0.95], arc: [Math.PI, Math.PI * 2], spacing: 1.8, face: TOWER, children: 0.05, seed: 13 },
     ],
   },
@@ -118,6 +119,26 @@ export default {
       const bx = -52 + j * 1.1, bz = -6 + i * 0.9;
       solid.box(0.7, 0.18, 0.4, { position: [bx, ctx.heightAt(bx, bz) + 0.05, bz], color: r() < 0.5 ? '#c8a070' : '#bf9466', jitter: 0.06 });
     }
+    // A brick yard close by: a mud pit, rows of moulds, and stacks of burnt brick ready to carry.
+    solid.add(new THREE.CircleGeometry(2.6, 9).rotateX(-Math.PI / 2), { position: [1, ctx.heightAt(1, 28) + 0.05, 28], color: '#6a4a30' });
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 9; j++) {
+      const bx = 19 + j * 0.9, bz = 28.5 + i * 0.75;
+      solid.box(0.6, 0.16, 0.36, { position: [bx, ctx.heightAt(bx, bz) + 0.06, bz], color: r() < 0.5 ? '#c8a070' : '#bf9466', jitter: 0.06 });
+    }
+    for (const [sx, sz, rot] of [[6, 27, 0.2], [4, 23, -0.3], [8.2, 23.4, 0.5], [1.5, 31, 0.1]]) {
+      const sy = ctx.heightAt(sx, sz);
+      const layers = 5 + Math.floor(r() * 4);
+      const c = Math.cos(rot), sn = Math.sin(rot);
+      for (let k = 0; k < layers; k++) {
+        const turn = k % 2;
+        for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) {
+          const [lx, lz] = turn ? [(j - 1) * 0.42, (i - 1.5) * 0.22] : [(i - 1.5) * 0.22, (j - 1) * 0.42];
+          solid.box(turn ? 0.4 : 0.2, 0.13, turn ? 0.2 : 0.4, { position: [sx + lx * c + lz * sn, sy + 0.07 + k * 0.14, sz - lx * sn + lz * c], rotation: [0, rot, 0], color: r.pick([BRICK, '#c07850', '#a8603e']), jitter: 0.05 });
+        }
+      }
+      ctx.colliders.add({ x: sx, z: sz, w: 1.3, d: 1.3, rot, bottom: sy, top: sy + layers * 0.14 });
+    }
+
     // Bitumen pit.
     solid.add(new THREE.CircleGeometry(5, 9).rotateX(-Math.PI / 2), { position: [30, ctx.heightAt(30, 4) + 0.06, 4], color: '#1e1814' });
 

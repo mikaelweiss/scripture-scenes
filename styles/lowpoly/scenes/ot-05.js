@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.38, shadowTint: '#283850', highlightTint: '#fff2dc' },
   shadow: { center: [0, -35], radius: 80 },
 
-  player: { start: [6, 14], yaw: 0.08, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [5, 1], yaw: 0.06, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -66,7 +66,7 @@ export default {
   },
 
   figures: [
-    { x: ALTAR[0] - 0.2, z: ALTAR[1] + 2.3, face: [ALTAR[0], ALTAR[1] - 20], robe: '#e2dccb', mantle: '#8a6a48', skin: '#a8744e', arms: 'out', scale: 1.05 },
+    { x: ALTAR[0] - 2.4, z: ALTAR[1] - 1.4, face: [ALTAR[0] + 3, ALTAR[1] + 8], robe: '#e2dccb', mantle: '#8a6a48', skin: '#a8744e', arms: 'out', scale: 1.05 },
   ],
 
   effects: [
@@ -105,12 +105,12 @@ export default {
       ['elephant', -16, -46, 2.6], ['elephant', -20, -44, 2.4, true],
       ['giraffe', 18, -46, -2.2], ['giraffe', 22, -44, -2.4, true],
       ['horse', -26, -30, 2.2], ['horse', -29, -27, 2.0, true],
-      ['sheep', 12, -30, 2.8], ['sheep', 13.5, -28, 2.6, true], ['sheep', 15, -31, 3.0],
+      ['sheep', 9.5, -11, 2.5], ['sheep', 11, -9.5, 2.3, true], ['sheep', 12, -12.5, 2.7],
       ['deer', 30, -24, -2.6], ['deer', 33, -21, -2.4, true],
       ['camel', -38, -50, 1.6], ['camel', -42, -48, 1.8, true],
       ['lion', 34, -56, -1.4], ['lion', 37, -53, -1.2, true],
       ['ox', 4, -42, 3.0], ['ox', 8, -40, 2.8, true],
-      ['goat', -12, -24, 2.4], ['goat', -10, -22, 2.2, true],
+      ['goat', -5, -16, 2.2], ['goat', -3.5, -17.5, 2.0, true],
     ];
     for (const [kind, x, z, yaw, female] of herd) animal(ctx, { kind, x, z, yaw, female });
     birds(ctx, { center: [ALTAR[0], ALTAR[1] - 20], radius: 26, height: 24, count: 12, color: '#f6f2ea', speed: 6, seed: 2 });

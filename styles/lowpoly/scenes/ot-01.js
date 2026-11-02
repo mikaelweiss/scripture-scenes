@@ -11,8 +11,8 @@ export default {
   fov: 62,
   exposure: 1.25,
 
-  sun: { direction: [-0.5, 0.3, -0.8], color: '#ffd7a0', intensity: 3.8 },
-  light: { sky: '#7f8fd0', ground: '#6a6448', hemi: 1.5 },
+  sun: { direction: [0.25, 0.27, -0.93], color: '#ffd7a0', intensity: 3.8 },
+  light: { sky: '#b2a9c8', ground: '#7a7056', hemi: 1.8 },
   sky: { top: '#141a46', horizon: '#ffc685', ground: '#3d4a5a', sunColor: '#fff0c8', glow: 1.2 },
   fog: { color: '#c79a86', near: 90, far: 700 },
   clouds: { count: 50, seed: 11, shadow: '#3a3660', lit: '#ffb878', rim: '#fff3d0', distance: [300, 900], altitude: [70, 200], hole: 0.25 },
@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.15, contrast: 1.06, vignette: 0.45, shadowTint: '#2a2260', highlightTint: '#ffe6bb' },
   shadow: { center: [10, 0], radius: 90 },
 
-  player: { start: [-10, 34], yaw: -0.22, pitch: 0.06, eye: 1.65, speed: 4.5 },
+  player: { start: [-9, 31], yaw: 0.02, pitch: 0.06, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1300,
@@ -36,8 +36,8 @@ export default {
     ],
     colors: { ground: '#5f8236', groundAlt: '#6d8f3c', grass: '#7aa045', high: '#7f8a58', rock: '#6a6056' },
     patches: [
-      { x: -70, z: 10, r: 70, color: '#5a5048', strength: 0.95, rough: 0.5 },
-      { x: -40, z: -30, r: 40, color: '#4c443f', strength: 0.9, rough: 0.4 },
+      { x: -70, z: 10, r: 70, color: '#7a6c62', strength: 0.95, rough: 0.5 },
+      { x: -40, z: -30, r: 40, color: '#6c625a', strength: 0.9, rough: 0.4 },
       { x: 30, z: -35, r: 26, color: '#c9b48a', strength: 0.8, rough: 0.5 },
       { x: -5, z: -32, r: 24, color: '#bba57c', strength: 0.75, rough: 0.5 },
       { x: 60, z: -20, r: 30, color: '#c2ad84', strength: 0.6, rough: 0.5 },
@@ -45,22 +45,23 @@ export default {
   },
 
   objects: [
-    { type: 'rubble', x: -38, z: 12, radius: 16, count: 30, size: [0.4, 1.4], color: '#4f4741' },
-    { type: 'rubble', x: -20, z: -18, radius: 10, count: 16, size: [0.3, 1.0], color: '#58504a' },
-    { type: 'rock', x: -26, z: 4, size: 4.5, color: '#4c4440' },
-    { type: 'rock', x: -52, z: -10, size: 6, color: '#4a423e' },
-    { type: 'rock', x: -14, z: -24, size: 3, color: '#55504a' },
+    { type: 'rubble', x: -38, z: 12, radius: 16, count: 30, size: [0.4, 1.4], color: '#72685f' },
+    { type: 'rubble', x: -20, z: -18, radius: 10, count: 16, size: [0.3, 1.0], color: '#7a7067' },
+    { type: 'rubble', x: -21, z: 22, radius: 8, count: 30, size: [0.3, 1.2], color: '#82776d' },
+    { type: 'rock', x: -26, z: 4, size: 4.5, color: '#6e645c' },
+    { type: 'rock', x: -52, z: -10, size: 6, color: '#685e56' },
+    { type: 'rock', x: -14, z: -24, size: 3, color: '#746a62' },
   ],
 
   scatter: [
-    { type: 'rock', count: 26, center: [-80, 10], ring: [10, 90], spacing: 8, seed: 3, props: { color: '#4f4842' } },
-    { type: 'tree', count: 40, center: [70, 30], ring: [14, 110], spacing: 7, seed: 4, props: { kind: 'broad', leaf: '#4f8a34' }, avoid: [{ r: 22, x: 28, z: 14 }] },
+    { type: 'rock', count: 26, center: [-80, 10], ring: [10, 90], spacing: 8, seed: 3, props: { color: '#6e665e' } },
+    { type: 'tree', count: 40, center: [70, 30], ring: [14, 110], spacing: 7, seed: 4, props: { kind: 'broad', leaf: '#4f8a34' }, avoid: [{ r: 22, x: 28, z: 14 }, { r: 75, x: -60, z: 10 }, { r: 12, x: 4, z: 22 }] },
     { type: 'tree', count: 14, center: [40, -10], ring: [6, 40], spacing: 7, seed: 5, props: { kind: 'palm', leaf: '#5c8f38' }, avoid: [{ r: 18, x: 28, z: 14 }] },
-    { type: 'tree', count: 50, center: [40, 160], ring: [30, 220], spacing: 9, seed: 6, props: { leaf: '#4b7d30' } },
+    { type: 'tree', count: 50, center: [40, 160], ring: [30, 220], spacing: 9, seed: 6, props: { leaf: '#4b7d30' }, avoid: [{ r: 80, x: -60, z: 30 }] },
   ],
 
   effects: [
-    { type: 'sunShafts', center: [0, -180], count: 9, spread: 120, length: 600, width: [12, 30], opacity: 0.09, color: '#ffe2ae' },
+    { type: 'sunShafts', center: [40, -180], count: 9, spread: 120, length: 600, width: [12, 30], opacity: 0.09, color: '#ffe2ae' },
     { type: 'motes', at: [24, 6], radius: 30, height: 30, count: 260, color: '#fff2c8', size: 0.07 },
   ],
 
@@ -69,11 +70,31 @@ export default {
     water(ctx, { level: SEA, color: '#2f6d8a', amp: 0.22, specular: '#ffe4b8', shininess: 40 });
     blockWater(ctx, { level: SEA, center: [0, 0], radius: 160, cell: 3 });
     stars(ctx, { count: 1100, minY: 0.22, size: 2, opacity: 0.85 });
-    skyDisc(ctx, { dir: [-0.5, 0.3, -0.8], radius: 26, color: '#fff3d2', glow: 3.5, glowColor: '#ffb870' });
-    skyDisc(ctx, { dir: [0.55, 0.42, -0.6], radius: 16, color: '#eef0ff', glow: 3, glowColor: '#b8c4ff', crescent: '#1e2552' });
+    skyDisc(ctx, { dir: [0.25, 0.27, -0.93], radius: 26, color: '#fff3d2', glow: 3.5, glowColor: '#ffb870' });
+    skyDisc(ctx, { dir: [-0.6, 0.45, -0.65], radius: 16, color: '#eef0ff', glow: 3, glowColor: '#b8c4ff', crescent: '#1e2552' });
+
+    const r = ctx.rand;
+    // Soft bounce light from the open sky behind the walker so backlit rock still shows its facets.
+    const fill = new THREE.DirectionalLight('#c9c2e6', 1.3);
+    fill.position.set(-120, 160, 260);
+    ctx.scene.add(fill);
+    // Jagged crags of the newly risen land, still wet from the waters.
+    for (const [cx, cz, h] of [[-20, 14, 5], [-28, 6, 8], [-22, -4, 6], [-38, -2, 11], [-32, -18, 9], [-50, -14, 14], [-15, -12, 4], [-44, 14, 7], [-60, 4, 10], [-17, 25, 2.6], [-24, 22, 3.4]]) {
+      const gy = ctx.heightAt(cx, cz);
+      for (let i = 0; i < 3; i++) {
+        const sh = h * (1 - i * 0.28);
+        solid.add(new THREE.DodecahedronGeometry(1, 0), {
+          position: [cx + r.range(-1, 1) * i, gy + sh * 0.4 + i * h * 0.12, cz + r.range(-1, 1) * i],
+          rotation: [r.range(-0.2, 0.2), r() * 3, r.range(-0.2, 0.2)],
+          scale: [h * 0.32 * r.range(0.8, 1.1), sh * 0.55, h * 0.3 * r.range(0.8, 1.1)],
+          color: r.pick(['#7c7168', '#857a70', '#6c625a']),
+          jitter: 0.08,
+        });
+      }
+      ctx.colliders.add({ x: cx, z: cz, w: h * 0.5, d: h * 0.5, bottom: gy, top: gy + h });
+    }
 
     // Islands of new land breaking the surface of the sea.
-    const r = ctx.rand;
     for (const [ix, iz, s] of [[-120, -170, 18], [90, -230, 26], [-30, -300, 14], [180, -150, 12], [-200, -260, 30]]) {
       for (let i = 0; i < 4; i++) {
         solid.add(new THREE.DodecahedronGeometry(1, 0), {
@@ -100,7 +121,7 @@ export default {
       ['lion', 2, 12, 2.6], ['lion', 5, 14, 2.2, true], ['sheep', -3, 20, 3.0], ['sheep', -1, 22, 2.6], ['sheep', -5, 23, 3.3], ['sheep', 0, 18, 2.0],
       ['deer', 14, 4, 2.0], ['deer', 17, 7, 2.4, true], ['horse', 22, 20, 2.8], ['horse', 26, 22, 2.6, true],
       ['elephant', 30, -6, 2.4], ['elephant', 36, -2, 2.2, true], ['giraffe', 46, 8, 2.8], ['giraffe', 50, 4, 2.5, true],
-      ['rabbit', -6, 27, 1], ['rabbit', -5, 28, 0.4], ['ox', 28, 30, 3.2], ['ox', 32, 33, 3.0, true],
+      ['rabbit', -1, 21, 1], ['rabbit', 0, 22.5, 0.4], ['ox', 28, 30, 3.2], ['ox', 32, 33, 3.0, true],
     ];
     for (const [kind, x, z, yaw, female] of herd) animal(ctx, { kind, x, z, yaw, female });
     for (let i = 0; i < 10; i++) animal(ctx, { kind: 'dove', x: 8 + r.range(-5, 5), z: 22 + r.range(-4, 4), yaw: r() * 6 });

@@ -40,7 +40,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.4, shadowTint: '#2a3040', highlightTint: '#ffe8c4' },
   shadow: { center: [0, -30], radius: 85 },
 
-  player: { start: [29, 27], yaw: 0.58, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [32, 23], yaw: 0.7, pitch: 0.12, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1000,
@@ -72,13 +72,13 @@ export default {
     },
     groups: [
       { count: 9, points: [[30, -36], [34, -34], [38, -37], [44, -38], [42, -30], [28, -54], [36, -57], [48, -50], [26, -31]], face: [36, -46], children: 0, seed: 3 },
-      { count: 5, points: [[17, 20], [14.5, 19], [25.5, 21], [27.5, 20.5], [12, 17.5]], face: [20, 12], children: 0.2, seed: 7 },
+      { count: 5, points: [[15, 21.5], [13, 20], [17.5, 22.5], [11, 18.5], [19, 24]], face: [10, 10], children: 0.2, seed: 7 },
       { count: 12, center: [-60, 10], ring: [8, 22], arc: [0, Math.PI * 2], spacing: 1.5, face: ARK, children: 0.2, seed: 4 },
     ],
   },
 
   figures: [
-    { x: 21, z: 18.5, face: [17, 13], robe: '#d6ccb4', mantle: '#8a6a48', skin: '#a8744e', arms: 'out', scale: 1.05 },
+    { x: 23, z: 18.5, face: [16, 12], robe: '#d6ccb4', mantle: '#8a6a48', skin: '#a8744e', arms: 'out', scale: 1.05 },
   ],
 
   custom(ctx) {

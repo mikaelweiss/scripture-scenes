@@ -43,7 +43,7 @@ export default {
   grade: { saturation: 1.18, contrast: 1.05, vignette: 0.35, shadowTint: '#203a40', highlightTint: '#fff2d0' },
   shadow: { center: [0, -15], radius: 80 },
 
-  player: { start: [13, -3], yaw: 0.62, pitch: 0.05, eye: 1.65, speed: 4.5 },
+  player: { start: [9, -3], yaw: 0.2, pitch: 0.12, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 760,
@@ -60,14 +60,14 @@ export default {
   },
 
   scatter: [
-    { type: 'tree', count: 60, center: [0, -10], ring: [26, 120], spacing: 8, seed: 3, props: { kind: 'broad', leaf: '#3f8a34' }, avoid: [{ r: 16, x: 13, z: -3 }, { r: 12, x: 4, z: -34 }] },
+    { type: 'tree', count: 60, center: [0, -10], ring: [26, 120], spacing: 8, seed: 3, props: { kind: 'broad', leaf: '#3f8a34' }, avoid: [{ r: 16, x: 13, z: -3 }, { r: 12, x: 4, z: -34 }, { r: 10, x: 7, z: -18 }] },
     { type: 'tree', count: 24, center: [0, -10], ring: [30, 110], spacing: 10, seed: 4, props: { kind: 'palm', leaf: '#4f9a3a' }, avoid: [{ r: 16, x: 13, z: -3 }, { r: 12, x: 4, z: -34 }] },
     { type: 'tree', count: 120, center: [0, 0], ring: [120, 330], spacing: 9, seed: 5, props: { leaf: '#3c7a30' } },
   ],
 
   figures: [
-    { x: TREE[0] + 1.2, z: TREE[1] + 11, face: [TREE[0] + 4, TREE[1] + 12], robe: '#efe6d2', mantle: '#d9c9a6', skin: '#b07a52', arms: 'down' },
-    { x: TREE[0] + 3.6, z: TREE[1] + 12.2, face: [TREE[0], TREE[1] + 10], robe: '#f6efe2', mantle: '#e8d8bc', skin: '#c08a62', hood: true, scale: 0.95, arms: 'down' },
+    { x: TREE[0] + 0.6, z: TREE[1] + 18, face: [TREE[0] + 4, TREE[1] + 19], robe: '#e2d2b0', mantle: '#a8865a', skin: '#b07a52', arms: 'down' },
+    { x: TREE[0] + 3, z: TREE[1] + 19, face: [TREE[0], TREE[1] + 17], robe: '#f4ece0', mantle: '#c49a78', skin: '#c08a62', hood: true, scale: 0.95, arms: 'down' },
   ],
 
   effects: [
@@ -111,12 +111,12 @@ export default {
 
     // Peaceful creatures: the lion lies near the lamb.
     const herd = [
-      ['lion', 10, -16, -1.2], ['sheep', 8, -15, -2.1], ['sheep', 9.5, -13.5, 2.6],
+      ['lion', 14, -15, -1.0], ['sheep', 12, -14, -2.1], ['sheep', 13.5, -12.5, 2.6],
       ['deer', -8, -40, 0.6], ['deer', -11, -43, 0.4, true],
       ['horse', 30, -40, -0.8], ['horse', 33, -36, -1.1, true],
       ['elephant', -36, -64, 0.9], ['elephant', -30, -70, 0.7, true],
       ['giraffe', 40, -80, -0.5], ['giraffe', 45, -76, -0.7, true],
-      ['rabbit', 6, -12, 2.2], ['rabbit', 7.5, -11, 1.6], ['ox', 36, -6, 2.4], ['bear', 26, -58, -0.3],
+      ['rabbit', 3, -11, 2.2], ['rabbit', 4.5, -10, 1.6], ['ox', 36, -6, 2.4], ['bear', 26, -58, -0.3],
     ];
     for (const [kind, x, z, yaw, female] of herd) animal(ctx, { kind, x, z, yaw, female });
     for (let i = 0; i < 8; i++) animal(ctx, { kind: 'dove', x: tx + r.range(-6, 6), z: tz + 9 + r.range(-2, 4), yaw: r() * 6 });
@@ -127,7 +127,7 @@ export default {
       const x = r.range(-90, 90), z = r.range(-110, 50);
       const y = ctx.heightAt(x, z);
       if (y < WATER + 0.25 || Math.hypot(x - tx, z - tz) < 4) continue;
-      if (r() < 0.55) solid.add(new THREE.OctahedronGeometry(r.range(0.07, 0.12), 0), { position: [x, y + 0.22, z], color: r.pick(['#f6e45a', '#ffffff', '#f07a8a', '#c58af0', '#ff9a4a', '#ff5a5a']), jitter: 0.08 });
+      if (r() < 0.55) solid.add(new THREE.OctahedronGeometry(r.range(0.07, 0.12), 0), { position: [x, y + 0.1, z], color: r.pick(['#f6e45a', '#ffffff', '#f07a8a', '#c58af0', '#ff9a4a', '#ff5a5a']), jitter: 0.08 });
       else solid.add(new THREE.ConeGeometry(0.16, 0.5, 3), { position: [x, y + 0.18, z], rotation: [0, r() * 3, 0], color: '#5fa03e', jitter: 0.14 });
     }
     // Low hedges of blossom along the paths.
