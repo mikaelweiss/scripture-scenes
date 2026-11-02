@@ -83,7 +83,7 @@ function custom(ctx) {
   ctx.scene.add(sea);
 
   // Elijah, arms lifted in prayer beside the altar.
-  figure(ctx, { pos: ELIJAH, facing: ALTAR, scale: 1.05, colors: { robe: '#8a6a48', mantle: '#4e3a28', skin: '#9c6a45', hair: '#cfc6b8', sash: '#3a2a1c', arms: [0.4, 2.4] } });
+  figure(ctx, { pos: ELIJAH, facing: ALTAR, scale: 1.15, colors: { robe: '#d8c4a0', mantle: '#7a5232', skin: '#9c6a45', hair: '#e8e0d0', sash: '#3a2a1c', arms: [0.4, 2.4] } });
   // Ahab under a canopy of state, watching.
   figure(ctx, { pos: [10, -1], facing: ALTAR, colors: { robe: '#6a2a4a', mantle: '#c8912e', skin: '#a87650', hair: '#2b1a12', sash: '#c8912e', arms: [0.2, 0.2] }, extras: { crown: '#e0b040' } });
   const priest = { robe: '#7a2a3a', mantle: '#3a1a2a', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e', arms: [0.5, 0.6] };
@@ -163,5 +163,5 @@ export default {
     ],
   },
 
-  player: { start: [2, 9], lookAt: [-1, -8], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: [1.6, 3], lookAt: [-1.2, -8], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };

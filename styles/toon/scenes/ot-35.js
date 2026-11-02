@@ -2,7 +2,7 @@
 // the mountain is full of horses and chariots of fire round about Elisha.
 // x is east, z is south. The town lies south; the host fills the plain to the north; fire crowns the hills beyond.
 import * as THREE from 'three';
-import { Batch, PEOPLE, box, chariot, cyl, figure, frameAt, glow, horse, house, makeRng, stoneWall, xf } from './lib/ot-31-kit.js';
+import { Batch, PEOPLE, box, chariot, cyl, figure, frameAt, glow, horse, house, makeRng, rock, stoneWall, xf } from './lib/ot-31-kit.js';
 
 const ELISHA = [-1.2, -3.5];
 const TOWN = [0, 36];
@@ -38,8 +38,14 @@ function custom(ctx) {
 
   // A rocky rise outside the gate where Elisha and his servant stand.
   const ty = ctx.terrainHeight(0, -2);
-  b.add('#b8a07a', box(9, 1.6, 7, [0, ty + 0.3, -2]));
-  b.add('#a8906a', box(4, 0.6, 1.6, [0, ty, 2.2]));
+  b.add('#a8926e', box(9, 1.6, 7, [0, ty + 0.3, -2]));
+  b.add('#98825e', box(4, 0.6, 1.6, [0, ty, 2.2]));
+  for (let i = 0; i < 26; i++) {
+    const a = (i / 26) * Math.PI * 2;
+    const x = Math.sin(a) * 4.9, z = -2 + Math.cos(a) * 3.9;
+    if (Math.abs(x) < 2.6 && z > 0) continue;
+    b.add(['#9a8670', '#8a7660', '#b09a7a'][i % 3], rock(0.7 + rng() * 0.5, [x, ty + 0.2 + rng() * 0.5, z], [1.2, 0.8, 1], [rng(), rng() * 3, rng()]));
+  }
   ctx.addCollider({ x: 0, z: -2, hx: 4.5, hz: 3.5, rot: 0, top: ty + 1.1, walkable: true });
   ctx.addCollider({ x: 0, z: 2.2, hx: 2, hz: 0.8, rot: 0, top: ty + 0.3, walkable: true });
   const ey = ty + 1.1;
@@ -73,8 +79,8 @@ function custom(ctx) {
     const a = (rng() - 0.5) * 2.6, d = 110 + rng() * 90;
     const x = Math.sin(a) * d, z = -Math.cos(a) * d;
     const y = ctx.terrainHeight(x, z);
-    const rot = Math.atan2(-x, -z) + (rng() - 0.5) * 0.6;
-    const f = frameAt(x, y, z, rot).multiply(new THREE.Matrix4().makeScale(2.4, 2.4, 2.4));
+    const rot = Math.atan2(-x, -z) + (i % 2 ? 1 : -1) * (Math.PI / 2 - 0.3) + (rng() - 0.5) * 0.4;
+    const f = frameAt(x, y, z, rot).multiply(new THREE.Matrix4().makeScale(2.8, 2.8, 2.8));
     chariot(fire, f, { body: '#ff9a3c', trim: '#fff0a0', wheel: '#ffcf5a', glow: true });
     for (const s of [-0.75, 0.75]) horse(fire, f.clone().multiply(new THREE.Matrix4().makeTranslation(s, 0, 3.4)), { color: '#ffb347', mane: '#fff0a0', glow: true, rear: rng() < 0.3 ? 0.5 : 0 });
     if (i % 2 === 0) glow(ctx, [x, y + 5, z], 22, '#ffb860', 0.5, 0.08);

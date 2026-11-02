@@ -32,6 +32,8 @@ function custom(ctx) {
   crag(cx + 5.2, cz - 2.8, 3.6, 1.6, GRANITE[4]);
   b.add(GRANITE[1], rock(4.6, [cx, cy + 8.6, cz - 3.6], [1.6, 1.0, 1.0], [0.2, 0.4, 0.1]));
   b.add(GRANITE[0], rock(7, [cx, cy + 15, cz - 9], [1.3, 1.6, 1.0], [0.1, 1.1, 0.1]));
+  b.add(GRANITE[3], rock(2.4, [cx + 2.6, cy + 4.6, cz - 3.4], [1, 1.2, 0.9], [0.3, 0.8, 0.2]));
+  b.add(GRANITE[1], rock(2.2, [cx - 2.6, cy + 4.4, cz - 3.4], [1, 1.2, 0.9], [0.2, 2.1, 0.3]));
   ctx.addCollider({ x: cx, z: cz - 7, hx: 5, hz: 4, rot: 0, top: cy + 30 });
   // The cave's dark mouth.
   const mouth = xf(new THREE.SphereGeometry(1, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), { pos: [cx, cy - 0.1, cz - 1.8], scale: [2.6, 4.6, 1.6] });
@@ -155,5 +157,5 @@ export default {
 
   figures: [],
 
-  player: { start: [3, 9], lookAt: [0, -12], colors: { robe: '#7a6a52', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: [1.6, -2.5], lookAt: [-0.6, -12], colors: { robe: '#7a6a52', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };

@@ -214,20 +214,70 @@ export function river(ctx, { from, to, width, y, color = '#4f8fa0', line = '#cfe
   return { rot, len, dir: [dirX, dirZ] };
 }
 
-// A horse facing +z in local space, about 1.6 m at the shoulder. rear lifts the front.
+const UP = new THREE.Vector3(0, 1, 0);
+
+// Geometry built along +y and centered, stretched between points p and q.
+function between(geo, p, q) {
+  const a = new THREE.Vector3(...p), d = new THREE.Vector3(...q).sub(a);
+  const len = d.length();
+  geo.scale(1, len, 1);
+  geo.applyMatrix4(new THREE.Matrix4().compose(a.addScaledVector(d, 0.5), new THREE.Quaternion().setFromUnitVectors(UP, d.normalize()), new THREE.Vector3(1, 1, 1)));
+  return geo;
+}
+const limb = (p, q, r0, r1, seg = 7) => between(new THREE.CylinderGeometry(r1, r0, 1, seg), p, q);
+
+const NECK = [[0, 1.42, 0.62], [0, 1.82, 0.86], [0, 2.14, 1.04], [0, 2.3, 1.22]];
+const NECK_R = [0.3, 0.22, 0.17, 0.14];
+const MUZZLE = [0, 1.86, 1.66];
+const HIP = [0, 1.25, -0.62];
+
+// A horse facing +z in local space, about 1.6 m at the withers, with an arched neck, tapered head,
+// crest mane, flowing tail and jointed slender legs. rear lifts the forehand about the hips.
 export function horse(b, frame, { color = '#7a5a3c', mane = '#2b1a12', glow = false, rear = 0, scale = 1 } = {}) {
-  const local = new THREE.Matrix4().makeScale(scale, scale, scale);
-  const f = frame.clone().multiply(local);
+  const f = frame.clone().multiply(new THREE.Matrix4().makeScale(scale, scale, scale));
   const opt = { glow, frame: f };
-  const pivot = (geo) => (rear ? xf(geo, { rot: [-rear, 0, 0], pos: [0, rear * 0.6, 0] }) : geo);
-  b.add(color, pivot(xf(new THREE.CapsuleGeometry(0.36, 1.2, 4, 8), { pos: [0, 1.3, 0], rot: [Math.PI / 2, 0, 0] })), opt);
-  b.add(color, pivot(xf(new THREE.CapsuleGeometry(0.2, 0.6, 4, 8), { pos: [0, 1.8, 0.75], rot: [0.6, 0, 0] })), opt);
-  b.add(color, pivot(box(0.24, 0.26, 0.6, [0, 2.12, 1.1], [0.5, 0, 0])), opt);
-  b.add(mane, pivot(box(0.08, 0.5, 0.42, [0, 2.0, 0.6], [0.6, 0, 0])), opt);
-  b.add(mane, pivot(xf(new THREE.CapsuleGeometry(0.07, 0.6, 3, 6), { pos: [0, 1.25, -0.95], rot: [-0.5, 0, 0] })), opt);
-  for (const [lx, lz, front] of [[-0.2, 0.55, 1], [0.2, 0.55, 1], [-0.2, -0.55, 0], [0.2, -0.55, 0]]) {
-    if (front && rear) b.add(color, pivot(cyl(0.07, 0.06, 0.8, [lx, 0.85, lz + 0.25], [-1.0, 0, 0], 6)), opt);
-    else b.add(color, cyl(0.08, 0.06, 1.05, [lx, 0.52, lz], [0, 0, 0], 6), opt);
+  const lift = new THREE.Matrix4().makeTranslation(...HIP).multiply(new THREE.Matrix4().makeRotationX(-rear)).multiply(new THREE.Matrix4().makeTranslation(-HIP[0], -HIP[1], -HIP[2]));
+  const fore = (geo) => (rear ? geo.applyMatrix4(lift) : geo);
+  const coat = (geo) => b.add(color, fore(geo), opt);
+  const hair = (geo) => b.add(mane, fore(geo), opt);
+
+  // Barrel, chest and rump.
+  coat(xf(new THREE.CapsuleGeometry(0.38, 1.05, 4, 10), { pos: [0, 1.3, 0], rot: [Math.PI / 2, 0, 0], scale: [0.92, 1, 1.08] }));
+  coat(ball(0.4, [0, 1.36, 0.5], [0.9, 1, 1]));
+  b.add(color, ball(0.42, [0, 1.36, -0.6], [0.95, 0.95, 1]), opt);
+  // Arched neck and head.
+  for (let i = 0; i < 3; i++) coat(limb(NECK[i], NECK[i + 1], NECK_R[i], NECK_R[i + 1], 9));
+  coat(ball(0.15, NECK[3], [0.85, 1, 1]));
+  coat(limb(NECK[3], MUZZLE, 0.15, 0.1, 9));
+  coat(ball(0.16, [0, 2.1, 1.34], [0.75, 1, 1.1]));
+  coat(ball(0.11, MUZZLE, [0.9, 0.85, 1]));
+  for (const s of [-1, 1]) coat(xf(new THREE.ConeGeometry(0.045, 0.18, 5), { pos: [s * 0.07, 2.44, 1.2], rot: [-0.2, 0, s * 0.2] }));
+  // Mane along the crest, a forelock, and the tail.
+  for (let i = 0; i < 3; i++) {
+    const [, y0, z0] = NECK[i], [, y1, z1] = NECK[i + 1];
+    const len = Math.hypot(y1 - y0, z1 - z0), ny = (z1 - z0) / len, nz = -(y1 - y0) / len;
+    const o = NECK_R[i] * 0.9;
+    hair(between(new THREE.BoxGeometry(0.07, 1, 0.2), [0, y0 + ny * o, z0 + nz * o], [0, y1 + ny * o * 0.9, z1 + nz * o * 0.9]));
+  }
+  hair(xf(new THREE.ConeGeometry(0.06, 0.22, 4), { pos: [0, 2.32, 1.36], rot: [2.4, 0, 0] }));
+  b.add(mane, limb([0, 1.55, -0.98], [0, 1.15, -1.22], 0.06, 0.12), opt);
+  b.add(mane, limb([0, 1.15, -1.22], [0, 0.55, -1.3], 0.12, 0.04), opt);
+  // Legs: forearm, knee, cannon, hoof in front; gaskin, hock, cannon, hoof behind.
+  for (const s of [-1, 1]) {
+    const x = s * 0.2;
+    if (rear) {
+      coat(limb([x, 1.15, 0.55], [x, 0.78, 0.86], 0.09, 0.06));
+      coat(limb([x, 0.78, 0.86], [x, 0.45, 0.66], 0.05, 0.045));
+      hair(xf(new THREE.CylinderGeometry(0.06, 0.07, 0.12, 7), { pos: [x, 0.42, 0.62], rot: [-0.9, 0, 0] }));
+    } else {
+      coat(limb([x, 1.15, 0.55], [x, 0.58, 0.58], 0.1, 0.06));
+      coat(limb([x, 0.58, 0.58], [x, 0.12, 0.6], 0.048, 0.045));
+      b.add(mane, cyl(0.06, 0.075, 0.12, [x, 0.06, 0.61], [0, 0, 0], 7), opt);
+    }
+    const hz = rear ? -0.45 : -0.68;
+    b.add(color, limb([x, 1.28, -0.58], [x, 0.66, -0.82], 0.15, 0.07), opt);
+    b.add(color, limb([x, 0.66, -0.82], [x, 0.12, hz], 0.05, 0.045), opt);
+    b.add(mane, cyl(0.06, 0.075, 0.12, [x, 0.06, hz], [0, 0, 0], 7), opt);
   }
 }
 

@@ -206,5 +206,5 @@ export default {
     ],
   },
 
-  player: { start: [1.3, -8.5], lookAt: [0, -20], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: [2.4, -11.6], lookAt: [-1, -19.5], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };

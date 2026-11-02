@@ -102,8 +102,8 @@ function custom(ctx) {
   step.castShadow = step.receiveShadow = true;
   ctx.scene.add(step);
   ctx.addCollider({ x: NEHEMIAH[0], z: NEHEMIAH[1], hx: 1.2, hz: 0.9, rot: 0, top: ny + 0.7, walkable: true });
-  figure(ctx, { pos: NEHEMIAH, y: ny + 0.7, clear: 2.5, facing: [-4, WALL_Z], scale: 1.04, colors: { robe: '#2f5a6a', mantle: '#c8912e', skin: '#a87650', hair: '#2b1a12', sash: '#e6d8b8', arms: [0.5, 1.5] }, extras: { tallHat: '#e6d8b8' } });
-  figure(ctx, { pos: [NEHEMIAH[0] + 1.8, NEHEMIAH[1] + 0.4], facing: [0, WALL_Z], colors: { robe: '#d9c7a3', mantle: '#8a5a3c', skin: '#9c6a45', hair: '#3a2418', sash: '#5a3a26', arms: [0.2, 1.4] }, extras: { trumpet: '#d8a840', sword: '#9aa0a8' } });
+  figure(ctx, { pos: NEHEMIAH, y: ny + 0.7, clear: 2.5, facing: [12, -6], scale: 1.12, colors: { robe: '#2f5a6a', mantle: '#c8912e', skin: '#a87650', hair: '#2b1a12', sash: '#e6d8b8', arms: [0.5, 1.5] }, extras: { tallHat: '#e6d8b8' } });
+  figure(ctx, { pos: [NEHEMIAH[0] - 1.9, NEHEMIAH[1] - 0.6], facing: [-6, WALL_Z], colors: { robe: '#d9c7a3', mantle: '#8a5a3c', skin: '#9c6a45', hair: '#3a2418', sash: '#5a3a26', arms: [0.2, 1.4] }, extras: { trumpet: '#d8a840', sword: '#9aa0a8' } });
 }
 
 export default {
@@ -166,5 +166,5 @@ export default {
     groups: [{ shape: 'rect', center: [0, -4], size: [120, 10], count: 70, facingJitter: 2.5 }],
   },
 
-  player: { start: [1.5, 7], lookAt: [-2.5, WALL_Z], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: [2.2, 4.5], lookAt: [-4.5, WALL_Z], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };

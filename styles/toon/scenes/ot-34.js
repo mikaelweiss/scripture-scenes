@@ -13,7 +13,7 @@ function custom(ctx) {
   river(ctx, { from: [-300, -6], to: [300, -12], width: 16, y: WATER_Y, color: '#4f8f92', line: '#d6ebe0', flow: 0.04 });
 
   // Naaman, bowing beneath the water and rising again.
-  const naaman = figure(ctx, { pos: NAAMAN, y: -0.6, facing: [0, 10], clear: 0, colors: { robe: '#e8dcc4', mantle: '#e8dcc4', skin: '#b5825a', hair: '#2b1a12', arms: [0.35, 0.5] } });
+  const naaman = figure(ctx, { pos: NAAMAN, y: -0.6, facing: [-1, 10], scale: 1.2, clear: 0, colors: { robe: '#e8dcc4', mantle: '#e8dcc4', skin: '#b5825a', hair: '#2b1a12', arms: [0.35, 0.5] } });
   const ripples = [0, 1, 2].map((i) => {
     const r = new THREE.Mesh(xf(new THREE.TorusGeometry(1, 0.05, 4, 32), { rot: [Math.PI / 2, 0, 0] }), ctx.kit.basic('#e8f4f0'));
     r.position.set(NAAMAN[0], WATER_Y + 0.02, NAAMAN[1]);
@@ -133,5 +133,5 @@ export default {
     ],
   },
 
-  player: { start: [2.5, 6], lookAt: [0, -6], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: [-1.2, 3], lookAt: [5, -6], colors: { robe: '#a0825c', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };

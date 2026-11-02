@@ -7,6 +7,15 @@ const CHARIOT = [3, -11];
 const LIFT = 4.2;
 const ELISHA = [0.5, 0];
 const RIVER_X = -16;
+const WATCHERS = [-30, -19];
+const START = [5.5, 4.5];
+
+const nearSightline = (x, z, width, [bx, bz] = WATCHERS) => {
+  const [ax, az] = START;
+  const dx = bx - ax, dz = bz - az;
+  const t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+  return Math.hypot(x - ax - dx * t, z - az - dz * t) < width;
+};
 
 function custom(ctx) {
   const b = new Batch(ctx);
@@ -19,20 +28,20 @@ function custom(ctx) {
   river(ctx, { from: [RIVER_X, 260], to: [RIVER_X - 6, -260], width: 13, y: 0.25, color: '#5b8f8a', line: '#d6ebe0' });
 
   // The chariot of fire and its two horses, rising, facing up and away to the north east.
-  const rotY = 1.75;
+  const rotY = 2.2;
   const f = frameAt(cx, cy, cz, rotY).multiply(new THREE.Matrix4().makeRotationX(-0.25)).multiply(new THREE.Matrix4().makeScale(1.6, 1.6, 1.6));
   chariot(fire, f, { body: '#ff9a3c', trim: '#fff0a0', wheel: '#ffcf5a', glow: true });
   for (const s of [-0.75, 0.75]) {
     const hf = f.clone().multiply(new THREE.Matrix4().makeTranslation(s, -0.2, 3.4));
-    horse(fire, hf, { color: '#ffb347', mane: '#fff0a0', glow: true, rear: 0.6, scale: 1.1 });
+    horse(fire, hf, { color: '#ffb347', mane: '#fff0a0', glow: true, rear: 0.35, scale: 1.1 });
   }
   fire.flush();
   const dir = [Math.sin(rotY), Math.cos(rotY)];
   const spots = [];
-  for (let i = 0; i < 26; i++) {
+  for (let i = 0; i < 36; i++) {
     const along = -1.5 + rng() * 9, side = (rng() - 0.5) * 3.6;
     const x = cx + dir[0] * along + dir[1] * side, z = cz + dir[1] * along - dir[0] * side;
-    spots.push([x, cy + 0.6 + along * 0.4 + rng() * 1.5, z, 1.2 + rng() * 2, 1 + rng() * 0.9]);
+    spots.push([x, cy + 0.6 + along * 0.4 + rng() * 1.5, z, 0.8 + rng() * 1.3, 0.7 + rng() * 0.6]);
   }
   flames(ctx, spots, { outer: '#ff8a2c', inner: '#fff0a0' });
   glow(ctx, [cx, cy + 2, cz], 14, '#ffc870', 0.55, 0.08);
@@ -64,7 +73,7 @@ function custom(ctx) {
     const side = rng() < 0.5 ? -1 : 1;
     const z = -150 + rng() * 300;
     const rx = RIVER_X - 6 * (0.5 - z / 520) + side * (9 + rng() * 22);
-    if (Math.hypot(rx - cx, z - cz) < 22 || Math.hypot(rx - ELISHA[0], z - ELISHA[1]) < 12) continue;
+    if (Math.hypot(rx - cx, z - cz) < 32 || Math.hypot(rx - ELISHA[0], z - ELISHA[1]) < 12 || nearSightline(rx, z, 12) || nearSightline(rx, z, 9, CHARIOT) || Math.hypot(rx - WATCHERS[0], z - WATCHERS[1]) < 16) continue;
     tree(b, ctx, rx, z, rng, { kind: rng() < 0.35 ? 'palm' : 'olive', h: 4 + rng() * 4, leaves: ['#6f8a52', '#7e9a5a', '#5a7a46'] });
   }
   for (let i = 0; i < 60; i++) {
@@ -140,8 +149,8 @@ export default {
       hair: PEOPLE.hair,
       wraps: ['#d8cdb5', '#8a7a5a', '#c9b48e'],
     },
-    groups: [{ shape: 'rect', center: [-40, -6], size: [8, 14], count: 50, kneel: 0.3 }],
+    groups: [{ shape: 'rect', center: WATCHERS, size: [7, 12], count: 50, kneel: 0.3 }],
   },
 
-  player: { start: [3, 8], lookAt: [3, -10], colors: { robe: '#7a6a52', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
+  player: { start: START, lookAt: [-3, -9], colors: { robe: '#7a6a52', mantle: '#4f5a6b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' } },
 };
