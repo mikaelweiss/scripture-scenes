@@ -5,7 +5,7 @@ import { add, baseStyle, block, clothes, fretBand, groundColors, houses, mound, 
 
 const HILL = { x: 0, z: -20, radius: 28, height: 7.5 };
 const ALMA = [0, -21];
-const CITY = [120, 10];
+const CITY = [80, -135];
 
 const POOR = {
   robes: ['#c9b48e', '#a89878', '#b89a70', '#8f7f66', '#9a8a72', '#7f8a7a', '#a07a5e', '#d0c2a0', '#8a6e5a', '#6f7f80', '#a8826a'],
@@ -21,11 +21,11 @@ function city(ctx) {
   block(ctx, [26, 9, 20], [cx, y, cz], '#e8d6ae');
   fretBand(ctx, [26.4, 1.2, 20.4], [cx, y + 7.4, cz], ['#5b3a6e', '#d9a441']);
   block(ctx, [27, 0.6, 21], [cx, y + 9, cz], '#cdb48a', { collide: false });
-  block(ctx, [3, 7, 3], [cx, y + 9.6, cz], '#e8d6ae', { collide: false });
-  fretBand(ctx, [3.3, 1, 3.3], [cx, y + 15, cz], ['#8c2f3a', '#d9a441']);
-  add(ctx, new THREE.BoxGeometry(4, 0.4, 4), ctx.kit.toon('#d9a441'), { pos: [cx, y + 16.8, cz] });
+  block(ctx, [4, 13, 4], [cx, y + 9.6, cz], '#e8d6ae', { collide: false });
+  fretBand(ctx, [4.3, 1.4, 4.3], [cx, y + 20.5, cz], ['#8c2f3a', '#d9a441']);
+  add(ctx, new THREE.BoxGeometry(5, 0.5, 5), ctx.kit.toon('#d9a441'), { pos: [cx, y + 22.85, cz] });
   ctx.exclude({ kind: 'rect', x: cx, z: cz, hx: 15, hz: 12 });
-  houses(ctx, { center: CITY, ring: [16, 60], count: 46, colors: ['#e8d6ae', '#d6bf95', '#cdb48a'], roof: '#5b3a6e', seed: 29, size: [4, 8] });
+  houses(ctx, { center: CITY, ring: [16, 48], count: 40, colors: ['#e8d6ae', '#d6bf95', '#cdb48a'], roof: '#5b3a6e', seed: 29, size: [4, 8] });
 }
 
 function hill(ctx) {
@@ -95,7 +95,7 @@ export default {
   },
 
   player: {
-    start: [0, -5],
+    start: [0, -8],
     lookAt: ALMA,
     colors: { robe: '#8a7a62', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c2b08a' },
   },

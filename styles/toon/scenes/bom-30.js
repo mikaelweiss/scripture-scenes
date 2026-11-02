@@ -169,7 +169,7 @@ export default {
   },
 
   player: {
-    start: [0, 7],
+    start: [0, 3],
     lookAt: [0, -6],
     colors: { robe: '#4f7f80', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#b5523b' },
   },

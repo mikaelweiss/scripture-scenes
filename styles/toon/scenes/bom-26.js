@@ -43,35 +43,68 @@ function mergeAll(geos) {
   return g;
 }
 
+// A long ridge of dug earth whose steep inner face is the dark wall of the trench.
+// Local frame: the bank runs along x, its inner edge sits on z = 0, and it rises toward -z.
+function bank(ctx, { x, z, y, len, rot, height, rng }) {
+  const k = ctx.kit;
+  const shape = new THREE.Shape();
+  const pts = [[0, -0.4], [0.02, 0], [0.45, height], [0.9, height * 1.08], [1.7, height * 0.95], [2.6, height * 0.45], [3.4, -0.4]];
+  shape.moveTo(...pts[0]);
+  for (const p of pts.slice(1)) shape.lineTo(...p);
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: len, bevelEnabled: false }).rotateY(Math.PI / 2).translate(-len / 2, 0, 0);
+  const g = new THREE.Group();
+  g.position.set(x, y, z);
+  g.rotation.y = rot;
+  const earth = new THREE.Mesh(geo, k.toon('#8a5a3b'));
+  earth.castShadow = earth.receiveShadow = true;
+  const slant = Math.hypot(0.45, height + 0.4);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(len, slant), k.toon('#3b2416'));
+  wall.rotation.x = -Math.atan2(0.45, height + 0.4);
+  wall.position.set(0, (height - 0.4) / 2, -0.2);
+  wall.receiveShadow = true;
+  g.add(earth, wall);
+  const lump = new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2);
+  for (let i = 0; i < Math.round(len / 3.5); i++) {
+    const m = new THREE.Mesh(lump, k.toon(i % 2 ? '#94633f' : '#7a4e33'));
+    m.position.set(-len / 2 + 1.5 + (i + rng()) * ((len - 3) / Math.round(len / 3.5)), height * 0.9, -1.3 - rng() * 0.5);
+    m.scale.set(1.2 + rng() * 0.8, (0.35 + rng() * 0.3) * Math.min(1, height / 1.2), 0.8 + rng() * 0.3);
+    m.castShadow = true;
+    g.add(m);
+  }
+  ctx.scene.add(g);
+}
+
 function burial(ctx) {
   const rng = makeRng(26);
   const k = ctx.kit;
   const { x: tx, z: tz, len, w } = TRENCH;
-  const y = ctx.terrainHeight(tx, tz);
+  let y = -Infinity;
+  for (let i = 0; i <= 12; i++) for (const dz of [-w / 2, 0, w / 2]) y = Math.max(y, ctx.terrainHeight(tx - len / 2 + (i / 12) * len, tz + dz));
+  const H = 1.15;
+  const bankTop = (side) => y + (side < 0 ? H * 1.15 : H * 0.3);
 
-  const pit = add(ctx, new THREE.BoxGeometry(len, 0.1, w), k.toon('#3a2418'), { pos: [tx, y + 0.02, tz], cast: false });
-  pit.receiveShadow = false;
-  add(ctx, new THREE.BoxGeometry(len - 0.6, 0.12, w - 0.8), k.toon('#2a1a10'), { pos: [tx, y + 0.04, tz], cast: false });
-  const ridge = new THREE.SphereGeometry(1, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2);
+  add(ctx, new THREE.BoxGeometry(len + 0.4, 0.6, w + 0.4), k.toon('#1e120a'), { pos: [tx, y - 0.25, tz], cast: false });
+  bank(ctx, { x: tx, z: tz - w / 2, y, len: len + 1, rot: 0, height: H * 1.15, rng });
+  bank(ctx, { x: tx, z: tz + w / 2, y, len: len + 1, rot: Math.PI, height: H * 0.3, rng });
+  bank(ctx, { x: tx - len / 2, z: tz, y, len: w + 1.5, rot: Math.PI / 2, height: H, rng });
+  bank(ctx, { x: tx + len / 2, z: tz, y, len: w + 1.5, rot: -Math.PI / 2, height: H, rng });
+  ctx.exclude({ kind: 'rect', x: tx, z: tz, hx: len / 2 + 3.6, hz: w / 2 + 3.6 });
   for (const side of [-1, 1]) {
-    for (let i = 0; i < 9; i++) {
-      const x = tx - len / 2 + 2 + i * ((len - 4) / 8) + (rng() - 0.5);
-      const z = tz + side * (w / 2 + (side < 0 ? 1.2 : 0.9) + rng() * 0.3);
-      const m = add(ctx, ridge, k.toon(i % 2 ? '#8a5a3b' : '#7a4e33'), { pos: [x, ctx.terrainHeight(x, z) - 0.05, z], rotY: rng() * 3 });
-      m.scale.set(1.8 + rng(), side < 0 ? 0.55 + rng() * 0.3 : 0.25 + rng() * 0.1, 0.9 + rng() * 0.3);
+    for (let i = 0; i < 6; i++) {
+      ctx.addCollider({ x: tx - len / 2 + (i + 0.5) * (len / 6), z: tz + side * (w / 2 + 1.3), hx: len / 12, hz: 1.1, rot: 0, top: bankTop(side), walkable: true });
     }
   }
-  ctx.exclude({ kind: 'rect', x: tx, z: tz, hx: len / 2 + 0.5, hz: w / 2 + 0.8 });
 
   const sword = swordGeometries();
   const lying = [], q = new THREE.Quaternion(), e = new THREE.Euler(), m = new THREE.Matrix4();
-  for (let i = 0; i < 260; i++) {
-    const x = tx + (rng() - 0.5) * (len - 1.5), z = tz + (rng() - 0.5) * (w - 1);
+  for (let i = 0; i < 220; i++) {
+    const x = tx + (rng() - 0.5) * (len - 1.5), z = tz + (rng() - 0.5) * (w - 0.8);
     e.set(Math.PI / 2 + (rng() - 0.5) * 0.3, rng() * 6.28, 0, 'YXZ');
-    m.compose(new THREE.Vector3(x, y + 0.1 + rng() * 0.15, z), q.setFromEuler(e), new THREE.Vector3(1.4, 1.4, 1.4));
+    m.compose(new THREE.Vector3(x, y + 0.08 + rng() * 0.12, z), q.setFromEuler(e), new THREE.Vector3(1.4, 1.4, 1.4));
     lying.push(m.clone());
   }
-  const pile = [[-6, -16.5], [6, -16.5], [-14, 2], [14, 2]];
+  // Swords waiting in heaps by the king to be carried down.
+  const pile = [[-6, -16.5], [6, -16.5]];
   for (const [px, pz] of pile) {
     for (let i = 0; i < 40; i++) {
       const a = rng() * 6.28, r = Math.sqrt(rng()) * 1.2;
@@ -83,15 +116,16 @@ function burial(ctx) {
     ctx.exclude({ kind: 'circle', x: px, z: pz, r: 1.6 });
     ctx.addCollider({ x: px, z: pz, hx: 1, hz: 1, rot: 0, top: ctx.terrainHeight(px, pz) + 0.5 });
   }
-  instanced(ctx, sword.metal, '#d4dadd', lying);
+  instanced(ctx, sword.metal, '#c4ccd0', lying);
   instanced(ctx, sword.wood, '#5e4632', lying);
 
-  for (let i = 0; i < 10; i++) {
-    const x = tx - len / 2 + 3 + i * 3.3, z = tz + (i % 2 ? 1 : -1) * (w / 2 + 1.4);
-    const stick = add(ctx, new THREE.CylinderGeometry(0.04, 0.05, 1.7, 5), k.toon('#6b4a33'), { pos: [x, ctx.terrainHeight(x, z) + 0.9, z] });
+  // Digging sticks left standing in the spoil.
+  for (let i = 0; i < 8; i++) {
+    const side = i % 2 ? 1 : -1;
+    const x = tx - len / 2 + 3 + i * 4.2, z = tz + side * (w / 2 + 2.2);
+    const top = bankTop(side) - 0.05;
+    const stick = add(ctx, new THREE.CylinderGeometry(0.04, 0.05, 1.7, 5), k.toon('#6b4a33'), { pos: [x, top + 0.7, z] });
     stick.rotation.z = (rng() - 0.5) * 0.6;
-    const blade = add(ctx, new THREE.BoxGeometry(0.22, 0.32, 0.04), k.toon('#7a6a52'), { pos: [x, ctx.terrainHeight(x, z) + 0.05, z] });
-    blade.rotation.copy(stick.rotation);
   }
 
   // The king on a rock, Ammon and his brethren beside him.
@@ -120,10 +154,10 @@ function burial(ctx) {
   for (let i = 0; i < 18; i++) {
     const side = i % 2 ? 1 : -1;
     const x = tx - len / 2 + 2 + (i / 17) * (len - 4) + (rng() - 0.5);
-    const z = tz + side * (w / 2 + 0.5);
+    const z = tz + side * (w / 2 + 0.75);
     const pal = clothes;
     const pick = (l) => l[Math.floor(rng() * l.length)];
-    const f = person(ctx, { robe: pick(pal.robes), mantle: pick(pal.mantles), skin: pick(pal.skins), hair: pick(pal.hair), arms: [0.15, 1.0] }, [x, z], [x, tz], { kneel: true, clear: 0.6 });
+    const f = person(ctx, { robe: pick(pal.robes), mantle: pick(pal.mantles), skin: pick(pal.skins), hair: pick(pal.hair), arms: [0.15, 1.0] }, [x, z], [x, tz], { kneel: true, clear: 0.6, y: bankTop(side) - 0.05 });
     swordFig(f);
   }
   for (const [x, z] of [[-3, 6], [2.5, 7.5], [8, 5], [-9, 5.5], [-1, 10]]) {
@@ -164,7 +198,7 @@ export default {
   },
 
   light: {
-    glows: [{ at: KING, lift: 2.6, size: 4, color: '#fff3d0', opacity: 0.25 }],
+    glows: [{ at: KING, lift: 2.6, size: 4, color: '#fff3d0', opacity: 0.35 }],
   },
 
   crowd: {
@@ -183,7 +217,7 @@ export default {
   },
 
   player: {
-    start: [0, 3],
+    start: [0, -1.5],
     lookAt: KING,
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
