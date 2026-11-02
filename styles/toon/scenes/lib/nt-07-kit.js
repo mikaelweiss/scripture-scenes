@@ -739,7 +739,7 @@ export const JUDEANS = {
   wraps: ['#e6d8b8', '#d9c7a3', '#b5523b', '#c8a97a', '#4f6a80', '#efe3c2'],
 };
 
-export const JESUS = { robe: '#f6f1e4', mantle: '#b5523b', skin: '#b07a50', hair: '#4a2e1c', sash: '#e9dcc0' };
+export const JESUS = { robe: '#f6f1e4', mantle: '#ece3cf', skin: '#b07a50', hair: '#4a2e1c', sash: '#e9dcc0' };
 
 let glowTex = null;
 export function glow(ctx, [x, y, z], size, color, opacity = 0.7, pulse = 0.04) {
