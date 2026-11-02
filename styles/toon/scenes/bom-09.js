@@ -127,7 +127,10 @@ export default {
     palms(ctx, [[-40, -22], [-44, -14], [40, -24], [46, -20], [52, -12]], { seed: 2 });
 
     // Lehi gives thanks; Nephi with the seed; others kneel at the rows.
-    person(ctx, { robe: '#e6d8b8', mantle: '#d9c7a3', skin: '#c08f66', hair: '#e8e4dc', sash: '#8c5a3c', arms: [0.5, 1.9] }, { pos: [-2, -8], face: [-2, 10] });
+    const lehiY = ctx.terrainHeight(-2, -8);
+    addMesh(scene, [new THREE.CylinderGeometry(1.1, 1.5, 1.2, 8).translate(-2, lehiY + 0.4, -8)], kit.stoneMat('#9a8a78'));
+    ctx.addCollider({ x: -2, z: -8, hx: 1.2, hz: 1.2, rot: 0, top: lehiY + 1.0 });
+    person(ctx, { robe: '#f2ead6', mantle: '#d9c7a3', skin: '#c08f66', hair: '#e8e4dc', sash: '#8c5a3c', arms: [0.5, 2.3] }, { pos: [-2, -8], face: [4, 6], y: lehiY + 1.0, scale: 1.15 });
     person(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.2, 0.9] }, { pos: [13, 9], face: [20, 9], scale: 1.05 });
     for (const [x, z] of [[18, 7.3], [23, 9.9], [27, 12.5]]) person(ctx, { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#2b1a12' }, { pos: [x, z], face: [x + 4, z], kneel: true });
   },
@@ -150,8 +153,8 @@ export default {
   },
 
   player: {
-    start: [6, 12],
-    lookAt: [-6, -30],
+    start: [6, -2],
+    lookAt: [-1, -13],
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

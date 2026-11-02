@@ -38,7 +38,7 @@ export default {
     { type: 'stones', count: 200, center: [0, 0], ring: [10, 60], size: [0.12, 0.4], colors: ['#b8a07a', '#a08868', '#c8b48a'] },
   ],
 
-  smolder: [{ pos: [-7, 5], radius: 0.9, embers: 10, flames: 3, smoke: 0, logs: 3 }],
+  smolder: [{ pos: [-12, 9], radius: 0.9, embers: 10, flames: 3, smoke: 0, logs: 3 }],
 
   clouds: {
     layers: [
@@ -77,7 +77,7 @@ export default {
     const grain = [];
     for (let i = 0; i < 70; i++) {
       const x = -70 + (i % 14) * 4 + rng(), z = -60 - Math.floor(i / 14) * 4 + rng();
-      grain.push(boxGeo(3.6, 0.9, 3.4, [x, ctx.terrainHeight(x, z) + 0.45, z]));
+      grain.push(boxGeo(3.8, 0.5, 3.6, [x, ctx.terrainHeight(x, z) + 0.15, z]));
     }
     addMesh(scene, grain, kit.toon('#d8b85a'));
     leafyTrees(ctx, scatter(ctx, rng, 90, { center: [0, 0], ring: [48, 180], margin: 4, reject: (x, z) => z > 15 && Math.abs(x) < 30 }), { height: [6, 11], leaves: ['#5a8a44', '#6a9a4a', '#4a7a3e'] });
@@ -110,7 +110,8 @@ export default {
   },
 
   player: {
-    start: [2.5, 10],
+    fov: 48,
+    start: [1.4, 2.6],
     lookAt: LEHI,
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

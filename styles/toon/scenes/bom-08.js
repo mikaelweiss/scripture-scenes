@@ -54,24 +54,25 @@ export default {
 
     // Cords around Nephi and the mast (1 Nephi 18:11-15).
     const cords = [];
-    for (const h of [0.55, 0.85, 1.15, 1.3]) {
-      const ring = new THREE.TorusGeometry(0.42, 0.04, 5, 18);
+    for (const h of [0.5, 0.8, 1.1, 1.38]) {
+      const ring = new THREE.TorusGeometry(0.5, 0.05, 5, 20);
       ring.rotateX(Math.PI / 2);
-      ring.translate((MAST[0] + NEPHI[0]) / 2 + 0.05, deckY + h, 0);
+      ring.scale(1.3, 1, 0.62);
+      ring.translate((MAST[0] + NEPHI[0]) / 2 + 0.06, deckY + h, 0);
       cords.push(ring);
     }
-    addMesh(scene, cords, kit.toon('#d8c8a0'), { cast: false });
+    addMesh(scene, cords, kit.toon('#f0e2b8', { emissive: '#3a3020' }), { cast: false });
     cargo(ctx, [[-4, 2.3], [-4.6, 2.0], [-3.8, -2.4], [8, 2.2], [8.6, -2.1], [7.6, 1.9]], { y: deckY });
 
     const fam = { robe: '#7a6a52', mantle: '#5e4632', skin: '#a87650', hair: '#2b1a12', sash: '#3e6e66' };
-    person(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.12, -0.3] }, { pos: NEPHI, face: [-10, 0], y: deckY, scale: 1.05, kneel: true });
+    person(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.06, 0] }, { pos: NEPHI, face: [12, -2], y: deckY, scale: 1.1 });
     person(ctx, { ...fam, robe: '#8c5a3c', mantle: '#3a2418', arms: [0.25, 0.9] }, { pos: [-0.5, 1.4], face: NEPHI, y: deckY });
     person(ctx, { ...fam, robe: '#6b5a4a', mantle: '#8c5a3c', arms: [0.6, 0.4] }, { pos: [0.2, -1.8], face: NEPHI, y: deckY });
     person(ctx, { robe: '#e6d8b8', mantle: '#d9c7a3', skin: '#c08f66', hair: '#e8e4dc' }, { pos: [-6.2, 2.3], face: [-6.2, 0], y: deckY, kneel: true });
     person(ctx, { robe: '#b5523b', mantle: '#d9c7a3', skin: '#c08f66', hair: '#d8d2c8' }, { pos: [-6.2, -2.3], face: [-6.2, 0], y: deckY, kneel: true });
-    person(ctx, { robe: '#4f7f80', mantle: '#c8912e', skin: '#b5825a', hair: '#2b1a12' }, { pos: [5.2, 1.6], face: NEPHI, y: deckY, kneel: true });
-    person(ctx, { robe: '#c98b3c', mantle: '#4f7f80', skin: '#b5825a', hair: '#3a2418' }, { pos: [5.0, 0.6], face: NEPHI, y: deckY, scale: 0.6 });
-    person(ctx, { robe: '#d9c7a3', mantle: '#b5523b', skin: '#b5825a', hair: '#3a2418' }, { pos: [5.6, -0.5], face: NEPHI, y: deckY, scale: 0.65 });
+    person(ctx, { robe: '#4f7f80', mantle: '#c8912e', skin: '#b5825a', hair: '#2b1a12' }, { pos: [4.3, 1.9], face: NEPHI, y: deckY, kneel: true });
+    person(ctx, { robe: '#c98b3c', mantle: '#4f7f80', skin: '#b5825a', hair: '#3a2418' }, { pos: [3.7, 2.6], face: NEPHI, y: deckY, scale: 0.6 });
+    person(ctx, { robe: '#d9c7a3', mantle: '#b5523b', skin: '#b5825a', hair: '#3a2418' }, { pos: [5.0, 2.5], face: NEPHI, y: deckY, scale: 0.65 });
 
     rain(ctx, { count: 1500, wind: [0.5, 0.15], speed: 30, opacity: 0.4 });
 
@@ -119,7 +120,7 @@ export default {
 
   light: {
     glows: [{ at: [-6.75, 0], lift: 1.8, size: 2.2, color: '#ffc870', opacity: 0.7 }],
-    pointLights: [{ at: [-6.5, 0], lift: 3.4, color: '#ffc070', intensity: 5, distance: 10 }],
+    pointLights: [{ at: [-6.5, 0], lift: 3.4, color: '#ffc070', intensity: 5, distance: 10 }, { at: [4.6, -0.6], lift: 2.6, color: '#ffd8a0', intensity: 3, distance: 6 }],
   },
 
   crowd: {
@@ -140,8 +141,9 @@ export default {
   },
 
   player: {
-    start: [9, 1.3],
-    lookAt: [-6, -1.8],
+    fov: 48,
+    start: [7.4, -2.3],
+    lookAt: [2.2, -0.9],
     colors: { robe: '#4f7f80', mantle: '#5e4632', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

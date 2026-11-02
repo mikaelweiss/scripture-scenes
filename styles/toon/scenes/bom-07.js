@@ -9,7 +9,7 @@ import {
 const SEG = 400;
 const shore = (x) => -30 + 3 * Math.sin(x / 23) + 1.5 * Math.sin(x / 9);
 const SHIP = [0, -8];
-const NEPHI = [-3.5, -1.5];
+const NEPHI = [-2.2, 10.5];
 
 const people = {
   robes: ['#d9c7a3', '#c8a97a', '#a87b4f', '#8c5a3c', '#b5523b', '#c98b3c', '#7a6a52', '#e6d8b8', '#9c6b4e'],
@@ -134,7 +134,15 @@ export default {
     addMesh(scene, skeps, kit.toon('#d8a94a', { map: plankTexture() }));
 
     // Nephi directs the work, his brothers carry timber.
-    person(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.4, 1.3] }, { pos: NEPHI, face: [0, -8], scale: 1.08 });
+    const nephi = person(ctx, { robe: '#efe4c8', mantle: '#8f3326', skin: '#a87650', hair: '#3a2418', sash: '#d9a23a', arms: [0.12, 0.2] }, { pos: NEPHI, face: [9, 18], scale: 1.2 });
+    nephi.children.at(-1).rotation.set(-0.5, 0, 2.3);
+
+    // Brothers at work on the scaffold planks along the near side of the hull.
+    const plankY = g.position.y + 2.66, plankZ = ship.shape.halfW(0.5) + 1.2;
+    for (const [lx, arms] of [[-9, [0.2, 2.2]], [-1.5, [0.3, 1.0]], [6, [0.2, 2.4]]]) {
+      const wx = SHIP[0] + lx * Math.cos(0.05) + plankZ * Math.sin(0.05), wz = SHIP[1] - lx * Math.sin(0.05) + plankZ * Math.cos(0.05);
+      person(ctx, { robe: '#c8a97a', mantle: '#6b4a33', skin: '#9c6a45', hair: '#2b1a12', sash: '#b5523b', arms }, { pos: [wx, wz], face: [wx, wz - 5], y: plankY });
+    }
     for (const [x, z, f] of [[10, 4, [18, 6]], [12, 6.5, [18, 6]], [-8, 6, [-17, 7]]]) {
       person(ctx, { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#2b1a12', sash: '#7a6a52', arms: [0.15, 1.6] }, { pos: [x, z], face: f });
     }

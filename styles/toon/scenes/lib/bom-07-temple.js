@@ -90,11 +90,26 @@ export function buildTemple(ctx, { pos, rot = Math.PI / 2, building = false, col
     stone.push(boxGeo(2, 5, 2, [s * 7, 2.5, front]));
     solid(s * 7, front, 1, 1, 5);
   }
-  const altar = [boxGeo(4.4, 2.2, 4.4, [-11, 1.1, 36]), boxGeo(4.8, 0.3, 4.8, [-11, 2.35, 36]), boxGeo(2, 1.1, 3.5, [-11, 0.55, 39.6], { rotX: 0.3 })];
-  for (const [x, z] of [[-13.1, 33.9], [-8.9, 33.9], [-13.1, 38.1], [-8.9, 38.1]]) altar.push(new THREE.ConeGeometry(0.3, 0.7, 4).translate(x, 2.85, z));
+  // Bronze altar: a stepped base, a ledge at half height, horns at the corners, and a ramp up its south side.
+  const altar = [boxGeo(5.4, 0.35, 5.4, [-11, 0.17, 36]), boxGeo(4.4, 2.2, 4.4, [-11, 1.1, 36]), boxGeo(4.8, 0.3, 4.8, [-11, 2.35, 36])];
+  const altarTrim = [boxGeo(4.7, 0.22, 4.7, [-11, 1.15, 36])];
+  for (const [x, z] of [[-13.1, 33.9], [-8.9, 33.9], [-13.1, 38.1], [-8.9, 38.1]]) altar.push(new THREE.ConeGeometry(0.32, 0.8, 4).rotateY(Math.PI / 4).translate(x, 2.9, z));
+  const rampLen = 5, rampTop = 2.5, rampX0 = -13.2 - rampLen;
+  const wedge = (w, h, low) => {
+    const box = new THREE.BoxGeometry(rampLen, h, w).translate(rampX0 + rampLen / 2, h / 2, 36);
+    const p = box.attributes.position;
+    for (let i = 0; i < p.count; i++) if (p.getY(i) > h / 2 && p.getX(i) < rampX0 + rampLen / 2) p.setY(i, low);
+    box.computeVertexNormals();
+    return box;
+  };
+  const rampStone = [wedge(2.2, rampTop, 0.12)];
+  for (const s of [-1, 1]) altarTrim.push(wedge(0.3, rampTop + 0.25, 0.3).translate(0, 0, s * 1.25));
   addMesh(g, altar, k.toon('#8a5a2a'));
+  addMesh(g, altarTrim, k.toon(c.bronze));
+  addMesh(g, rampStone, k.stoneMat(c.base));
   addMesh(g, [boxGeo(3, 0.2, 3, [-11, 2.55, 36])], k.toon('#3a2418'), { cast: false });
   solid(-11, 36, 2.7, 2.7, 2.6);
+  solid(rampX0 + rampLen / 2, 36, rampLen / 2, 1.4, rampTop * 0.5);
   const seaX = 14, seaZ = 30;
   const basin = new THREE.LatheGeometry([[0.001, 0], [1.4, 0.1], [2.1, 0.7], [2.45, 1.5], [2.6, 1.65], [2.35, 1.65], [0.001, 1.5]].map(([r, h]) => new THREE.Vector2(r, h)), 24);
   basin.translate(seaX, 1.1, seaZ);

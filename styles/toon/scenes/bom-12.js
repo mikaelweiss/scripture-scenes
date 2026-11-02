@@ -46,7 +46,7 @@ export default {
     leafyTrees(ctx, scatter(ctx, rng, 70, { center: [0, 0], ring: [90, 220], margin: 4, reject: road }), { height: [6, 10], leaves: ['#5a8a44', '#4a7a3e', '#6a9a4a'] });
 
     // Jacob in a white robe with a priestly mantle, his brother Joseph beside him.
-    person(ctx, { robe: '#f3eddf', mantle: '#4f7f80', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.7, 1.0] }, { pos: JACOB, face: [60, 0], y: temple.podium, scale: 1.1 });
+    person(ctx, { robe: '#f3eddf', mantle: '#4f7f80', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.6, 1.6] }, { pos: JACOB, face: [60, 0], y: temple.podium, scale: 1.2 });
     person(ctx, { robe: '#efe6d2', mantle: '#8c5a3c', skin: '#a87650', hair: '#2b1a12', sash: '#c8912e' }, { pos: [20.6, -3.2], face: [60, 0], y: temple.podium });
   },
 
@@ -72,7 +72,8 @@ export default {
   },
 
   player: {
-    start: [41, 1.3],
+    fov: 48,
+    start: [37, 1.2],
     lookAt: JACOB,
     colors: { robe: '#b5523b', mantle: '#2f8f8a', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },

@@ -3,7 +3,7 @@
 import { leafyTrees, makeRng, person, scatter } from './lib/bom-07-kit.js';
 import { buildTemple, houses } from './lib/bom-07-temple.js';
 
-const NEPHI = [31, 5];
+const NEPHI = [40.5, 8];
 
 export default {
   title: '2 Nephi 5:5-16: Nephi builds a temple',
@@ -47,7 +47,8 @@ export default {
     houses(ctx, scatter(ctx, rng, 70, { center: [10, 0], ring: [62, 150], margin: 5, reject: (x, z) => court(x, z) || road(x, z) }));
     leafyTrees(ctx, scatter(ctx, rng, 70, { center: [0, 0], ring: [90, 220], margin: 4, reject: road }), { height: [6, 10], leaves: ['#5a8a44', '#4a7a3e', '#6a9a4a'] });
 
-    person(ctx, { robe: '#e6d8b8', mantle: '#3e6e66', skin: '#a87650', hair: '#3a2418', sash: '#c8912e', arms: [0.55, 1.4] }, { pos: NEPHI, face: [0, 0], scale: 1.08 });
+    const nephi = person(ctx, { robe: '#efe4c8', mantle: '#8f3326', skin: '#a87650', hair: '#3a2418', sash: '#d9a23a', arms: [0.12, 0.2] }, { pos: NEPHI, face: [47, 4], scale: 1.18 });
+    nephi.children.at(-2).rotation.set(-0.5, 0, -2.3);
     for (const [x, z, f] of [[24, 10, [28, 12]], [26, 14, [28, 12]], [14, -19, [14, -23]], [16, -19, [14, -23]]]) {
       person(ctx, { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#2b1a12', sash: '#7a6a52', arms: [0.2, 1.7] }, { pos: [x, z], face: f });
     }

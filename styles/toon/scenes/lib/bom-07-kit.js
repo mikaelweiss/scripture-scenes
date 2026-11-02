@@ -606,6 +606,39 @@ export function animal(ctx, kind, { color, pos, rot = 0, scale = 1, grazing = fa
 
 // ---------- trees ----------
 
+// One arched frond: a midrib that rises then droops, lined with leaflets on both sides. Points along +x.
+function palmFrond(rng, len, rise) {
+  const N = 12, pos = [];
+  const rib = [];
+  for (let i = 0; i <= N; i++) {
+    const s = i / N;
+    rib.push(new THREE.Vector3(len * s * (1 - 0.18 * s), len * (rise * s - 0.7 * s * s), 0));
+  }
+  const ribW = 0.07;
+  for (let i = 0; i < N; i++) {
+    const a = rib[i], b = rib[i + 1];
+    const w = ribW * (1 - i / N);
+    pos.push(a.x, a.y, -w, b.x, b.y, -w * 0.8, b.x, b.y, w * 0.8, a.x, a.y, -w, b.x, b.y, w * 0.8, a.x, a.y, w);
+  }
+  for (let i = 1; i < N; i++) {
+    const s = i / N;
+    const a = rib[i], b = rib[i + 1];
+    const dir = b.clone().sub(a).normalize();
+    const reach = len * 0.36 * Math.sin(Math.PI * (0.15 + 0.85 * s)) * (0.85 + rng() * 0.3);
+    for (const side of [-1, 1]) {
+      const tip = a.clone().addScaledVector(dir, reach * 0.55);
+      tip.z += side * reach;
+      tip.y -= reach * 0.45;
+      const mid = a.clone().lerp(b, 0.7);
+      pos.push(a.x, a.y, a.z, mid.x, mid.y, mid.z, tip.x, tip.y, tip.z);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
+}
+
 // Date palms and fruit trees merged into a few meshes. spots: [[x, z], ...]
 export function palms(ctx, spots, { seed = 4, height = [7, 11], trunk = '#8a6a48', frond = ['#4f8a4a', '#5f9a52', '#3f7a46'], dates = '#c8742e' } = {}) {
   const rng = makeRng(seed);
@@ -621,18 +654,17 @@ export function palms(ctx, spots, { seed = 4, height = [7, 11], trunk = '#8a6a48
     }
     trunks.push(curveTube(pts, 0.24, 10, 6));
     const top = pts[5];
-    const n = 9 + Math.floor(rng() * 3);
+    const n = 10 + Math.floor(rng() * 4);
     for (let k = 0; k < n; k++) {
-      const a = (k / n) * Math.PI * 2 + rng() * 0.4;
-      const len = 3 + rng() * 1.2;
-      const leaf = new THREE.ConeGeometry(0.9, len, 4, 1);
-      leaf.scale(1, 1, 0.22);
-      leaf.translate(0, len / 2, 0);
-      leaf.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(1.35 + rng() * 0.5, a, 0, 'YXZ')));
+      const a = (k / n) * Math.PI * 2 + rng() * 0.35;
+      const rise = k % 3 === 0 ? 0.55 : k % 3 === 1 ? 0.15 : -0.25;
+      const leaf = palmFrond(rng, 3.4 + rng() * 1.4, rise + (rng() - 0.5) * 0.2);
+      leaf.applyMatrix4(new THREE.Matrix4().makeRotationY(a));
       leaf.translate(top[0], top[1], top[2]);
       fronds[Math.floor(rng() * frond.length)].push(leaf);
     }
-    for (let k = 0; k < 4; k++) fruit.push(ball(0.28, top[0] + Math.sin(k * 1.6) * 0.45, top[1] - 0.5, top[2] + Math.cos(k * 1.6) * 0.45, {}, 7));
+    trunks.push(cyl(0.42, 0.26, 0.9, top[0], top[1] - 0.2, top[2], {}, 7));
+    for (let k = 0; k < 4; k++) fruit.push(ball(0.3, top[0] + Math.sin(k * 1.6) * 0.5, top[1] - 0.75, top[2] + Math.cos(k * 1.6) * 0.5, {}, 7));
     ctx.addCollider({ x, z, hx: 0.35, hz: 0.35, rot: 0, top: y + h });
   }
   addMesh(ctx.scene, trunks, ctx.kit.toon(trunk, { map: plankTexture() }));
