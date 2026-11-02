@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.36, shadowTint: '#2c3050', highlightTint: '#fff2d6' },
   shadow: { center: [0, 0], radius: 30 },
 
-  player: { start: [-1.2, 6.6], yaw: -0.05, pitch: -0.03, eye: 1.65, speed: 4 },
+  player: { start: [0.7, 6.6], yaw: 0.04, pitch: -0.08, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1200, segments: 200, seed: 44, hills: 26, bumps: 0.3,
@@ -43,6 +43,11 @@ export default {
   objects: [
     { type: 'tree', x: -5.5, z: -3, h: 6, kind: 'broad', leaf: '#6f7d4e' },
     { type: 'tree', x: 7, z: -6, h: 5, kind: 'broad', leaf: '#7b8a5a' },
+    { type: 'tree', x: -9, z: -12, h: 4.5, kind: 'broad', leaf: '#6f7d4e' },
+    { type: 'tree', x: 12, z: 4, h: 4, kind: 'broad', leaf: '#7b8a5a' },
+    { type: 'tree', x: -12, z: 9, h: 7, kind: 'palm', leaf: '#6f8448' },
+    { type: 'rock', x: 4.5, z: 6.5, size: 0.7, color: '#9a8a74' },
+    { type: 'rock', x: -6, z: 3.5, size: 0.9, color: '#9a8a74' },
   ],
 
   scatter: [
@@ -59,7 +64,7 @@ export default {
   },
 
   figures: [
-    { x: 1.5, z: 3.6, face: [-1.05, 1.0], robe: '#2f5a7a', mantle: '#8a3a2e', skin: '#a87652', hood: true },
+    { x: -1.5, z: 3.1, face: [0.95, 0.85], robe: '#2f5a7a', mantle: '#8a3a2e', skin: '#a87652', hood: true },
   ],
 
   custom(ctx) {
@@ -81,14 +86,14 @@ export default {
     ctx.solid.add(new THREE.CylinderGeometry(0.13, 0.1, 0.22, 6), { position: [WELL[0] + 0.3, y + 0.6, WELL[1] + 0.3], color: '#6a4a30' });
     K.block(ctx, { x: -1.9, z: 1.3, y: y - 0.1, w: 0.6, h: 0.45, d: 1.6, rot: 0.4, color: '#9a8a70' });
 
-    K.seated(ctx, { x: -1.05, z: 1.0, y, face: [1.4, 3.6], seat: 0.75, robe: '#f6f1e6', mantle: '#ece3cf', skin: '#a8754f', scale: 1.05 });
-    ctx.effects.halo({ position: [-1.05, y + 1.7, 1.0], size: 2.4, opacity: 0.22, color: '#fff3d6' });
+    K.seated(ctx, { x: 0.95, z: 0.85, y, face: [-1.6, 3.4], seat: 0.75, robe: '#f6f1e6', mantle: '#ece3cf', skin: '#a8754f', scale: 1.05 });
+    ctx.effects.halo({ position: [0.95, y + 1.7, 0.85], size: 2.4, opacity: 0.22, color: '#fff3d6' });
     const pl = new THREE.PointLight('#fff0cf', 1.2, 5, 1.6);
-    pl.position.set(-0.6, y + 2.0, 1.8);
+    pl.position.set(0.6, y + 2.0, 1.8);
     ctx.scene.add(pl);
 
-    K.jar(ctx, { x: 1.2, z: 0.9, y: y + 0.75, h: 0.6, color: '#b07a50' });
-    ctx.solid.add(new THREE.CylinderGeometry(0.01, 0.01, 0.9, 3), { position: [1.5, y + 1.1, 0.75], rotation: [0, 0, 0.5], color: '#c8b080' });
+    K.jar(ctx, { x: -0.8, z: 0.8, y: y + 0.75, h: 0.55, color: '#b07a50' });
+    ctx.solid.add(new THREE.CylinderGeometry(0.01, 0.01, 0.9, 3), { position: [-1.05, y + 1.1, 0.65], rotation: [0, 0, -0.5], color: '#c8b080' });
 
     for (let i = 0; i < 28; i++) {
       const a = r() * Math.PI * 2, d = r.range(4, 22);
@@ -99,7 +104,42 @@ export default {
     for (const [cx, cz, rad, n] of [[-40, -30, 28, 1600], [45, -20, 24, 1300], [-35, 30, 22, 1100]]) {
       K.grass(ctx, { center: [cx, cz], radius: rad, count: n, color: '#e2c878', seed: Math.floor(cx * 7 + cz) });
     }
-    K.grass(ctx, { center: [0, 0], radius: 18, count: 0, color: '#9a9a52', avoid: (x, z) => Math.hypot(x, z) < 3.2 || (x > 0 && x < 6 && z < 2 && z > -16) });
+    // Worn flagstones around the well mouth.
+    for (let i = 0; i < 44; i++) {
+      const a = (i / 22) * Math.PI * 2 + r.range(-0.08, 0.08), d = i < 22 ? r.range(1.7, 2.1) : r.range(2.4, 2.9);
+      const fx = WELL[0] + Math.cos(a) * d, fz = WELL[1] + Math.sin(a) * d;
+      ctx.solid.box(r.range(0.55, 0.75), 0.08, r.range(0.42, 0.55), { position: [fx, ctx.heightAt(fx, fz) + 0.01, fz], rotation: [0, -a + r.range(-0.3, 0.3), 0], color: r.pick(['#b8a88c', '#a89878', '#c2b294']), jitter: 0.06 });
+    }
+    // Stone watering trough for flocks.
+    K.block(ctx, { x: 3.2, z: -1.6, y: y - 0.1, w: 2.4, h: 0.55, d: 0.7, rot: -0.5, color: '#a08c70' });
+    const trough = new THREE.BoxGeometry(2.1, 0.05, 0.45);
+    ctx.solid.add(trough, { position: [3.2, y + 0.43, -1.6], rotation: [0, -0.5, 0], color: '#3e5a60', jitter: 0 });
+    // Her own water jar, set down beside her.
+    K.jar(ctx, { x: -2.1, z: 3.6, y, h: 0.62, color: '#b8784a' });
+    // A flock drinking and grazing with its shepherd.
+    for (const [ax, az, rot] of [[2.6, -2.4, 2.6], [3.9, -2.2, 3.2], [4.6, -0.9, 2.1], [6.5, -3.5, 0.6], [7.4, -2.2, 1.6], [5.6, -4.6, 2.9], [8.2, -4.1, 0.2], [6.8, -5.8, 1.2]]) {
+      K.animal(ctx, { x: ax, z: az, rot, kind: 'sheep' });
+    }
+    K.animal(ctx, { x: 9.4, z: -2.6, rot: 1.9, kind: 'goat' });
+    K.person(ctx, { x: 9.2, z: -5.6, face: [4, -2], robe: '#7a5a3c', mantle: '#c9b48e', skin: '#8a5a3c', hood: true });
+    ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 1.9, 4), { position: [9.55, ctx.heightAt(9.5, -5.6) + 0.95, -5.4], rotation: [0.1, 0, -0.1], color: '#6a4a30' });
+    // Dry-stone walls bounding the white fields.
+    for (const [cx, cz, rad] of [[-40, -30, 29], [45, -20, 25], [-35, 30, 23]]) {
+      for (let i = 0; i < 70; i++) {
+        const a = (i / 70) * Math.PI * 2, wx = cx + Math.cos(a) * rad, wz = cz + Math.sin(a) * rad;
+        if (Math.hypot(wx - WELL[0], wz - WELL[1]) < 8) continue;
+        ctx.solid.add(new THREE.DodecahedronGeometry(0.45, 0), { position: [wx, ctx.heightAt(wx, wz) + 0.2, wz], rotation: [r(), r() * 3, r()], scale: [1.3, 0.8, 1], color: r.pick(['#a8987c', '#988a70', '#b4a486']), jitter: 0.08 });
+      }
+    }
+    // Shrubs and tufts in the dry ground near the well.
+    for (let i = 0; i < 40; i++) {
+      const a = r() * Math.PI * 2, d = r.range(5, 20);
+      const bx = Math.cos(a) * d, bz = Math.sin(a) * d;
+      if ((bx > 0 && bx < 6 && bz < 2 && bz > -16) || Math.hypot(bx - 0.7, bz - 7) < 7) continue;
+      const bs = r.range(0.35, 0.8);
+      ctx.solid.add(new THREE.IcosahedronGeometry(bs, 0), { position: [bx, ctx.heightAt(bx, bz) + bs * 0.4, bz], scale: [1, 0.7, 1], color: r.pick(['#7a8048', '#6a7440', '#8a8a50']), jitter: 0.1 });
+    }
+    K.grass(ctx, { center: [0, 0], radius: 18, count: 500, color: '#9a9a52', avoid: (x, z) => Math.hypot(x, z) < 3.2 || (x > 0 && x < 6 && z < 2 && z > -16) });
     K.birds(ctx, { center: [-20, -40], height: 30, radius: 25, count: 4, color: '#2a2420', speed: 0.12, size: 0.6 });
   },
 };

@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#2e3458', highlightTint: '#ffe6c0' },
   shadow: { center: [1, -6], radius: 40 },
 
-  player: { start: [0.2, 3.2], yaw: 0.02, pitch: -0.03, eye: 1.65, speed: 4 },
+  player: { start: [-0.4, 1.0], yaw: 0.12, pitch: 0.0, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1200, segments: 200, seed: 61, hills: 34, bumps: 0.25,
@@ -142,8 +142,8 @@ export default {
     const deck = (b) => b.position.y + 0.62;
     
     const crew = [
-      { at: A(0, 2.3), face: A(2, -2), christ: true },
-      { at: A(0.15, 1.2), face: A(0, 4), robe: '#6e5a44', mantle: '#8a3a2e', kneel: true },
+      { at: A(-0.3, 2.4), face: A(2, -2), christ: true },
+      { at: A(0.5, 1.5), face: A(-0.3, 2.4), robe: '#6e5a44', mantle: '#8a3a2e', kneel: true },
       { at: A(0.45, -0.4), face: NET, robe: '#a0825c', arms: 'out' },
       { at: A(0.4, -1.9), face: NET, robe: '#5e4b3a', mantle: '#3f4d5e', arms: 'out' },
       { at: B(-0.4, -1.4), face: NET, robe: '#94704e', arms: 'out', boat: boatB },
@@ -151,8 +151,10 @@ export default {
       { at: B(0.1, 2.4), face: NET, robe: '#c4b090', boat: boatB },
     ];
     for (const c of crew) {
-      const y = deck(c.boat ?? boatA) - (c.kneel ? 0.5 : 0);
-      if (c.christ) {
+      const y = deck(c.boat ?? boatA);
+      if (c.kneel) {
+        K.kneeling(ctx, { x: c.at[0], z: c.at[1], y, face: c.face, robe: c.robe, mantle: c.mantle, skin: r.pick(K.palette.skins), bow: 0.5 });
+      } else if (c.christ) {
         const spec = K.christ(c.at[0], c.at[1], c.face);
         K.person(ctx, { x: c.at[0], z: c.at[1], y, face: c.face, robe: spec.robe, mantle: spec.mantle, skin: spec.skin, scale: spec.scale });
         ctx.effects.halo({ position: [c.at[0], y + 1.4, c.at[1]], size: 3, opacity: 0.3, color: '#fff3d6' });

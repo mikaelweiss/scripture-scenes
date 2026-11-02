@@ -12,6 +12,8 @@ const twelve = Array.from({ length: 12 }, (_, i) => {
   return [CHRIST[0] + Math.cos(a) * 3.4, CHRIST[1] + Math.sin(a) * 3.0];
 });
 
+const PATH = Array.from({ length: 14 }, (_, i) => ({ r: 1.1, x: 4.4 - i * 0.3, z: -6 - i * 1.5 }));
+
 export default {
   title: 'Matthew 5-7: The Sermon on the Mount',
   seed: 11,
@@ -28,7 +30,7 @@ export default {
   grade: { saturation: 1.0, contrast: 1.05, vignette: 0.36, shadowTint: '#2c3458', highlightTint: '#fff0d4' },
   shadow: { center: [0, -10], radius: 55 },
 
-  player: { start: [4.4, -6], yaw: 0.17, pitch: 0.13, eye: 1.65, speed: 4 },
+  player: { start: [-8.6, -27.6], yaw: -1.75, pitch: -0.08, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1200, segments: 220, seed: 71, hills: 12, bumps: 0.35,
@@ -57,7 +59,6 @@ export default {
   crowd: {
     palette: K.palette,
     groups: [
-      { count: 900, center: CHRIST, ring: [6.5, 36], arc: [Math.PI / 2 - 1.05, Math.PI / 2 + 1.05], spacing: 0.95, face: CHRIST, children: 0.22, kneel: 1, seed: 81, avoid: Array.from({ length: 14 }, (_, i) => ({ r: 1.1, x: 4.4 - i * 0.3, z: -6 - i * 1.5 })) },
       { count: 120, center: CHRIST, ring: [36, 42], arc: [Math.PI / 2 - 0.9, Math.PI / 2 + 0.9], spacing: 1.2, face: CHRIST, children: 0.2, seed: 82 },
     ],
   },
@@ -66,10 +67,11 @@ export default {
 
   custom(ctx) {
     const r = ctx.rand;
+    K.seatedCrowd(ctx, [
+      { count: 12, points: twelve, face: [CHRIST[0], CHRIST[1] + 6], children: 0, seed: 83 },
+      { count: 900, center: CHRIST, ring: [6.5, 36], arc: [Math.PI / 2 - 1.05, Math.PI / 2 + 1.05], spacing: 0.95, face: CHRIST, children: 0.22, seed: 81, avoid: PATH },
+    ]);
     K.water(ctx, { y: -17, size: 1200, z: 300, color: '#4a8aa0', opacity: 0.92, amp: 0.1, segments: 100 });
-    for (const [x, z] of twelve) {
-      K.seated(ctx, { x, z, face: [CHRIST[0], CHRIST[1] + 6], seat: 0.05, robe: r.pick(K.palette.robes), mantle: r() < 0.6 ? r.pick(K.palette.mantles) : undefined, skin: r.pick(K.palette.skins) });
-    }
     const inCrowd = (x, z) => {
       const d = Math.hypot(x - CHRIST[0], z - CHRIST[1]);
       return d < 4;

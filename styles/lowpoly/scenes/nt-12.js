@@ -27,7 +27,7 @@ export default {
   exposure: 1.05,
 
   sun: { direction: [0.12, 0.95, 0.22], color: '#fff0d0', intensity: 3.2 },
-  light: { sky: '#c8b8a0', ground: '#4a3a2c', hemi: 0.55 },
+  light: { sky: '#d8c8b0', ground: '#7a6048', hemi: 1.0 },
   sky: { top: '#3f6aa8', horizon: '#dce4e8', ground: '#b8a68e', sunColor: '#fff4d8', glow: 0.7 },
   fog: { color: '#d8d4c8', near: 60, far: 400 },
   clouds: { count: 20, shadow: '#a8b0c0', lit: '#ffffff', rim: '#ffffff', distance: [250, 800], altitude: [120, 240], hole: 0.2 },
@@ -35,7 +35,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.1, vignette: 0.5, shadowTint: '#2e2440', highlightTint: '#ffe6c0' },
   shadow: { center: [0, 0], radius: 14 },
 
-  player: { start: [-3.7, 2.5], yaw: -0.9, pitch: 0.22, eye: 1.62, speed: 2.5 },
+  player: { start: [-3.7, 2.5], yaw: -0.95, pitch: 0.1, eye: 1.62, speed: 2.5 },
 
   terrain: {
     size: 600, segments: 100, seed: 81, hills: 8, bumps: 0.1,
@@ -52,7 +52,7 @@ export default {
   },
 
   figures: [
-    K.christ(CHRIST[0], CHRIST[1], [HOLE.x, HOLE.z], { arms: 'out', light: { color: '#fff0cf', intensity: 5, distance: 7 }, halo: { size: 2.4, opacity: 0.3, color: '#fff3d6' } }),
+    K.christ(CHRIST[0], CHRIST[1], [HOLE.x, HOLE.z], { arms: 'out', light: { color: '#fff0cf', intensity: 2.5, distance: 6 }, halo: { size: 2.4, opacity: 0.22, color: '#fff3d6' } }),
     ...[[-HOLE.w / 2 - 0.35, -0.5], [HOLE.w / 2 + 0.35, 0.4], [0.2, -HOLE.d / 2 - 0.35], [-0.2, HOLE.d / 2 + 0.35]].map(([dx, dz]) => ({
       x: HOLE.x + dx, z: HOLE.z + dz, y: H + 0.3, face: [HOLE.x, HOLE.z], robe: '#8b6b4a', mantle: '#5a3d2b', skin: '#9b6a46', arms: 'out',
     })),
@@ -140,6 +140,9 @@ export default {
       K.lamp(ctx, { x, y: 2.05, z, intensity: 2.2, distance: 6 });
     }
 
+    const fill = new THREE.PointLight('#ffd8a8', 7, 11, 1.4);
+    fill.position.set(-1.5, 2.6, 1.2);
+    ctx.scene.add(fill);
     const scribe = ['#3f4d5e', '#e0d6c0', '#2e3a4a', '#d8cdb5', '#4f3a2e'];
     for (let i = 0; i < 5; i++) {
       K.seated(ctx, { x: -3.0 + i * 1.05, z: -D / 2 + 0.55, face: [-3.0 + i * 1.05, 0], seat: 0.45, robe: scribe[i], mantle: i % 2 ? '#8a7a5a' : '#f0eadc', skin: r.pick(K.palette.skins) });

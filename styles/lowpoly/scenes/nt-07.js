@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.4, shadowTint: '#3a2c5a', highlightTint: '#ffe2b8' },
   shadow: { center: [0, 0], radius: 40 },
 
-  player: { start: [0.0, 10.4], yaw: 0.12, pitch: -0.13, eye: 1.65, speed: 3.5 },
+  player: { start: [-0.7, 9.0], yaw: 0.1, pitch: -0.16, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 900, segments: 160, seed: 21, hills: 30, bumps: 0.25,
@@ -67,7 +67,7 @@ export default {
 
   custom(ctx) {
     const { THREE } = ctx;
-    for (const [x, z] of JARS) K.jar(ctx, { x, z, h: 1.0, color: '#cfc3ab', fill: '#8a1430' });
+    for (const [x, z] of JARS) K.jar(ctx, { x, z, h: 1.0, color: '#d6cab2', fill: '#b01e3c' });
     K.jar(ctx, { x: -6.6, z: 7.4, h: 0.5, color: '#9a6a48' });
     ctx.glow.add(new THREE.OctahedronGeometry(0.06, 0), { position: [0.15, 1.25, 5.05], color: '#9a1e3a' });
 

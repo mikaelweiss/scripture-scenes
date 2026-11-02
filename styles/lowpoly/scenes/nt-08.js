@@ -29,7 +29,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.38, shadowTint: '#2c3050', highlightTint: '#fff0d0' },
   shadow: { center: [0, -10], radius: 60 },
 
-  player: { start: [0.6, 10.5], yaw: 0.02, pitch: 0.02, eye: 1.65, speed: 4 },
+  player: { start: [1.4, 8.6], yaw: 0.12, pitch: 0.04, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000, segments: 160, seed: 31, hills: 40, bumps: 0.2,
@@ -128,6 +128,7 @@ export default {
       K.animal(ctx, { x: CHRIST[0] + Math.cos(a) * d, z: CHRIST[1] + Math.sin(a) * d * 0.7, rot: Math.atan2(Math.cos(a), Math.sin(a)) + r.range(-0.3, 0.3), kind: 'sheep', run: 1, lift: 0.1 });
     }
     for (let i = 0; i < 6; i++) K.animal(ctx, { x: -14 + i * 1.6 + r.range(-0.4, 0.4), z: -4 - i * 2 + r.range(-1, 1), rot: Math.PI * 0.75 + r.range(-0.3, 0.3), kind: 'sheep', run: 1 });
+    K.animal(ctx, { x: 5.8, z: -1.5, rot: 2.2, kind: 'ox', run: 1 });
     K.animal(ctx, { x: 13, z: -9, rot: Math.PI * 0.85, kind: 'ox', run: 1 });
     K.animal(ctx, { x: 15.5, z: -11.5, rot: Math.PI * 0.8, kind: 'ox', run: 0.6 });
     K.animal(ctx, { x: -16, z: -14, rot: Math.PI * 1.1, kind: 'ox', run: 0.8 });

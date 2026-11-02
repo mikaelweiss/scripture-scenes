@@ -1,7 +1,8 @@
 // Shared props for the Galilean ministry scenes (nt-07 to nt-12): houses, water, boats, jars, animals, seated people, birds.
 import * as THREE from 'three';
 import { Batch } from '../../engine/world.js';
-import { createFigure } from '../../engine/crowd.js';
+import { createFigure, placeCrowd, parts } from '../../engine/crowd.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { rng } from '../../engine/util.js';
 
 export { Batch };
@@ -204,32 +205,76 @@ export function jar(ctx, { x, z, y, h = 1.1, color = '#c9bba2', fill, batch }) {
   ctx.colliders.add({ x, z, w: 0.7 * h, d: 0.7 * h, bottom: base, top: base + h });
 }
 
-// Simple four-legged animal facing local +z. kind: sheep, ox, donkey, goat.
-export function animal(ctx, { x, z, rot = 0, kind = 'sheep', y, color, batch, lift = 0, run = 0 }) {
+// Four-legged animal facing local +z. kind: sheep, ox, donkey, goat. `run` swings the legs and pitches the body.
+export function animal(ctx, { x, z, rot = 0, kind = 'sheep', y, color, batch, lift = 0, run = 0, scale = 1 }) {
   const B = batch ?? ctx.solid;
   const spec = {
-    sheep: { body: [0.55, 0.45, 0.85], leg: 0.3, head: 0.2, color: '#e6dcc6', face: '#4a3e36', neck: 0.08 },
-    goat: { body: [0.4, 0.38, 0.75], leg: 0.42, head: 0.2, color: '#4a3b30', face: '#3a2e26', neck: 0.18 },
-    ox: { body: [0.95, 0.85, 1.8], leg: 0.6, head: 0.36, color: '#8a6440', face: '#5a3e28', neck: 0.15 },
-    donkey: { body: [0.55, 0.55, 1.15], leg: 0.6, head: 0.28, color: '#8c8278', face: '#6a6058', neck: 0.35 },
+    sheep: { body: [0.62, 0.52, 0.9], leg: 0.24, legW: 0.075, head: [0.2, 0.22, 0.34], neck: 0.1, color: '#f2ead8', face: '#4a3e34', leg_c: '#5e5044', ear: [0.16, 0.05, 0.08] },
+    goat: { body: [0.42, 0.42, 0.8], leg: 0.44, legW: 0.08, head: [0.18, 0.2, 0.36], neck: 0.22, color: '#5a4636', face: '#3a2e26', leg_c: '#3a2e26', ear: [0.14, 0.04, 0.07] },
+    ox: { body: [0.95, 0.82, 1.85], leg: 0.62, legW: 0.17, head: [0.38, 0.42, 0.6], neck: 0.12, color: '#8a6440', face: '#6a4a30', leg_c: '#5a3e28', ear: [0.2, 0.06, 0.1] },
+    donkey: { body: [0.55, 0.55, 1.15], leg: 0.62, legW: 0.1, head: [0.24, 0.26, 0.5], neck: 0.32, color: '#8c8278', face: '#6a6058', leg_c: '#5a524a', ear: [0.06, 0.32, 0.06] },
   }[kind];
   const col = color ?? spec.color;
+  const S = scale;
   const base = (y ?? ctx.heightAt(x, z)) + lift;
   const at = frame(x, z, rot);
   const [bw, bh, bd] = spec.body;
-  const put = (geo, lx, ly, lz, c, rotation = [0, 0, 0], scale = [1, 1, 1]) => {
-    const [px, pz] = at(lx, lz);
-    B.add(geo, { position: [px, base + ly, pz], rotation: [rotation[0], rot + rotation[1], rotation[2]], scale, color: c, jitter: 0.06, shade: darkenBottom });
+  const pitch = run * 0.12;
+  const wool = (c, ny) => c.multiplyScalar(0.82 + 0.18 * Math.max(ny, 0));
+  const put = (geo, lx, ly, lz, c, rotation = [0, 0, 0], sc = [1, 1, 1], jitter = 0.06) => {
+    const [px, pz] = at(lx * S, lz * S);
+    B.add(geo, { position: [px, base + ly * S, pz], rotation: [rotation[0], rot + rotation[1], rotation[2]], scale: sc.map((v) => v * S), color: c, jitter, shade: c === col && kind === 'sheep' ? wool : darkenBottom });
   };
-  const bodyGeo = kind === 'sheep' ? new THREE.IcosahedronGeometry(0.5, 0) : new THREE.BoxGeometry(1, 1, 1);
-  put(bodyGeo, 0, spec.leg + bh / 2, 0, col, [run * 0.15, 0, 0], kind === 'sheep' ? [bw * 1.1, bh * 1.1, bd * 1.05] : [bw, bh, bd]);
+  const bodyY = spec.leg + bh / 2;
+  // Legs: a front and a back pair, diagonal pairs swinging together when running.
   for (const [sx, sz] of [[-1, 1], [1, 1], [-1, -1], [1, -1]]) {
-    const swing = run * (sx * sz > 0 ? 0.5 : -0.5);
-    put(new THREE.BoxGeometry(0.11, spec.leg, 0.11), sx * bw * 0.32, spec.leg / 2, sz * bd * 0.36, spec.face, [swing, 0, 0]);
+    const swing = run * (sx * sz > 0 ? 0.35 : -0.35);
+    const len = spec.leg + bh * 0.3;
+    const g = new THREE.BoxGeometry(spec.legW, len, spec.legW).translate(0, -len / 2, 0);
+    put(g, sx * bw * 0.3, spec.leg + bh * 0.3, sz * bd * 0.36, spec.leg_c, [swing, 0, 0]);
+    if (kind === 'ox' || kind === 'donkey') {
+      const hoof = new THREE.BoxGeometry(spec.legW * 1.15, 0.08, spec.legW * 1.2).translate(0, -len + 0.04, 0);
+      put(hoof, sx * bw * 0.3, spec.leg + bh * 0.3, sz * bd * 0.36, '#2a2018', [swing, 0, 0]);
+    }
   }
-  put(new THREE.BoxGeometry(spec.head * 0.9, spec.head, spec.head * 1.5), 0, spec.leg + bh * 0.6 + spec.neck, bd / 2 + spec.head * 0.45, kind === 'sheep' ? spec.face : col, [0.35, 0, 0]);
-  if (kind === 'ox' || kind === 'goat') for (const sx of [-1, 1]) put(new THREE.ConeGeometry(0.05, 0.3, 4), sx * spec.head * 0.45, spec.leg + bh + spec.neck + 0.1, bd / 2 + spec.head * 0.4, '#e8dcc0', [0, 0, sx * -0.8]);
-  if (kind === 'donkey') for (const sx of [-1, 1]) put(new THREE.ConeGeometry(0.05, 0.3, 4), sx * 0.08, spec.leg + bh + spec.neck + 0.2, bd / 2 + 0.1, spec.face);
+  if (kind === 'sheep') {
+    // Woolly body: overlapping lumpy puffs.
+    put(new THREE.IcosahedronGeometry(0.5, 1), 0, bodyY, 0, col, [pitch, 0, 0], [bw, bh, bd], 0.05);
+    for (const [ox, oy, oz, s] of [[0, 0.16, 0.22, 0.42], [0, 0.17, -0.2, 0.42], [-0.17, 0.05, 0, 0.4], [0.17, 0.05, 0, 0.4], [0, 0.08, 0.38, 0.34], [0, 0.04, -0.4, 0.34]]) {
+      put(new THREE.IcosahedronGeometry(s * 0.6, 0), ox, bodyY + oy, oz - oy * pitch, col, [ox * 3, oz * 4, 0], [1, 0.85, 1], 0.07);
+    }
+    put(new THREE.IcosahedronGeometry(0.06, 0), 0, bodyY + 0.08, -bd / 2 - 0.02, col);
+  } else {
+    put(new THREE.BoxGeometry(1, 1, 1), 0, bodyY, 0, col, [pitch, 0, 0], [bw, bh, bd]);
+    put(new THREE.BoxGeometry(1, 1, 1), 0, bodyY - bh * 0.1, bd * 0.02, col, [pitch, 0, 0], [bw * 1.06, bh * 0.8, bd * 0.8]);
+    if (kind === 'ox') put(new THREE.BoxGeometry(1, 1, 1), 0, bodyY + bh * 0.42, bd * 0.3, col, [pitch, 0, 0], [bw * 0.7, bh * 0.3, bd * 0.3]);
+    const tail = new THREE.BoxGeometry(0.05, bh * 0.8, 0.05).translate(0, -bh * 0.4, 0);
+    put(tail, 0, bodyY + bh * 0.4, -bd / 2 - 0.02, spec.face, [-0.25 - run * 0.6, 0, 0]);
+  }
+  // Head on a short neck, tipped down for grazing animals, raised when running.
+  const [hw, hh, hd] = spec.head;
+  const hy = bodyY + bh * 0.25 + spec.neck + run * 0.08;
+  const hz = bd / 2 + hd * 0.35;
+  const tip = kind === 'sheep' ? 0.55 - run * 0.3 : 0.3 - run * 0.15;
+  if (kind !== 'sheep') put(new THREE.BoxGeometry(hw * 0.9, spec.neck + bh * 0.4, hd * 0.6), 0, hy - spec.neck * 0.5 - 0.05, bd / 2 - 0.02, col, [-0.5, 0, 0]);
+  const headCol = kind === 'sheep' ? spec.face : col;
+  const head = new THREE.BoxGeometry(hw, hh, hd).translate(0, 0, hd * 0.3);
+  put(head, 0, hy, hz - hd * 0.2, headCol, [tip, 0, 0]);
+  const muzzle = new THREE.BoxGeometry(hw * 0.8, hh * 0.7, hd * 0.3).translate(0, -hh * 0.1, hd * 0.8);
+  put(muzzle, 0, hy, hz - hd * 0.2, kind === 'ox' ? '#c8a888' : spec.face, [tip, 0, 0]);
+  if (kind === 'sheep') put(new THREE.IcosahedronGeometry(0.13, 0), 0, hy + 0.06, hz - hd * 0.25, col, [0, 0, 0], [1, 0.8, 1.1]);
+  const [ew, eh, ed] = spec.ear;
+  for (const sx of [-1, 1]) {
+    const ear = new THREE.BoxGeometry(ew, eh, ed).translate(sx * ew / 2, eh / 2 - 0.01, 0);
+    put(ear, sx * hw * 0.45, hy + hh * 0.25, hz - hd * 0.2, spec.face, [0, 0, kind === 'donkey' ? sx * -0.2 : sx * -0.35]);
+  }
+  if (kind === 'ox' || kind === 'goat') {
+    for (const sx of [-1, 1]) {
+      const horn = new THREE.ConeGeometry(kind === 'ox' ? 0.06 : 0.04, kind === 'ox' ? 0.38 : 0.3, 5).translate(0, 0.15, 0);
+      put(horn, sx * hw * 0.4, hy + hh * 0.45, hz - hd * 0.2, '#e8dcc0', [kind === 'goat' ? -0.6 : 0, 0, sx * -0.9]);
+    }
+  }
+  if (kind === 'donkey') put(new THREE.BoxGeometry(0.06, 0.18, bd * 0.4), 0, hy - 0.1, bd * 0.35, spec.face, [-0.5, 0, 0]);
 }
 
 // Flock of birds circling or flying past, flapping. One instanced mesh.
@@ -279,7 +324,15 @@ export function lamp(ctx, { x, y, z, light = true, color = '#ffb24a', intensity 
 export function table(ctx, { x, z, rot = 0, w = 2.4, d = 0.9, h = 0.75, color = '#7a5638', y, tilt }) {
   const base = y ?? ctx.heightAt(x, z);
   if (tilt) {
-    ctx.solid.box(w, 0.08, d, { position: [x, base + 0.4, z], rotation: [tilt, rot, 0.2], color });
+    // Overturned: top on its edge with the trestle legs sticking out sideways.
+    const e = new THREE.Euler(tilt, rot, 0.2);
+    const q = new THREE.Quaternion().setFromEuler(e);
+    const cy = base + d / 2 * Math.abs(Math.sin(tilt)) * 0.9;
+    ctx.solid.box(w, 0.08, d, { position: [x, cy, z], rotation: [tilt, rot, 0.2], color, shade: darkenBottom });
+    for (const sx of [-1, 1]) {
+      const o = new THREE.Vector3(sx * (w / 2 - 0.2), -h / 2, 0).applyQuaternion(q);
+      ctx.solid.box(0.1, h, d * 0.8, { position: [x + o.x, cy + o.y, z + o.z], rotation: [tilt, rot, 0.2], color: '#5a3e28' });
+    }
     return;
   }
   const at = frame(x, z, rot);
@@ -314,4 +367,93 @@ export function grass(ctx, { center = [0, 0], radius = 40, count = 400, color = 
     const h = r.range(0.14, 0.32);
     ctx.solid.add(new THREE.ConeGeometry(0.09, h, 3), { position: [x, ctx.heightAt(x, z) + h / 2 - 0.03, z], rotation: [r.range(-0.2, 0.2), r() * 3, r.range(-0.2, 0.2)], color, jitter: 0.1 });
   }
+}
+
+function whiteColors(geo, under = 0.75) {
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  g.computeVertexNormals();
+  const n = g.attributes.normal;
+  const col = new Float32Array(n.count * 3);
+  for (let i = 0; i < n.count; i++) col.fill(n.getY(i) < -0.5 ? under : 1, i * 3, i * 3 + 3);
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  return g;
+}
+
+// Seated-on-the-ground figure parts, origin at the ground, facing +z: crossed legs in front, torso resting on them.
+const seatedParts = {
+  body: () => {
+    const legs = new THREE.CylinderGeometry(0.15, 0.15, 0.62, 6).rotateZ(Math.PI / 2).translate(0, 0.14, 0.26);
+    const lap = new THREE.BoxGeometry(0.5, 0.2, 0.38).translate(0, 0.12, 0.08);
+    const torso = new THREE.CylinderGeometry(0.17, 0.26, 0.62, 7).translate(0, 0.39, -0.06);
+    return whiteColors(mergeGeometries([legs.toNonIndexed(), lap.toNonIndexed(), torso.toNonIndexed()]));
+  },
+  feet: () => {
+    const foot = (sx) => new THREE.BoxGeometry(0.1, 0.08, 0.2).translate(sx * 0.2, 0.05, 0.4).toNonIndexed();
+    return whiteColors(mergeGeometries([foot(-1), foot(1)]));
+  },
+  arms: () => {
+    const arm = (sx) => new THREE.CylinderGeometry(0.05, 0.06, 0.46, 5).translate(0, -0.23, 0).rotateX(-0.75).rotateZ(sx * 0.12).translate(sx * 0.21, 0.62, -0.04).toNonIndexed();
+    return whiteColors(mergeGeometries([arm(-1), arm(1)]));
+  },
+  mantle: () => parts.mantle().translate(0, -0.66, -0.03),
+  head: () => parts.head().translate(0, -0.69, -0.04),
+  hood: () => parts.hood().translate(0, -0.69, -0.05),
+};
+
+// A multitude sitting on the ground, placed with the engine crowd scatter. One instanced mesh per part.
+export function seatedCrowd(ctx, groups, pal = palette) {
+  const people = placeCrowd(groups.map((g) => ({ palette: pal, ...g, kneel: 0 })), ctx.heightAt, ctx.heightAt);
+  const material = new THREE.MeshLambertMaterial({ vertexColors: true });
+  const n = people.length;
+  const meshes = Object.fromEntries(Object.entries(seatedParts).map(([k, make]) => [k, new THREE.InstancedMesh(make(), material, n)]));
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
+  const zero = new THREE.Matrix4().makeScale(0, 0, 0);
+  const up = new THREE.Vector3(0, 1, 0);
+  const feet = new THREE.Color('#5a4030');
+  people.forEach((person, i) => {
+    p.set(person.x, person.y - 0.02, person.z);
+    q.setFromAxisAngle(up, person.yaw);
+    s.setScalar(person.scale);
+    m.compose(p, q, s);
+    const outer = person.mantle ?? person.robe;
+    for (const [k, c] of [['body', person.robe], ['feet', feet], ['arms', outer], ['head', person.skin]]) {
+      meshes[k].setMatrixAt(i, m);
+      meshes[k].setColorAt(i, c);
+    }
+    meshes.mantle.setMatrixAt(i, person.mantle ? m : zero);
+    meshes.mantle.setColorAt(i, outer);
+    meshes.hood.setMatrixAt(i, person.hood ? m : zero);
+    meshes.hood.setColorAt(i, outer);
+  });
+  for (const mesh of Object.values(meshes)) {
+    mesh.castShadow = mesh.receiveShadow = true;
+    mesh.computeBoundingSphere();
+    ctx.scene.add(mesh);
+  }
+  return people;
+}
+
+// A person kneeling upright, shins flat behind, arms reaching forward. Faces `face`.
+export function kneeling(ctx, { x, z, y, face, robe = '#8b6b4a', mantle, skin = '#9b6a46', scale = 1, bow = 0.25 }) {
+  const g = new THREE.Group();
+  const mat = (c) => new THREE.MeshLambertMaterial({ color: c, vertexColors: true });
+  const add = (geo, c) => g.add(new THREE.Mesh(geo, mat(c)));
+  const lean = new THREE.Group();
+  lean.position.set(0, 0.42, 0);
+  lean.rotation.x = bow;
+  g.add(lean);
+  const addLean = (geo, c) => lean.add(new THREE.Mesh(geo, mat(c)));
+  add(whiteColors(new THREE.BoxGeometry(0.42, 0.18, 0.62).translate(0, 0.09, -0.18)), robe);
+  add(whiteColors(new THREE.CylinderGeometry(0.2, 0.27, 0.42, 7).translate(0, 0.24, 0)), robe);
+  addLean(whiteColors(new THREE.CylinderGeometry(0.16, 0.22, 0.6, 7).translate(0, 0.3, 0)), robe);
+  if (mantle) addLean(parts.mantle().translate(0, -0.78, -0.02), mantle);
+  addLean(parts.head().translate(0, -0.66, 0.02), skin);
+  const arm = (sx) => new THREE.CylinderGeometry(0.05, 0.06, 0.55, 5).translate(0, -0.27, 0).rotateX(-1.1).translate(sx * 0.2, 0.52, 0.02).toNonIndexed();
+  addLean(whiteColors(mergeGeometries([arm(-1), arm(1)])), mantle ?? robe);
+  g.position.set(x, y ?? ctx.heightAt(x, z), z);
+  g.scale.setScalar(scale);
+  if (face) g.rotation.y = Math.atan2(face[0] - x, face[1] - z);
+  g.traverse((o) => (o.castShadow = true));
+  ctx.scene.add(g);
+  return g;
 }
