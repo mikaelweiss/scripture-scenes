@@ -14,16 +14,16 @@ export default {
   fov: 64,
   exposure: 1.0,
 
-  sun: { direction: [0.3, 0.8, -0.4], color: '#a8b8d0', intensity: 1.8 },
-  light: { sky: '#8a9ab6', ground: '#3a4450', hemi: 2.0 },
-  sky: { top: '#141a24', horizon: '#3e4a5a', ground: '#232c38', sunColor: '#4a5668', glow: 0.2 },
-  fog: { color: '#3a4656', near: 25, far: 260 },
-  clouds: { count: 160, shadow: '#1c2028', lit: '#4e5868', rim: '#6a7484', distance: [180, 620], altitude: [80, 150], hole: 0 },
+  sun: { direction: [-0.35, 0.7, 0.6], color: '#b8c8e0', intensity: 2.2 },
+  light: { sky: '#9aaac6', ground: '#4a5460', hemi: 2.1 },
+  sky: { top: '#182030', horizon: '#56647a', ground: '#2a3440', sunColor: '#6a7890', glow: 0.3 },
+  fog: { color: '#465468', near: 40, far: 300 },
+  clouds: { count: 160, shadow: '#222834', lit: '#5e6a7c', rim: '#8a96aa', distance: [180, 620], altitude: [80, 150], hole: 0 },
   bloom: { strength: 0.6, radius: 0.5, threshold: 0.8 },
-  grade: { saturation: 0.8, contrast: 1.1, vignette: 0.55, shadowTint: '#1a2440', highlightTint: '#d8e4ff' },
+  grade: { saturation: 0.85, contrast: 1.12, vignette: 0.45, shadowTint: '#1a2440', highlightTint: '#d8e4ff' },
   shadow: { center: [0, 0], radius: 25 },
 
-  player: { start: [0.9, 12.5], yaw: 0.03, pitch: -0.02, eye: 1.65, speed: 3.2 },
+  player: { start: [0.2, 8.8], yaw: -0.1, pitch: -0.03, eye: 1.65, speed: 3.2 },
 
   terrain: {
     size: 1100,
@@ -37,9 +37,9 @@ export default {
 
   custom(ctx) {
     const { THREE, scene, rand } = ctx;
-    ocean(ctx, { level: 0, size: 900, segments: 220, color: '#2c4a5a', deep: '#0f2230', crest: '#c8d4dc', amp: 1.3, freq: 0.055, chop: 1.2, speed: 1.3 });
+    ocean(ctx, { level: 0, size: 900, segments: 220, color: '#4a7c90', deep: '#16303e', crest: '#e8f0f4', foam: 0.85, glow: 0.55, amp: 1.3, freq: 0.055, chop: 1.2, speed: 1.3 });
     rain(ctx, { count: 6000, box: 70, height: 34, speed: 30, slant: [9, 4], color: '#c0ccd8', opacity: 0.4 });
-    lightning(ctx, { every: [2.5, 6], distance: [140, 280], fogFlash: '#8c96b0' });
+    lightning(ctx, { every: [2.5, 6], distance: [140, 280], fogFlash: '#a0aac4', strike: 3.5 });
 
     const ship = new THREE.Group();
     ship.position.y = RIDE;
@@ -71,11 +71,11 @@ export default {
     lying(-2.1, 4.5, '#d8d0c0');
     lying(2.1, 4.5, '#8a6a7a');
     const my = deck(MAST_Z);
-    const nephi = createFigure({ x: 0, y: my, z: MAST_Z + 0.42, face: [0, 20], robe: '#9a6a44', mantle: '#6a4a30', skin: '#9b6a46', arms: 'down' });
+    const nephi = createFigure({ x: 0, y: my, z: MAST_Z + 0.42, face: [0, 20], robe: '#d0b48a', mantle: '#8a5636', skin: '#a87652', arms: 'down' });
     ship.add(nephi);
-    const rope = lit('#b8a070');
+    const rope = lit('#e8d4a0');
     for (const h of [0.45, 0.85, 1.25]) {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.04, 4, 10), rope);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.06, 4, 10), rope);
       ring.rotation.x = Math.PI / 2;
       ring.position.set(0, my + h, MAST_Z + 0.2);
       ship.add(ring);
@@ -85,10 +85,10 @@ export default {
     const lamp = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: '#ffc070', toneMapped: false }));
     lamp.position.set(0, my + 2.6, MAST_Z + 0.45);
     ship.add(lamp);
-    const lampLight = new THREE.PointLight('#ffb060', 14, 16, 1.4);
-    lampLight.position.set(0, my + 2.5, MAST_Z + 0.9);
+    const lampLight = new THREE.PointLight('#ffb060', 9, 16, 1.4);
+    lampLight.position.set(0.4, my + 2.3, MAST_Z + 2.0);
     ship.add(lampLight);
-    ctx.onFrame((t) => (lampLight.intensity = 14 * (0.85 + 0.15 * Math.sin(t * 9) * Math.sin(t * 5.3))));
+    ctx.onFrame((t) => (lampLight.intensity = 9 * (0.85 + 0.15 * Math.sin(t * 9) * Math.sin(t * 5.3))));
     const stand = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.7, 0.6), lit('#5a3b26'));
     stand.position.set(1.4, my + 0.35, MAST_Z + 2.2);
     ship.add(stand);
@@ -111,9 +111,9 @@ export default {
     };
     const toLocal = (x, z) => deck(z);
     const people = placeCrowd([
-      { palette, count: 5, points: [[-1.1, MAST_Z + 1.6], [-1.6, MAST_Z + 2.3], [-0.6, MAST_Z + 2.5], [0.5, MAST_Z + 2.9], [-2.2, MAST_Z + 1.2]], face: [0, MAST_Z], children: 0.6, kneel: 0.8, seed: 81 },
+      { palette, count: 5, points: [[-1.1, MAST_Z + 1.6], [-1.6, MAST_Z + 2.3], [-0.6, MAST_Z + 2.5], [1.3, MAST_Z + 2.9], [-2.2, MAST_Z + 1.2]], face: [0, MAST_Z], children: 0.6, kneel: 0.8, seed: 81 },
       { palette, count: 3, points: [[2.3, MAST_Z - 1.6], [2.9, MAST_Z - 0.4], [-2.6, MAST_Z - 2.2]], face: [0, MAST_Z], children: 0, seed: 82 },
-      { palette, count: 8, points: [[-3, 2.6], [-1.0, 2.9], [2.9, 2.4], [1.0, 3.0], [-0.9, 6.6], [2.8, 6.8], [-1, -9], [1.2, -10.5]], face: [0, 4.5], children: 0.3, kneel: 0.5, seed: 83 },
+      { palette, count: 8, points: [[-3, 2.6], [-3.1, 3.6], [2.9, 2.4], [3.1, 3.4], [-3.0, 7.4], [2.8, 6.8], [-1, -9], [1.2, -10.5]], face: [0, 4.5], children: 0.3, kneel: 0.5, seed: 83 },
       { palette, count: 4, points: [[-2.4, -6], [2.2, -5.5], [-1.5, -12], [2.5, -13]], face: [0, -20], children: 0.2, seed: 84 },
     ], toLocal, toLocal);
     const time = { value: 0 };

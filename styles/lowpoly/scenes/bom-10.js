@@ -27,7 +27,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.06, vignette: 0.38, shadowTint: '#30285e', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -6], radius: 45 },
 
-  player: { start: [1.5, 6], yaw: 0.06, pitch: -0.02, eye: 1.65, speed: 4.2 },
+  player: { start: [0, 1.2], yaw: 0, pitch: 0.03, eye: 1.65, speed: 4.2 },
 
   terrain: {
     size: 1100,
@@ -36,8 +36,8 @@ export default {
     hills: 40,
     bumps: 0.3,
     flats: [{ x: 0, z: -6, r: 50, falloff: 40, height: 0.2 }],
-    colors: { ground: '#7e8a48', groundAlt: '#6c7c40', grass: '#5c7a38', high: '#76784e', rock: '#7a6e5c' },
-    patches: [{ x: LEHI[0], z: LEHI[1] + 4, r: 16, color: '#9a8458', strength: 0.6, rough: 0.5 }],
+    colors: { ground: '#9a9258', groundAlt: '#88884c', grass: '#6c843e', high: '#76784e', rock: '#7a6e5c' },
+    patches: [{ x: LEHI[0], z: LEHI[1] + 4, r: 18, color: '#b49a68', strength: 0.7, rough: 0.5 }],
   },
 
   objects: [
@@ -59,7 +59,7 @@ export default {
     },
     groups: [
       { count: 26, center: LEHI, ring: [3.4, 7.5], arc: [0.2, Math.PI - 0.2], spacing: 1.0, face: LEHI, children: 0.2, kneel: 0.35, seed: 101, avoid: [{ rect: [LEHI[0], LEHI[1] + 6, 2.4, 12] }, { rect: [LEHI[0], LEHI[1], 3.6, 3.6] }] },
-      { count: 30, center: LEHI, ring: [7.5, 12], arc: [0.05, Math.PI - 0.05], spacing: 1.15, face: LEHI, children: 0.35, kneel: 0.1, seed: 102, avoid: [{ rect: [LEHI[0], LEHI[1] + 6, 2.4, 12] }, { rect: [1.5, 6, 3, 3] }] },
+      { count: 30, center: LEHI, ring: [7.5, 12], arc: [0.05, Math.PI - 0.05], spacing: 1.15, face: LEHI, children: 0.35, kneel: 0.1, seed: 102, avoid: [{ rect: [LEHI[0], LEHI[1] + 6, 2.4, 12] }, { rect: [0, 1.5, 3, 4] }] },
       { count: 6, center: [-16, -2], ring: [1, 4], spacing: 1.2, face: LEHI, children: 0.6, seed: 103 },
     ],
   },

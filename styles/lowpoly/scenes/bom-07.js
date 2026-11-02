@@ -15,7 +15,7 @@ export default {
   fov: 62,
   exposure: 1.05,
 
-  sun: { direction: [-0.55, 0.62, 0.25], color: '#fff0d0', intensity: 2.8 },
+  sun: { direction: [-0.25, 0.55, 0.8], color: '#fff0d0', intensity: 2.8 },
   light: { sky: '#a8c8e8', ground: '#6a7a48', hemi: 1.15 },
   sky: { top: '#4f86c6', horizon: '#d6e6ea', ground: '#c8d8d8', sunColor: '#fff4d8', glow: 0.8 },
   fog: { color: '#d2e2e6', near: 90, far: 620 },
@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.05, vignette: 0.32, shadowTint: '#2a3a50', highlightTint: '#fff2d8' },
   shadow: { center: [10, -5], radius: 60 },
 
-  player: { start: [4, 10], yaw: 0.22, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [8, -1], yaw: 0.3, pitch: 0.08, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -39,7 +39,7 @@ export default {
     colors: { ground: '#7a9446', groundAlt: '#5a7c3a', grass: '#567c38', high: '#6c7c4c', rock: '#7c7262' },
     patches: [
       { x: 0, z: -340, r: 362, color: '#dcc896', strength: 1, rough: 0.08 },
-      { x: SHIP[0], z: SHIP[1] + 4, r: 26, color: '#bfa878', strength: 0.7, rough: 0.4 },
+      { x: SHIP[0] + 4, z: SHIP[1] + 10, r: 34, color: '#d6be8a', strength: 0.85, rough: 0.4 },
       { x: CAMP[0], z: CAMP[1], r: 18, color: '#8a7a50', strength: 0.5, rough: 0.5 },
     ],
   },
@@ -72,7 +72,7 @@ export default {
   },
 
   figures: [
-    { x: 2.5, z: -15.6, face: [2.5, -20], robe: '#9a6a44', mantle: '#5a3d2b', skin: '#9b6a46', arms: 'out' },
+    { x: 3, z: -14.2, face: [8, -1], robe: '#d0b48a', mantle: '#8a5636', skin: '#a87652', arms: 'out' },
     { x: -9, z: -4, face: [0, -18], robe: '#6e3a2a', mantle: '#3f2a20', skin: '#8a5a3c', arms: 'down', hood: true },
     { x: -10.6, z: -2.8, face: [0, -18], robe: '#4f4a5b', mantle: '#2f2a3a', skin: '#9b6a46', arms: 'out' },
   ],
@@ -89,7 +89,7 @@ export default {
     const ground = heightAt(SHIP[0], SHIP[1]);
     const lift = 0.9;
     const L = 30;
-    const { mesh, shape } = buildShip({ length: L, beam: 8, depth: 4.6, built: 0.5, rand, hullColor: '#9c6c42', plankAlt: '#b0804e' });
+    const { mesh, shape } = buildShip({ length: L, beam: 8, depth: 4.6, built: 0.5, rand, hullColor: '#b07a4a', plankAlt: '#c48e5a' });
     mesh.position.set(SHIP[0], ground + lift, SHIP[1]);
     mesh.rotation.y = SHIP_ROT;
     scene.add(mesh);
@@ -146,7 +146,7 @@ export default {
       if (y > 70) c.lerp(new THREE.Color('#8a8070'), Math.min(1, (y - 70) / 30));
     } });
 
-    const avoid = (x, z) => Math.abs(z - SHIP[1]) < 12 && Math.abs(x) < 26 || Math.hypot(x - CAMP[0], z - CAMP[1]) < 22 || Math.hypot(x - 4, z - 10) < 4;
+    const avoid = (x, z) => Math.abs(z - SHIP[1]) < 12 && Math.abs(x) < 26 || Math.hypot(x - CAMP[0], z - CAMP[1]) < 22 || Math.hypot(x - 8, z + 1) < 10;
     for (let i = 0; i < 120; i++) {
       const x = rand.range(-90, 90), z = rand.range(-30, 90);
       if (avoid(x, z) || heightAt(x, z) < SEA + 0.4) continue;

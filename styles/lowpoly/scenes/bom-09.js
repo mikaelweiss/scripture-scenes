@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.15, contrast: 1.05, vignette: 0.32, shadowTint: '#283a50', highlightTint: '#fff0d0' },
   shadow: { center: [0, -5], radius: 60 },
 
-  player: { start: [2, 22], yaw: 0.05, pitch: 0.0, eye: 1.65, speed: 4.5 },
+  player: { start: [5, -2], yaw: 0.1, pitch: 0.03, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -35,7 +35,7 @@ export default {
       { x: 0, z: -340, r: 250, falloff: 70, height: -6 },
       { x: 0, z: 0, r: 40, falloff: 40, height: 0.2 },
     ],
-    colors: { ground: '#6a8c42', groundAlt: '#557a36', grass: '#4f7432', high: '#5e7444', rock: '#766c5e' },
+    colors: { ground: '#7e9c4a', groundAlt: '#6c8c40', grass: '#58803a', high: '#5e7444', rock: '#766c5e' },
     patches: [
       { x: 0, z: -340, r: 358, color: '#d8c8a0', strength: 1, rough: 0.08 },
       { x: -18, z: -12, r: 14, color: '#8a7a50', strength: 0.5, rough: 0.5 },
@@ -66,7 +66,7 @@ export default {
   },
 
   figures: [
-    { x: 8, z: 4, face: [12, 2], robe: '#9a6a44', mantle: '#5a3d2b', skin: '#9b6a46', arms: 'out' },
+    { x: 1.5, z: -14, face: [-4, -37], robe: '#d0b48a', mantle: '#8a5636', skin: '#a87652', arms: 'out' },
   ],
 
   custom(ctx) {
@@ -91,10 +91,10 @@ export default {
 
     const { mesh: boat } = buildShip({ mast: false, length: 6, beam: 2, depth: 0.9, built: 1, rand, hullColor: '#8a5e3a', plankAlt: '#9a6c44' });
     boat.position.set(BOAT[0], heightAt(...BOAT) + 0.15, BOAT[1]);
-    boat.rotation.set(0.04, 0.3, 0.12);
+    boat.rotation.set(0.04, 1.3, 0.12);
     scene.add(boat);
-    ctx.colliders.add({ x: BOAT[0], z: BOAT[1], w: 2, d: 6, rot: 0.3, bottom: heightAt(...BOAT), top: heightAt(...BOAT) + 1.2 });
-    for (const s of [-1, 1]) ctx.solid.box(0.1, 0.1, 3.4, { position: [BOAT[0] + s * 1.6, heightAt(...BOAT) + 0.2, BOAT[1] + 1], rotation: [0, 0.3 + s * 0.4, 0], color: '#6a4a30' });
+    ctx.colliders.add({ x: BOAT[0], z: BOAT[1], w: 2, d: 6, rot: 1.3, bottom: heightAt(...BOAT), top: heightAt(...BOAT) + 1.2 });
+    for (const s of [-1, 1]) ctx.solid.box(0.1, 0.1, 3.4, { position: [BOAT[0] + s * 1.6, heightAt(...BOAT) + 0.2, BOAT[1] + 1], rotation: [0, 1.3 + s * 0.4, 0], color: '#6a4a30' });
 
     provisions(ctx, { x: -6, z: -28, count: 10, radius: 3 });
     provisions(ctx, { x: -14, z: -18, count: 6, radius: 2 });

@@ -26,7 +26,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.32, shadowTint: '#2a3450', highlightTint: '#fff0d0' },
   shadow: { center: [0, -25], radius: 70 },
 
-  player: { start: [5, 16], yaw: 0.08, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [3.5, 13], yaw: 0.06, pitch: 0.06, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -35,10 +35,12 @@ export default {
     hills: 44,
     bumps: 0.25,
     flats: [{ x: 0, z: -20, r: 120, falloff: 60, height: 0 }],
-    colors: { ground: '#8a8a58', groundAlt: '#7a7e4e', grass: '#6c7c44', high: '#76784e', rock: '#7a6e5c' },
+    colors: { ground: '#b89c6e', groundAlt: '#a88c62', grass: '#7e8a4c', high: '#8a845a', rock: '#8a7a64' },
     patches: [
-      { x: TEMPLE[0], z: TEMPLE[1], r: 50, color: '#b8a682', strength: 0.7, rough: 0.4 },
-      { x: 0, z: 20, r: 30, color: '#a8966e', strength: 0.5, rough: 0.5 },
+      { x: TEMPLE[0], z: TEMPLE[1], r: 50, color: '#cdb58c', strength: 0.7, rough: 0.4 },
+      { x: 0, z: 20, r: 30, color: '#b49468', strength: 0.5, rough: 0.5 },
+      { x: -40, z: -10, r: 35, color: '#a6825a', strength: 0.45, rough: 0.6 },
+      { x: 45, z: 5, r: 30, color: '#c0a47a', strength: 0.45, rough: 0.6 },
     ],
   },
 
@@ -103,6 +105,32 @@ export default {
     provisions(ctx, { x: -12, z: 6, count: 5 });
     campfire(ctx, { x: -30, z: 18, light: 5 });
 
+    const pad = (x, z, w, d, rot, color, lift = 0.06) => {
+      const c = Math.cos(rot), sn = Math.sin(rot);
+      let lo = Infinity, hi = -Infinity;
+      for (const [u, v] of [[0, 0], [-w / 2, -d / 2], [w / 2, -d / 2], [-w / 2, d / 2], [w / 2, d / 2]]) {
+        const h = heightAt(x + u * c + v * sn, z - u * sn + v * c);
+        lo = Math.min(lo, h);
+        hi = Math.max(hi, h);
+      }
+      const bottom = lo - 0.15, top = hi + lift;
+      ctx.solid.box(w, top - bottom, d, { position: [x, (top + bottom) / 2, z], rotation: [0, rot, 0], color, jitter: 0.04 });
+    };
+    const paving = ['#e4d4b0', '#c8b088', '#d8c29a', '#bea47c', '#d0b890'];
+    for (let ix = -7; ix <= 7; ix++) {
+      for (let iz = 0; iz <= 8; iz++) {
+        const x = ix * 2.6, z = -10.8 + iz * 2.6;
+        if (Math.abs(x) < 9 && z < -11) continue;
+        pad(x, z, 2.3, 2.3, rand.range(-0.03, 0.03), rand.pick(paving), 0.08);
+      }
+    }
+    for (let z = 12.6; z <= 44; z += 2.2) for (const x of [-1.15, 1.15]) pad(x + rand.range(-0.05, 0.05), z, 2.1, 1.95, rand.range(-0.03, 0.03), rand.pick(paving), 0.08);
+    for (const s of [-1, 1]) for (let z = 11.8; z <= 44; z += 1.1) pad(s * 2.6, z, 0.5, 1.0, 0, '#9a8462', 0.14);
+    const dirt = ['#9a7650', '#a07c56', '#94704a'];
+    for (const [x, z, w, d, r] of [[0, 2, 110, 3.2, 0], [0, -66, 110, 3.2, 0], [-42, -30, 3.2, 120, 0], [42, -30, 3.2, 120, 0], [-24, 25, 3, 50, 0.5], [24, 25, 3, 50, -0.5], [-70, -20, 3, 70, 0], [70, -20, 3, 70, 0]]) {
+      pad(x, z, w, d, r, rand.pick(dirt), 0.04);
+    }
+
     for (let gx = -7; gx <= 7; gx++) {
       for (let gz = -7; gz <= 6; gz++) {
         const x = gx * 15 + rand.range(-3, 3), z = gz * 15 - 15 + rand.range(-3, 3);
@@ -110,7 +138,9 @@ export default {
         if (Math.abs(x) < 22 && z > -10) continue;
         if (Math.hypot(x, z + 20) > 125 || rand() < 0.3) continue;
         const rot = Math.round(rand() * 4) * (Math.PI / 2) + rand.range(-0.08, 0.08);
-        house(ctx, { x, z, rot, w: rand.range(5, 9), d: rand.range(4.5, 7), h: rand.range(2.8, 4), color: rand.pick(['#c8b08a', '#d0bc98', '#bca480', '#c4ae8e']) });
+        const w = rand.range(5, 9), d = rand.range(4.5, 7);
+        pad(x, z, w + 4, d + 4, rot, rand.pick(['#c8ac80', '#bfa074', '#d0b68c', '#b89870']), 0.05);
+        house(ctx, { x, z, rot, w, d, h: rand.range(2.8, 4), color: rand.pick(['#d8c09a', '#e0ccaa', '#ccb490', '#d4be9e']), roof: rand.pick(['#7a5a3a', '#8a6440', '#6a4a30']) });
       }
     }
     field(ctx, { x: -150, z: 40, w: 40, d: 26, rot: 0.2, rows: 14 });

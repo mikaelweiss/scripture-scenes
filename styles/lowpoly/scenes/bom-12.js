@@ -4,7 +4,7 @@ import { solomonTemple, house } from './lib/bom-07-temple.js';
 
 const TEMPLE = [0, -40];
 const JACOB = [0, -24.2];
-const START = [-12, 0];
+const START = [-9, -6];
 
 export default {
   title: 'Jacob 2: Jacob teaches at the temple',
@@ -22,7 +22,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.07, vignette: 0.36, shadowTint: '#2a3050', highlightTint: '#ffeccc' },
   shadow: { center: [0, -25], radius: 60 },
 
-  player: { start: START, yaw: -0.44, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: START, yaw: -0.5, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -50,11 +50,11 @@ export default {
     groups: [
       {
         count: 40, center: [0, -14], ring: [0, 9], arc: [-Math.PI, Math.PI], spacing: 1.1, face: JACOB, children: 0.15, onStructures: true, seed: 121,
-        avoid: [{ rect: [0, -4, 7.5, 7.5] }, { rect: [0, -14.5, 3, 6] }, { rect: [0, -25.5, 30, 12] }, { rect: [-6, -12, 3.2, 30, -0.464] }],
+        avoid: [{ rect: [0, -4, 7.5, 7.5] }, { rect: [0, -14.5, 3, 6] }, { rect: [0, -25.5, 30, 12] }, { rect: [-4.5, -15, 3.4, 22, -0.5] }],
       },
       {
         count: 330, center: JACOB, ring: [13, 44], arc: [0.35, Math.PI - 0.35], spacing: 1.0, face: JACOB, children: 0.22, kneel: 0.08, seed: 122,
-        avoid: [{ rect: [0, -4, 9, 9] }, { rect: [14, -11, 10, 10] }, { rect: [-6, -12, 3.2, 30, -0.464] }, { rect: [0, 10, 200, 8] }, { rect: [33, 0, 4, 120] }, { rect: [-33, 0, 4, 120] }],
+        avoid: [{ rect: [0, -4, 9, 9] }, { rect: [14, -11, 10, 10] }, { rect: [-4.5, -15, 3.4, 22, -0.5] }, { rect: [0, 10, 200, 8] }, { rect: [33, 0, 4, 120] }, { rect: [-33, 0, 4, 120] }],
       },
     ],
   },

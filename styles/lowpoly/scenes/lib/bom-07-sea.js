@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // Faceted ocean whose waves are displaced on the GPU. Flat shading derives normals from the displaced surface.
-export function ocean(ctx, { level = 0, size = 1400, segments = 200, center = [0, 0], color = '#2f7d8f', deep = '#1b4b62', crest = '#d8eef0', amp = 0.3, freq = 0.06, speed = 0.8, chop = 0.5, opacity = 1 } = {}) {
+export function ocean(ctx, { level = 0, size = 1400, segments = 200, center = [0, 0], color = '#2f7d8f', deep = '#1b4b62', crest = '#d8eef0', amp = 0.3, freq = 0.06, speed = 0.8, chop = 0.5, opacity = 1, foam = 0, glow = 0 } = {}) {
   const { THREE: T, scene } = ctx;
   const geo = new T.PlaneGeometry(size, size, segments, segments).rotateX(-Math.PI / 2);
   const mat = new T.MeshLambertMaterial({ color: '#ffffff', flatShading: true, transparent: opacity < 1, opacity });
@@ -13,11 +13,13 @@ export function ocean(ctx, { level = 0, size = 1400, segments = 200, center = [0
     uShallow: { value: new T.Color(color) },
     uDeep: { value: new T.Color(deep) },
     uCrest: { value: new T.Color(crest) },
+    uFoam: { value: foam },
+    uGlow: { value: glow },
   };
   mat.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform float uTime, uAmp, uFreq, uChop;\nvarying float vWave;')
+      .replace('#include <common>', '#include <common>\nuniform float uTime, uAmp, uFreq, uChop;\nvarying float vWave;\nvarying vec2 vWp;')
       .replace(
         '#include <begin_vertex>',
         `#include <begin_vertex>
@@ -28,17 +30,22 @@ export function ocean(ctx, { level = 0, size = 1400, segments = 200, center = [0
           + sin((wp.x + wp.z) * uFreq * 2.7 + t * 1.7) * 0.18 * uChop
           + sin((wp.x - wp.z) * uFreq * 4.1 - t * 2.3) * 0.1 * uChop;
         transformed.y += h * uAmp;
-        vWave = h;`,
+        vWave = h;
+        vWp = wp.xz;`,
       );
     shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uShallow, uDeep, uCrest;\nvarying float vWave;')
+      .replace('#include <common>', '#include <common>\nuniform vec3 uShallow, uDeep, uCrest;\nuniform float uFoam, uGlow;\nvarying float vWave;\nvarying vec2 vWp;')
       .replace(
         '#include <color_fragment>',
         `#include <color_fragment>
         vec3 sea = mix(uDeep, uShallow, smoothstep(-0.8, 0.6, vWave));
         sea = mix(sea, uCrest, smoothstep(0.62, 0.95, vWave) * 0.75);
+        float speck = fract(sin(dot(floor(vWp * 0.7), vec2(12.9898, 78.233))) * 43758.5453);
+        float foamAmt = smoothstep(0.3, 0.75, vWave + speck * 0.4 - 0.15) * uFoam;
+        sea = mix(sea, vec3(0.92, 0.95, 0.97), foamAmt);
         diffuseColor.rgb = sea;`,
-      );
+      )
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n        totalEmissiveRadiance += (uCrest * 0.25 + uShallow * 0.35) * (foamAmt + smoothstep(0.0, 0.9, vWave) * 0.4) * uGlow;');
   };
   const mesh = new T.Mesh(geo, mat);
   mesh.position.set(center[0], level, center[1]);
@@ -125,7 +132,7 @@ export function rain(ctx, { count = 5000, box = 60, height = 30, speed = 26, sla
 }
 
 // Random lightning: a jagged bolt far off, a flash of the sky lights and fog.
-export function lightning(ctx, { every = [3, 8], distance = [160, 320], color = '#dfe8ff', fogFlash = '#7d86a0' } = {}) {
+export function lightning(ctx, { every = [3, 8], distance = [160, 320], color = '#dfe8ff', fogFlash = '#7d86a0', strike = 0 } = {}) {
   const { THREE: T, scene, rand } = ctx;
   const hemi = scene.children.find((o) => o.isHemisphereLight);
   const sun = scene.children.find((o) => o.isDirectionalLight);
@@ -134,6 +141,8 @@ export function lightning(ctx, { every = [3, 8], distance = [160, 320], color = 
   const mat = new T.MeshBasicMaterial({ color, toneMapped: false, fog: false, transparent: true, opacity: 0 });
   const bolt = new T.Group();
   scene.add(bolt);
+  const strikeLight = new T.DirectionalLight(color, 0);
+  scene.add(strikeLight, strikeLight.target);
   let next = rand.range(1, 3), flashStart = -10;
   const makeBolt = (x, z) => {
     bolt.clear();
@@ -157,6 +166,8 @@ export function lightning(ctx, { every = [3, 8], distance = [160, 320], color = 
     if (t > next) {
       const a = rand() * Math.PI * 2, d = rand.range(distance[0], distance[1]);
       makeBolt(camera.position.x + Math.cos(a) * d, camera.position.z + Math.sin(a) * d);
+      strikeLight.position.set(camera.position.x + Math.cos(a) * 60, 80, camera.position.z + Math.sin(a) * 60);
+      strikeLight.target.position.copy(camera.position);
       flashStart = t;
       next = t + rand.range(every[0], every[1]);
     }
@@ -164,6 +175,7 @@ export function lightning(ctx, { every = [3, 8], distance = [160, 320], color = 
     const f = k < 0.5 ? Math.max(0, 1 - k / 0.5) * (0.6 + 0.4 * Math.sin(k * 60)) : 0;
     mat.opacity = f > 0.05 ? Math.min(1, f * 1.5) : 0;
     bolt.visible = f > 0.05;
+    strikeLight.intensity = f * strike;
     if (hemi) hemi.intensity = baseHemi * (1 + f * 3);
     if (sun) sun.intensity = baseSun * (1 + f * 2);
     scene.fog.color.copy(baseFog).lerp(flashFog, f * 0.8);
