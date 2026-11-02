@@ -13,7 +13,7 @@ export function mountHud(data, crowdCount) {
   title.className = 'hud hud-title';
   title.innerHTML = `<h1></h1><p></p>`;
   title.querySelector('h1').textContent = data.title;
-  title.querySelector('p').textContent = `${data.subtitle} · ${crowdCount.toLocaleString()} people`;
+  title.querySelector('p').textContent = crowdCount ? `${data.subtitle} · ${crowdCount.toLocaleString()} people` : data.subtitle;
   const hint = document.createElement('div');
   hint.className = 'hud hud-hint';
   const touch = matchMedia('(pointer: coarse)').matches;
