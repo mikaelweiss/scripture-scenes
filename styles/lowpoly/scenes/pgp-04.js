@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.07, vignette: 0.42, shadowTint: '#30285e', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -6], radius: 50 },
 
-  player: { start: [2.5, 9.5], yaw: 0.12, pitch: 0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [0.9, -1.7], yaw: 0.02, pitch: 0.06, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -82,9 +82,13 @@ export default {
     ctx.solid.add(new THREE.ConeGeometry(0.1, 0.9, 4).rotateZ(-Math.PI / 3), { position: [ax + 1.9, top + 1.05, az], color: gold });
 
     // Abraham on the altar, face upward, his loosed cords fallen on the dais.
-    const abraham = person(ctx, { x: ax + 0.85, y: top + 0.88, z: az, robe: '#f2ebdc', mantle: '#6a7a9a', skin: '#a8754f', ghost: true });
+    const bed = new THREE.Group();
+    bed.position.set(ax + 1.45, top + 1.0, az);
+    bed.rotation.x = 0.45;
+    ctx.scene.add(bed);
+    const abraham = person(ctx, { x: 0, y: 0, z: 0, parent: bed, robe: '#e8dcc0', mantle: '#3e5688', skin: '#a8754f', ghost: true, scale: 1.15 });
     abraham.rotation.order = 'YXZ';
-    abraham.rotation.set(-Math.PI / 2, -Math.PI / 2, 0);
+    abraham.rotation.set(-Math.PI / 2, Math.PI / 2, 0);
     for (const k of [-1.8, -1.4]) ctx.solid.add(new THREE.TorusGeometry(0.12, 0.025, 4, 7), { position: [ax + 1.6 + k * 0.3, top + 0.02, az + 0.9 + k * 0.2], rotation: [Math.PI / 2, 0, 0], color: '#6a5038' });
 
     // The priest of Elkenah falls back before the angel.
@@ -93,8 +97,8 @@ export default {
     person(ctx, { x: ax + 3.6, z: az - 2.4, y: top, face: [ax, az], robe: '#3a2a3a', mantle: '#c4a040', skin: '#9b6a46', hood: true });
 
     // The angel of the Lord's presence above the altar, light filling the place.
-    angel(ctx, { x: ax + 0.3, z: az - 0.6, y: top + 2.2, face: [ax + 2, az + 20], scale: 1.2, arms: 'out', light: 60, distance: 26, halo: 8, float: 0.01 });
-    ctx.effects.beam({ position: [ax, top, az], height: 300, radiusBottom: 2.4, radiusTop: 12, color: '#fff3dc', opacity: 0.5 });
+    angel(ctx, { x: ax + 0.3, z: az - 1.3, y: top + 2.0, face: [ax + 2, az + 20], scale: 1.2, arms: 'out', light: 22, distance: 26, halo: 4.5, float: 0.01 });
+    ctx.effects.beam({ position: [ax, top, az], height: 300, radiusBottom: 2.4, radiusTop: 12, color: '#fff3dc', opacity: 0.32 });
     ctx.effects.motes({ position: [ax, top, az], radius: 3, height: 30, count: 140 });
 
     // The idols: gods of Elkenah, Libnah, Mahmackrah and Korash, and a great seated Elkenah behind.

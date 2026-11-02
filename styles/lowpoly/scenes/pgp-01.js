@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { person, stone, cloudLayer, box } from './lib/pgp-01-kit.js';
 
 const PEAK = 150;
-const MOSES = [0, -12];
+const MOSES = [0, -8];
 const LAKES = [[-240, -420, 90], [280, -340, 60], [60, -640, 140]];
 
 export default {
@@ -15,7 +15,7 @@ export default {
   exposure: 0.92,
 
   sun: { direction: [0.55, 0.5, 0.45], color: '#fff0d4', intensity: 3.0 },
-  light: { sky: '#9ab4e8', ground: '#5a4a44', hemi: 0.8 },
+  light: { sky: '#9ab4e8', ground: '#7a6a5e', hemi: 1.0 },
   sky: { top: '#24386e', horizon: '#d8e2ec', ground: '#b8c4cc', sunColor: '#fff2d8', glow: 1.6 },
   fog: { color: '#b8c8da', near: 300, far: 2300 },
   clouds: { count: 34, shadow: '#a8a8b8', lit: '#fff0dc', rim: '#ffffff', distance: [500, 1100], altitude: [230, 340], hole: 0.05, seed: 11 },
@@ -24,7 +24,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.4, shadowTint: '#2a3060', highlightTint: '#fff0d0' },
   shadow: { center: [0, -4], radius: 60 },
 
-  player: { start: [1.4, -3], yaw: 0.05, pitch: -0.24, eye: 1.65, speed: 3.5 },
+  player: { start: [1.0, -4.0], yaw: 0.05, pitch: -0.3, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 1600,
@@ -35,7 +35,7 @@ export default {
     bumps: 0.5,
     flats: [{ x: 0, z: 0, r: 0, falloff: 450, height: 70 }, { x: 0, z: 0, r: 6, falloff: 60, height: PEAK }, ...LAKES.map(([x, z, rad]) => ({ x, z, r: rad, falloff: 50, height: -3 }))],
     colors: { ground: '#7d8a5a', groundAlt: '#6a7a4c', grass: '#5e7a44', high: '#8a8078', rock: '#6e6660' },
-    patches: [{ x: 0, z: 0, r: 22, color: '#6e655c', strength: 0.8, rough: 0.5 }],
+    patches: [{ x: 0, z: 0, r: 22, color: '#958a7c', strength: 0.8, rough: 0.5 }],
   },
 
   scatter: [

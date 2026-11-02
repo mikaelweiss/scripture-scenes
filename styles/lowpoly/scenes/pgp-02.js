@@ -25,7 +25,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.06, vignette: 0.42, shadowTint: '#30285e', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -6], radius: 50 },
 
-  player: { start: [4, 15], yaw: 0.22, pitch: 0.0, eye: 1.65, speed: 4.5 },
+  player: { start: [-4.5, 7.5], yaw: -0.48, pitch: 0.0, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -65,9 +65,9 @@ export default {
     // Adam kneels at the altar, Eve beside him. The angel stands across the altar, asking why.
     person(ctx, { x: 1.9, z: 1.3, face: ALTAR, robe: '#8a6a48', mantle: '#5e4632', skin: '#a8754f', kneel: true, arms: 'out' });
     person(ctx, { x: 3.2, z: 2.6, face: ALTAR, robe: '#b89a72', mantle: '#7a5a42', skin: '#b5835e', hood: true, kneel: true });
-    angel(ctx, { x: -2.6, z: -1.2, face: [2, 1.6], scale: 1.15, arms: 'out', light: 35, distance: 18, halo: 5.5, float: 0.35 });
+    angel(ctx, { x: -2.6, z: -1.2, face: [2, 1.6], scale: 1.15, arms: 'out', light: 18, distance: 18, halo: 3.2, float: 0.35 });
     ctx.effects.motes({ position: [-2.6, 0, -1.2], radius: 2, height: 14, count: 90 });
-    ctx.effects.beam({ position: [-2.6, 0, -1.2], height: 160, radiusBottom: 1.6, radiusTop: 6, color: '#fff3dc', opacity: 0.35 });
+    ctx.effects.beam({ position: [-2.6, 0, -1.2], height: 160, radiusBottom: 1.6, radiusTop: 6, color: '#fff3dc', opacity: 0.2 });
 
     // Firstlings of the flock, and the flock grazing nearby.
     sheep(ctx, { x: 2.6, z: -1.2, rot: -2.2, scale: 0.75, color: '#f4f0e6', lying: true });

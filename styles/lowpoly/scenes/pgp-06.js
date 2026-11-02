@@ -6,8 +6,8 @@ import * as THREE from 'three';
 import { stars, cloudLayer } from './lib/pgp-01-kit.js';
 
 const DAIS = [0, -30];
-const FATHER = [-1.6, -31.6];
-const SON = [1.4, -28.2];
+const FATHER = [-1.7, -24.6];
+const SON = [1.7, -23.8];
 
 const noble = Array.from({ length: 22 }, (_, i) => {
   const a = Math.PI * (0.2 + (i / 21) * 0.6);
@@ -28,7 +28,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.05, vignette: 0.45, shadowTint: '#2a2a6a', highlightTint: '#fff2dc' },
   shadow: { center: [0, -10], radius: 70 },
 
-  player: { start: [0.6, 1], yaw: 0, pitch: 0.16, eye: 1.65, speed: 4.5 },
+  player: { start: [0, -12.5], yaw: 0, pitch: 0.24, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 900,
@@ -42,7 +42,7 @@ export default {
   },
 
   objects: [
-    { type: 'steppedPyramid', x: DAIS[0], z: DAIS[1], w: 20, d: 20, tiers: 5, tierHeight: 1.1, inset: 1.4, stairWidth: 5, color: '#9a90c8', trim: '#7a70a8', stairColor: '#aaa2d4' },
+    { type: 'steppedPyramid', x: DAIS[0], z: DAIS[1], w: 20, d: 20, tiers: 3, tierHeight: 1.1, inset: 1.4, stairWidth: 5, color: '#9a90c8', trim: '#7a70a8', stairColor: '#aaa2d4' },
   ],
 
   crowd: {
@@ -67,19 +67,17 @@ export default {
 
   figures: [
     {
-      x: FATHER[0], z: FATHER[1], face: [0, 60], scale: 1.35, robe: '#ffffff', mantle: '#fbf6ea', skin: '#fff6e6', arms: 'down', emissive: 0.6,
-      light: { color: '#fff4dc', intensity: 60, distance: 36 },
-      halo: { size: 4.5, opacity: 0.3, color: '#fff3d6' },
+      x: FATHER[0], z: FATHER[1], face: [0, 60], scale: 1.95, robe: '#f6f2ea', mantle: '#e4d8bc', skin: '#fff6e6', arms: 'down', emissive: 0.3,
+      halo: { size: 6, opacity: 0.16, color: '#fff3d6' },
     },
     {
-      x: SON[0], z: SON[1], face: [0, 60], scale: 1.2, robe: '#fbf8f0', mantle: '#f2ecde', skin: '#f4ead8', arms: 'out', emissive: 0.55,
-      light: { color: '#fff0cf', intensity: 40, distance: 24 },
-      halo: { size: 3.5, opacity: 0.3, color: '#fff3d6' },
+      x: SON[0], z: SON[1], face: [0, 60], scale: 1.75, robe: '#f4efe4', mantle: '#ddd0b2', skin: '#fff4e2', arms: 'out', emissive: 0.28,
+      halo: { size: 5.4, opacity: 0.14, color: '#fff3d6' },
     },
   ],
 
   effects: [
-    { type: 'beam', at: FATHER, height: 400, radiusBottom: 5, radiusTop: 26, color: '#fff3dc', opacity: 0.3 },
+    { type: 'beam', at: FATHER, height: 400, radiusBottom: 4, radiusTop: 26, color: '#fff3dc', opacity: 0.07 },
     { type: 'ring', at: DAIS, lift: 0.05, radius: 8.5, width: 1.2, color: '#ffe8b8', opacity: 0.6 },
     { type: 'motes', at: DAIS, radius: 14, height: 40, count: 300 },
   ],

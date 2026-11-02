@@ -27,16 +27,16 @@ export default {
   fov: 66,
   exposure: 1.1,
 
-  sun: { direction: [0.9, 0.3, 0.25], color: '#a8b8ff', intensity: 1.2 },
-  light: { sky: '#4a5a9a', ground: '#2a2632', hemi: 1.4 },
+  sun: { direction: [0.9, 0.3, 0.25], color: '#a8b8ff', intensity: 2.0 },
+  light: { sky: '#5a6aaa', ground: '#3a3a52', hemi: 1.6 },
   sky: { top: '#050816', horizon: '#1e2650', ground: '#121420', sunColor: '#b8c4ff', glow: 0.0 },
-  fog: { color: '#141a34', near: 60, far: 520 },
+  fog: { color: '#1c2444', near: 80, far: 560 },
   mountains: { count: 40, color: '#141828', radius: [480, 700], height: [30, 90], haze: 0.35 },
   bloom: { strength: 0.9, radius: 0.6, threshold: 0.7 },
   grade: { saturation: 1.1, contrast: 1.08, vignette: 0.5, shadowTint: '#141a50', highlightTint: '#fff2d8' },
   shadow: { center: [0, 0], radius: 40 },
 
-  player: { start: [1.6, 4.2], yaw: 0.02, pitch: 0.25, eye: 1.65, speed: 4 },
+  player: { start: [1.5, 3.0], yaw: 0.02, pitch: 0.25, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 1000,
@@ -45,14 +45,14 @@ export default {
     hills: 18,
     bumps: 0.3,
     flats: [{ x: 0, z: 0, r: 10, falloff: 50, height: 9 }, { x: CAMP[0], z: CAMP[1], r: 20, falloff: 20, height: 0 }],
-    colors: { ground: '#4a4038', groundAlt: '#3e3630', grass: '#3a3c2c', high: '#4a4238', rock: '#3a322c' },
-    patches: [{ x: 0, z: 0, r: 12, color: '#5a5048', strength: 0.6, rough: 0.5 }],
+    colors: { ground: '#6e6a72', groundAlt: '#625e68', grass: '#555c58', high: '#76727e', rock: '#5c5862' },
+    patches: [{ x: 0, z: 0, r: 12, color: '#7a7270', strength: 0.6, rough: 0.5 }],
   },
 
   scatter: [
-    { type: 'rock', count: 18, center: [0, 0], ring: [8, 40], spacing: 5, seed: 7, avoid: [{ rect: [0, 2, 10, 14] }], props: { color: '#4e4640', size: 1.4 } },
-    { type: 'rock', count: 40, center: [0, 0], ring: [40, 260], spacing: 12, seed: 8, props: { color: '#3e3832' } },
-    { type: 'tree', count: 20, center: CAMP, ring: [22, 120], spacing: 10, seed: 9, avoid: [{ rect: [0, 0, 60, 60] }], props: { kind: 'palm', leaf: '#2e3a26' } },
+    { type: 'rock', count: 18, center: [0, 0], ring: [8, 40], spacing: 5, seed: 7, avoid: [{ rect: [0, 2, 10, 14] }], props: { color: '#6a6670', size: 1.4 } },
+    { type: 'rock', count: 40, center: [0, 0], ring: [40, 260], spacing: 12, seed: 8, props: { color: '#5e5a64' } },
+    { type: 'tree', count: 20, center: CAMP, ring: [22, 120], spacing: 10, seed: 9, avoid: [{ rect: [0, 0, 60, 60] }], props: { kind: 'palm', leaf: '#3e5040' } },
   ],
 
   custom(ctx) {

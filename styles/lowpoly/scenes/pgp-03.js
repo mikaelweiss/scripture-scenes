@@ -36,7 +36,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.06, vignette: 0.4, shadowTint: '#2a2c5e', highlightTint: '#fff0d0' },
   shadow: { center: [0, 0], radius: 60 },
 
-  player: { start: [6, 64], yaw: -0.08, pitch: 0.02, eye: 1.65, speed: 4.5 },
+  player: { start: [5, 44], yaw: -0.1, pitch: 0.0, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -44,7 +44,7 @@ export default {
     seed: 31,
     hills: 30,
     bumps: 0.35,
-    flats: [{ x: 0, z: 10, r: 80, falloff: 60, height: 0 }, { x: 6, z: 66, r: 7, falloff: 28, height: 9 }, { x: CITY[0], z: CITY[1], r: R - 4, falloff: 8, height: -3.5 }],
+    flats: [{ x: 0, z: 10, r: 80, falloff: 60, height: 0 }, { x: 5, z: 46, r: 6, falloff: 22, height: 11 }, { x: CITY[0], z: CITY[1], r: R - 4, falloff: 8, height: -3.5 }],
     colors: { ground: '#8a7c56', groundAlt: '#7a6e4c', grass: '#6a8040', high: '#7a7458', rock: '#6a5e50' },
     patches: [
       { x: CITY[0], z: CITY[1], r: R + 4, color: '#4a3a2c', strength: 0.95, rough: 0.35 },
@@ -126,10 +126,10 @@ export default {
     city.add(createFigure({ x: 0, y: 3.6, z: 3.4, face: [0, 100], scale: 1.1, robe: '#f4efe2', mantle: '#c9b48e', skin: '#a8754f', arms: 'out', emissive: 0.35 }));
 
     // Cloud wreathing the underside of the city.
-    const ring = cloudLayer(ctx, { radius: R + 5, inner: R - 3, y: -3.5, count: 34, size: [2.2, 4.5], color: '#fff8ee', emissive: 0.2, opacity: 0.8, seed: 9 });
+    const ring = cloudLayer(ctx, { radius: R + 5, inner: R - 3, y: -3.5, count: 40, size: [1.8, 3.6], color: '#f4eee4', emissive: 0.05, opacity: 0.85, seed: 9 });
     ctx.scene.remove(ring);
     city.add(ring);
-    const under = cloudLayer(ctx, { radius: R - 10, y: -20, count: 8, size: [3, 6], color: '#fff4e4', emissive: 0.4, opacity: 0.5, seed: 10 });
+    const under = cloudLayer(ctx, { radius: R - 10, y: -20, count: 8, size: [3, 6], color: '#f4ece0', emissive: 0.1, opacity: 0.45, seed: 10 });
     ctx.scene.remove(under);
     city.add(under);
 
