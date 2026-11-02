@@ -46,6 +46,89 @@ export const parts = {
   },
 };
 
+const merge = (...geos) => mergeGeometries(geos.map((g) => (g.index ? g.toNonIndexed() : g)));
+const lathe = (profile, segments = 8) => new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), segments);
+const broad = (geo) => geo.scale(1.12, 1, 0.86);
+
+function limb(from, to, r0, r1, segments = 5) {
+  const a = new THREE.Vector3(...from), b = new THREE.Vector3(...to);
+  const dir = b.clone().sub(a);
+  const g = new THREE.CylinderGeometry(r1, r0, dir.length(), segments).translate(0, dir.length() / 2, 0);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize()));
+  return g.translate(a.x, a.y, a.z);
+}
+
+// Kneeling folds the legs under the hips: the upper body drops onto the heels and leans slightly forward.
+const HIP = 0.88, KNEEL_HIP = 0.34, LEAN = 0.1;
+// placeCrowd and scene kits sink kneelers by this much; createCrowd lifts them back onto the ground.
+const KNEEL_SINK = 0.48;
+const kneelMatrix = new THREE.Matrix4()
+  .makeTranslation(0, KNEEL_HIP, 0)
+  .multiply(new THREE.Matrix4().makeRotationX(LEAN))
+  .multiply(new THREE.Matrix4().makeTranslation(0, -HIP, 0));
+const kneeled = (geo) => geo.clone().applyMatrix4(kneelMatrix);
+const kneelPoint = (p) => new THREE.Vector3(...p).applyMatrix4(kneelMatrix).toArray();
+
+const SHOULDER = 0.2;
+const torsoProfile = [[0.22, 0.78], [0.2, 0.92], [0.2, 0.99], [0.225, 1.18], [0.17, 1.26], [0.095, 1.31]];
+const beltTint = (y) => (y > 0.915 && y < 0.995 ? 0.7 : 1);
+const torso = (profile) => tint(broad(lathe(profile)), (x, y) => (y < 0.12 ? 0.75 : beltTint(y)));
+const skinTint = (x, y, z) => (y < 1.42 ? 0.8 : z > 0.02 ? 1 : 0.88);
+const head = () => merge(new THREE.CylinderGeometry(0.062, 0.07, 0.16, 6).translate(0, 1.37, 0), new THREE.IcosahedronGeometry(0.13, 0).scale(1, 1.12, 1).translate(0, 1.52, 0));
+const hand = (p) => new THREE.IcosahedronGeometry(0.05, 0).translate(...p);
+
+// Crowd shapes come standing and kneeling, sharing one origin at the ground under the person, facing +z.
+const crowdShapes = {
+  body: () => {
+    // Standing sleeves hug the robe and end without hands, so scene kits that add their own posed arms do not show a second pair.
+    const sleeves = (s) => tint(limb([s * SHOULDER, 1.21, 0], [s * 0.245, 0.76, 0.04], 0.056, 0.066), () => 0.92);
+    const stand = merge(torso([[0.3, 0], [0.27, 0.12], [0.21, 0.75], ...torsoProfile.slice(1)]), sleeves(-1), sleeves(1));
+    const shoulder = (s) => kneelPoint([s * SHOULDER, 1.21, 0]);
+    const elbow = (s) => kneelPoint([s * 0.24, 0.96, 0.03]);
+    const kneelArm = (s) =>
+      tint(merge(limb(shoulder(s), elbow(s), 0.058, 0.064), limb(elbow(s), [s * 0.13, 0.33, 0.28], 0.064, 0.07)), () => 0.92);
+    const thigh = (s) => tint(limb([s * 0.105, 0.27, -0.08], [s * 0.11, 0.17, 0.34], 0.13, 0.115, 6), () => 1);
+    const foot = (s) => tint(new THREE.BoxGeometry(0.1, 0.07, 0.15).translate(s * 0.1, 0.04, -0.32), () => 0.55);
+    const seat = tint(new THREE.CylinderGeometry(0.24, 0.28, 0.2, 8).translate(0, 0.1, -0.03), (x, y) => (y < 0.06 ? 0.75 : 0.95));
+    const kneel = merge(kneeled(torso(torsoProfile)), seat, thigh(-1), thigh(1), foot(-1), foot(1), kneelArm(-1), kneelArm(1));
+    return [stand, kneel];
+  },
+  skin: () => {
+    const face = tint(head(), skinTint);
+    const hands = (points) => tint(merge(...points.map(hand)), () => 0.95);
+    return [
+      face,
+      merge(kneeled(face), hands([[-0.13, 0.33, 0.33], [0.13, 0.33, 0.33]])),
+    ];
+  },
+  mantle: () => {
+    const upper = [[0.285, 1.16], [0.235, 1.26], [0.105, 1.325]];
+    const cloak = (hem) => tint(broad(lathe([[hem[0] + 0.005, hem[1]], ...upper])).translate(0, 0, -0.01), (x, y) => (y < hem[1] + 0.04 ? 0.85 : 1));
+    // A kneeler's mantle stops at the waist so it does not swallow the folded legs.
+    return [cloak([0.305, 0.76]), kneeled(cloak([0.29, 1.02]))];
+  },
+  hair: () => {
+    const cap = new THREE.SphereGeometry(0.142, 8, 4, Math.PI * 0.8, Math.PI * 1.4, 0, Math.PI * 0.68).scale(1, 1.08, 1).translate(0, 1.535, -0.008);
+    const shaded = tint(cap, (x, y) => (y > 1.6 ? 1 : 0.9));
+    return [shaded, kneeled(shaded)];
+  },
+  hood: () => {
+    const hood = parts.hood().translate(0, -0.02, 0).scale(1.15, 1, 1.1);
+    return [hood, kneeled(hood)];
+  },
+};
+let shapeCache;
+const shapes = () => (shapeCache ??= Object.fromEntries(Object.entries(crowdShapes).map(([k, build]) => [k, build()])));
+
+const HAIR = ['#3a2a20', '#4a3426', '#2e2420', '#56402e', '#44342a', '#7c7268'];
+const HEADCLOTHS = ['#e6dcc6', '#d8ccb0', '#cbbd9c', '#efe6d2', '#c9b48e', '#b8a888'];
+
+// Hair and headcloth come from a hash of the position so placeCrowd's random sequence, and every scene's layout, stays the same.
+function hairColor(person) {
+  const rand = rng((Math.floor(person.x * 97) * 73856093) ^ (Math.floor(person.z * 89) * 19349663));
+  return jitterColor(rand() < 0.45 ? rand.pick(HEADCLOTHS) : rand.pick(HAIR), rand, 0.08);
+}
+
 function sway(material, time) {
   material.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = time;
@@ -84,15 +167,17 @@ export function placeCrowd(groups, heightAt, standAt) {
       if (!g.points && (insideAny(x, z, g.avoid) || tooClose(x, z, spacing))) continue;
       const child = rand() < children;
       const target = face ?? g.center;
+      const kneeling = rand() < kneel;
       const p = {
         x, z,
-        y: (g.onStructures ? standAt : heightAt)(x, z) - (rand() < kneel ? 0.48 : 0),
+        y: (g.onStructures ? standAt : heightAt)(x, z) - (kneeling ? KNEEL_SINK : 0),
         yaw: Math.atan2(target[0] - x, target[1] - z) + rand.range(-0.35, 0.35),
         scale: child ? rand.range(0.55, 0.72) : rand.range(0.92, 1.1),
         robe: jitterColor(rand.pick(palette.robes), rand, 0.08),
         mantle: rand() < (palette.mantleChance ?? 0.6) ? jitterColor(rand.pick(palette.mantles), rand, 0.08) : null,
         hood: rand() < (palette.hoodChance ?? 0.3),
         skin: jitterColor(rand.pick(palette.skins), rand, 0.05),
+        kneeling,
       };
       people.push(p);
       const k = key(x, z);
@@ -108,30 +193,27 @@ export function createCrowd(people, time) {
   const material = new THREE.MeshLambertMaterial({ vertexColors: true });
   sway(material, time);
   const group = new THREE.Group();
-  const meshes = {
-    robe: new THREE.InstancedMesh(parts.robe(), material, people.length),
-    mantle: new THREE.InstancedMesh(parts.mantle(), material, people.length),
-    head: new THREE.InstancedMesh(parts.head(), material, people.length),
-    hood: new THREE.InstancedMesh(parts.hood(), material, people.length),
-  };
-  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
-  const zero = new THREE.Matrix4().makeScale(0, 0, 0);
-  const up = new THREE.Vector3(0, 1, 0);
-  people.forEach((person, i) => {
-    p.set(person.x, person.y, person.z);
-    q.setFromAxisAngle(up, person.yaw);
-    s.setScalar(person.scale);
-    m.compose(p, q, s);
-    meshes.robe.setMatrixAt(i, m);
-    meshes.robe.setColorAt(i, person.robe);
-    meshes.head.setMatrixAt(i, m);
-    meshes.head.setColorAt(i, person.skin);
-    meshes.mantle.setMatrixAt(i, person.mantle ? m : zero);
-    meshes.mantle.setColorAt(i, person.mantle ?? person.robe);
-    meshes.hood.setMatrixAt(i, person.hood ? m : zero);
-    meshes.hood.setColorAt(i, person.mantle ?? person.robe);
-  });
-  for (const mesh of Object.values(meshes)) {
+  const geometry = shapes();
+  const lists = {};
+  const put = (part, pose, matrix, color) => (lists[`${part}.${pose}`] ??= { part, pose, items: [] }).items.push([matrix, color]);
+  const q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0);
+  for (const person of people) {
+    const kneeling = Boolean(person.kneeling ?? person.kneel);
+    const pose = kneeling ? 1 : 0;
+    const ground = person.y + (kneeling ? KNEEL_SINK : 0);
+    const m = new THREE.Matrix4().compose(new THREE.Vector3(person.x, ground, person.z), q.setFromAxisAngle(up, person.yaw), new THREE.Vector3().setScalar(person.scale));
+    put('body', pose, m, person.robe);
+    put('skin', pose, m, person.skin);
+    if (person.mantle) put('mantle', pose, m, person.mantle);
+    if (person.hood) put('hood', pose, m, person.mantle ?? person.robe);
+    else put('hair', pose, m, person.hair ?? hairColor(person));
+  }
+  for (const { part, pose, items } of Object.values(lists)) {
+    const mesh = new THREE.InstancedMesh(geometry[part][pose], material, items.length);
+    items.forEach(([m, c], i) => {
+      mesh.setMatrixAt(i, m);
+      mesh.setColorAt(i, c);
+    });
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     mesh.computeBoundingSphere();
