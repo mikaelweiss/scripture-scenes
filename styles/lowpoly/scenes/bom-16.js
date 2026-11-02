@@ -17,7 +17,7 @@ const camp = (() => {
     for (let i = 0; i < n; i++) {
       const a = Math.PI * (-0.12 + (1.24 * (i + 0.5)) / n) + r.range(-0.03, 0.03);
       const x = TOWER[0] + Math.cos(a) * radius, z = TOWER[1] + Math.sin(a) * radius;
-      if (Math.abs(x - 4) < 4.5 && z > 0) continue;
+      if (Math.abs(x - 4) < 4.5 && z > TOWER[1] + 12) continue;
       const rot = faceYaw(x, z, TEMPLE);
       tents.push({ x, z, rot, color: r.pick(['#d8c8a4', '#cbb88e', '#e2d6b8', '#bfa77e', '#d4c09a']), stripe: r() < 0.5 ? r.pick(['#a8342a', '#3e5f86', '#6a7a3a', '#8a5a2a']) : null });
       const at = frame(x, z, rot);
@@ -44,7 +44,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.35, shadowTint: '#2a3048', highlightTint: '#fff0d4' },
   shadow: { center: [0, -20], radius: 85 },
 
-  player: { start: [15, -63.6], yaw: 2.8, pitch: -0.2, eye: 1.65, speed: 4.5 },
+  player: { start: [4, -12], yaw: 0.18, pitch: 0.2, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1200,
@@ -90,7 +90,7 @@ export default {
   },
 
   figures: [
-    { x: TOWER[0], z: TOWER[1], y: TOWER_H, face: [0, 40], scale: 1.15, robe: '#f2ead8', mantle: '#7a2a3a', skin: '#c08a62', arms: 'out' },
+    { x: TOWER[0], z: TOWER[1], y: TOWER_H, face: [0, 40], scale: 1.3, robe: '#f2ead8', mantle: '#7a2a3a', skin: '#c08a62', arms: 'out' },
   ],
 
   custom(ctx) {
@@ -133,7 +133,7 @@ export default {
     // A gold circlet for the king.
     const crown = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.035, 4, 10), new THREE.MeshLambertMaterial({ color: '#e8b84a', emissive: '#6a4a10' }));
     crown.rotation.x = Math.PI / 2;
-    crown.position.set(tx, TOWER_H + 1.68 * 1.15, tz);
+    crown.position.set(tx, TOWER_H + 1.68 * 1.3, tz);
     ctx.scene.add(crown);
     for (const s of [-1, 1]) banner(ctx, { x: tx + s * 6, z: tz + 3, h: 6, color: s < 0 ? '#3e5f86' : '#a8342a' });
     // Firstlings of the flocks brought for sacrifice, penned beside the temple.

@@ -3,8 +3,8 @@
 import { water, broadTree, bush, scatterIn, person, pine } from './lib/bom-13-kit.js';
 
 const POOL = [0, -10];
-const ALMA = [-1.4, -9.4];
-const HELAM = [-0.3, -8.6];
+const ALMA = [-1.2, -6.8];
+const HELAM = [-0.1, -6.0];
 const WATER_Y = -0.35;
 
 export default {
@@ -23,7 +23,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.4, shadowTint: '#283a48', highlightTint: '#fff0d0' },
   shadow: { center: [0, -6], radius: 45 },
 
-  player: { start: [4, 2.5], yaw: 0.43, pitch: -0.1, eye: 1.65, speed: 4 },
+  player: { start: [-1.4, 0.4], yaw: -0.04, pitch: -0.12, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
@@ -54,7 +54,7 @@ export default {
     groups: [
       {
         count: 200, center: POOL, ring: [10, 19], arc: [-0.5, Math.PI + 0.4], spacing: 0.85, face: ALMA, children: 0.2, kneel: 0.15, seed: 81,
-        avoid: [{ rect: [4.5, 4, 8, 10] }],
+        avoid: [{ rect: [4.5, 4, 8, 10] }, { x: -1.4, z: 1.2, r: 3.2 }],
       },
       { count: 6, points: [[6.4, -4.6], [7.2, -5.8], [-6.6, -4.4], [-7.4, -5.8], [7.6, -7.4], [-5.6, -3.4]], face: ALMA, children: 0, seed: 82 },
     ],
@@ -67,7 +67,7 @@ export default {
     water(ctx, { x: POOL[0] - 2, z: POOL[1] - 2, w: 34, d: 30, y: WATER_Y, color: '#4aa8b0', opacity: 0.78, wave: 0.03, cell: 1.6, speed: 0.6, shininess: 90 });
 
     // Alma, waist deep, raises his hand. Helam stands before him.
-    person(ctx, { x: ALMA[0], z: ALMA[1], y: WATER_Y - 0.85, face: HELAM, scale: 1.05, robe: '#efe8d8', mantle: '#d8ccb0', skin: '#c08a62', arms: 'out', collide: true });
+    person(ctx, { x: ALMA[0], z: ALMA[1], y: WATER_Y - 0.85, face: HELAM, scale: 1.12, robe: '#efe8d8', mantle: '#d8ccb0', skin: '#c08a62', arms: 'out', collide: true });
     person(ctx, { x: HELAM[0], z: HELAM[1], y: WATER_Y - 0.85, face: ALMA, robe: '#e8e0cc', skin: '#b07a55' });
     const ripples = [];
     for (const [x, z] of [ALMA, HELAM]) {

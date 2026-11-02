@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.08, contrast: 1.05, vignette: 0.35, shadowTint: '#2c3048', highlightTint: '#fff2d8' },
   shadow: { center: [0, -10], radius: 70 },
 
-  player: { start: [1.5, -1.5], yaw: 0.03, pitch: -0.1, eye: 1.65, speed: 4.5 },
+  player: { start: [2.2, -3.6], yaw: 0.14, pitch: -0.04, eye: 1.65, speed: 4.5 },
 
   terrain: {
     size: 1100,
@@ -80,7 +80,7 @@ export default {
   },
 
   figures: [
-    { x: JACOB[0], z: JACOB[1], face: [SHEREM[0], SHEREM[1] + 6], scale: 1.05, robe: '#efe7d4', mantle: '#3e5f86', skin: '#c08a62', arms: 'out' },
+    { x: JACOB[0], z: JACOB[1], face: [SHEREM[0], SHEREM[1] + 6], scale: 1.15, robe: '#efe7d4', mantle: '#3e5f86', skin: '#c08a62', arms: 'out' },
   ],
 
   custom(ctx) {

@@ -21,7 +21,7 @@ export default {
   grade: { saturation: 1.05, contrast: 1.08, vignette: 0.55, shadowTint: '#1a1e48', highlightTint: '#ffd2a8' },
   shadow: { center: [0, -6], radius: 40 },
 
-  player: { start: [0.6, 3.4], yaw: 0.12, pitch: 0.02, eye: 1.65, speed: 4 },
+  player: { start: [-2.8, -1.6], yaw: -0.85, pitch: 0.0, eye: 1.65, speed: 4 },
 
   terrain: {
     size: 900,
@@ -47,7 +47,7 @@ export default {
       if (i % 3 === 0) broadTree(ctx, { x, z, h: ctx.rand.range(6, 10), color: ctx.rand.pick(['#3f5e2c', '#4a6630', '#36522a']), crowns: 4 });
       else pine(ctx, { x, z, h: ctx.rand.range(7, near ? 13 : 16), color: ctx.rand.pick(['#2c4a2e', '#34532f', '#26402a']) });
     });
-    for (const [x, z] of scatterIn(ctx.rand, { center: ENOS, ring: [3.5, 60], count: 140, spacing: 1.6, avoid: (x, z) => Math.hypot(x - 0.6, z - 3.4) < 5 || Math.hypot(x - ENOS[0], z - ENOS[1]) < 3 })) {
+    for (const [x, z] of scatterIn(ctx.rand, { center: ENOS, ring: [3.5, 60], count: 140, spacing: 1.6, avoid: (x, z) => Math.hypot(x + 2.8, z + 1.6) < 5 || Math.hypot(x - ENOS[0], z - ENOS[1]) < 3 })) {
       bush(ctx, { x, z, size: ctx.rand.range(0.5, 1.1), color: ctx.rand.pick(['#4a6a32', '#3e5a2c', '#58703a']) });
     }
 

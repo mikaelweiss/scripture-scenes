@@ -31,7 +31,7 @@ export default {
   grade: { saturation: 1.12, contrast: 1.1, vignette: 0.5, shadowTint: '#3a2040', highlightTint: '#ffe0b0' },
   shadow: { center: [0, -3], radius: 30 },
 
-  player: { start: [3.2, 9.5], yaw: 0.27, pitch: 0.02, eye: 1.65, speed: 3.5 },
+  player: { start: [4.6, 1.8], yaw: 0.5, pitch: 0.06, eye: 1.65, speed: 3.5 },
 
   terrain: {
     size: 400,
@@ -149,13 +149,13 @@ export default {
     face.scale.set(1, 1.12, 1);
     face.position.set(ABINADI[0], abY + 1.53 * 1.05, ABINADI[1]);
     ctx.scene.add(face);
-    ctx.effects.halo({ position: [ABINADI[0], abY + 1.6, ABINADI[1]], size: 3.2, opacity: 0.8, color: '#fff2c8' });
+    ctx.effects.halo({ position: [ABINADI[0], abY + 1.6, ABINADI[1]], size: 2.2, opacity: 0.6, color: '#fff2c8' });
     const shine = new THREE.PointLight('#fff0c8', 14, 9, 1.4);
     shine.position.set(ABINADI[0], abY + 1.9, ABINADI[1] + 0.3);
     ctx.scene.add(shine);
     for (const s of [-1, 1]) ctx.solid.add(new THREE.TorusGeometry(0.1, 0.025, 4, 8), { position: [ABINADI[0] + s * 0.12, abY + 0.95, ABINADI[1] + 0.12], rotation: [0, 0, Math.PI / 2], color: '#9a8a6a' });
     // Guards who drew back from him.
-    for (const [x, z] of [[-3.4, -1], [2.6, -0.4], [-2.4, 2.6]]) {
+    for (const [x, z] of [[-3.4, -1], [3.2, -5.4], [-2.4, 2.6]]) {
       person(ctx, { x, z, y: abY, face: ABINADI, robe: '#7a2a2a', mantle: '#3a2a20', skin: '#a8724c', hood: false });
       ctx.solid.add(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 4), { position: [x + 0.35, abY + 1.3, z + 0.1], rotation: [0.12, 0, -0.1], color: '#5a4030' });
       ctx.solid.add(new THREE.ConeGeometry(0.07, 0.3, 4), { position: [x + 0.48, abY + 2.68, z + 0.26], rotation: [0.12, 0, -0.1], color: '#2a2a2a' });

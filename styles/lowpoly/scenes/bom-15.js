@@ -32,8 +32,8 @@ function band(seed, count, from, to, width, spacing) {
   return pts;
 }
 
-const travelers = band(51, 230, [15, 34], [8, -32], 10, 1.2).filter(([x, z]) => Math.hypot(x - 21, z - 48) > 6);
-const townsfolk = band(52, 180, [8, -52], [20, -78], 9, 1.1);
+const travelers = band(51, 230, [15, 34], [8, -32], 10, 1.2).filter(([x, z]) => Math.hypot(x - 24, z + 8) > 6);
+const townsfolk = band(52, 180, [8, -50], [20, -78], 9, 1.1);
 
 const housesAt = (() => {
   const r = rng(53);
@@ -65,7 +65,7 @@ export default {
   grade: { saturation: 1.1, contrast: 1.05, vignette: 0.35, shadowTint: '#2a3048', highlightTint: '#fff0d4' },
   shadow: { center: [8, -20], radius: 80 },
 
-  player: { start: [21, 48], yaw: 0.12, pitch: -0.16, eye: 1.65, speed: 5 },
+  player: { start: [24, -8], yaw: 0.3, pitch: -0.16, eye: 1.65, speed: 5 },
 
   terrain: {
     size: 1200,
@@ -73,7 +73,7 @@ export default {
     seed: 15,
     hills: 26,
     bumps: 0.3,
-    flats: [{ x: 10, z: -70, r: 90, falloff: 50, height: 0.6 }, { x: 24, z: 66, r: 4, falloff: 80, height: 10 }, ...riverFlats()],
+    flats: [{ x: 10, z: -70, r: 90, falloff: 50, height: 0.6 }, { x: 24, z: 66, r: 4, falloff: 80, height: 10 }, ...riverFlats(), { x: 25, z: -6, r: 4, falloff: 24, height: 7 }],
     colors: { ground: '#8a8a50', groundAlt: '#7a8248', grass: '#6a8c40', high: '#7c7a5a', rock: '#7a6c58' },
     patches: [
       { x: CITY[0], z: CITY[1], r: 70, color: '#b8a27c', strength: 0.7, rough: 0.3 },
@@ -120,8 +120,8 @@ export default {
   },
 
   figures: [
-    { x: MOSIAH[0], z: MOSIAH[1], face: ZARAHEMLA, scale: 1.05, robe: '#ece4d2', mantle: '#4a6a9a', skin: '#c08a62', arms: 'out' },
-    { x: ZARAHEMLA[0], z: ZARAHEMLA[1], face: MOSIAH, scale: 1.03, robe: '#d8b050', mantle: '#a83a2a', skin: '#9b6a46', arms: 'out' },
+    { x: MOSIAH[0], z: MOSIAH[1], face: ZARAHEMLA, scale: 1.2, robe: '#ece4d2', mantle: '#4a6a9a', skin: '#c08a62', arms: 'out' },
+    { x: ZARAHEMLA[0], z: ZARAHEMLA[1], face: MOSIAH, scale: 1.2, robe: '#d8b050', mantle: '#a83a2a', skin: '#9b6a46', arms: 'out' },
   ],
 
   custom(ctx) {
@@ -144,7 +144,7 @@ export default {
       }
     }
     for (const [x, z] of scatterIn(ctx.rand, { center: [-30, 0], ring: [10, 30], count: 70, spacing: 2, avoid: (x, z) => x > -14 })) bush(ctx, { x, z, size: ctx.rand.range(0.6, 1.2), color: '#4f7036' });
-    for (const [x, z] of scatterIn(ctx.rand, { center: [30, -10], ring: [20, 70], count: 26, spacing: 9, avoid: (x, z) => Math.abs(x - 10) < 14 || z > 20 })) broadTree(ctx, { x, z, h: ctx.rand.range(6, 9), color: '#4f7a35' });
+    for (const [x, z] of scatterIn(ctx.rand, { center: [30, -10], ring: [20, 70], count: 26, spacing: 9, avoid: (x, z) => Math.abs(x - 10) < 22 || z > 20 })) broadTree(ctx, { x, z, h: ctx.rand.range(6, 9), color: '#4f7a35' });
     // Bundles and walking staffs of the travelers who left the land of Nephi.
     for (const [x, z] of travelers.filter((_, i) => i % 9 === 0)) {
       const bx = x + 0.6, bz = z + 0.4;
