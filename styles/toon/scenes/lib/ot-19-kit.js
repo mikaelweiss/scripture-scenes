@@ -584,19 +584,58 @@ export function lightning(ctx, { top, bottom, count = 3, color = '#fff6d0', ligh
   });
 }
 
-// A figure lying down, propped up by `prop` radians. Head points along `dir` (radians around Y).
-export function lying(ctx, { pos, dir = 0, colors, prop = 0.3 }) {
+const limb = (from, to, r) => {
+  const d = new THREE.Vector3().subVectors(to, from);
+  const g = new THREE.CapsuleGeometry(r, Math.max(0.01, d.length() - r * 2), 4, 8);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()));
+  return g.translate((from.x + to.x) / 2, (from.y + to.y) / 2, (from.z + to.z) / 2);
+};
+
+// A person lying on the ground, head toward `toward`. Propped figures rise on one elbow and reach out with the other hand.
+export function lying(b, ctx, { pos, toward, colors, propped = true, lift = 0.5, reach = 0.6, seed = 1 }) {
   const [x, z] = pos;
-  const g = new THREE.Group();
-  const fig = makeFigure(colors, ctx.kit);
-  fig.rotation.x = -Math.PI / 2 + prop;
-  fig.position.y = 0.24;
-  g.add(fig);
-  g.position.set(x, ctx.terrainHeight(x, z), z);
-  g.rotation.y = dir + Math.PI;
-  ctx.scene.add(g);
-  ctx.exclude({ kind: 'circle', x, z, r: 1.2 });
-  return g;
+  const y = ctx.terrainHeight(x, z);
+  const frame = frameAt(x, y, z, Math.atan2(toward[0] - x, toward[1] - z));
+  const side = seed % 2 ? 1 : -1;
+  const tilt = propped ? lift : 0.12;
+  const torso = new THREE.Matrix4().makeTranslation(0, 0.16, 0).multiply(new THREE.Matrix4().makeRotationX(-tilt));
+  const at = (px, py, pz) => new THREE.Vector3(px, py, pz).applyMatrix4(torso);
+  const put = (color, geo, m = null) => b.add(color, m ? geo.applyMatrix4(m) : geo, { frame });
+
+  // Legs under the robe, with the hem pooling on the ground.
+  put(colors.robe, ball(1, [0, 0.16, -0.5], [0.24, 0.17, 0.6]));
+  put(colors.robe, ball(1, [side * 0.04, 0.05, -0.7], [0.29, 0.07, 0.48]));
+  for (const s of [-1, 1]) put(colors.skin, ball(0.065, [s * 0.09, 0.07, -1.12], [1, 0.8, 1.5], 8));
+
+  // Torso, mantle over the shoulders, head lifted toward the pole.
+  put(colors.robe, ball(1, [0, 0, 0.3], [0.24, 0.15, 0.36]), torso);
+  put(colors.mantle, ball(1, [0, 0.02, 0.48], [0.29, 0.17, 0.22]), torso);
+  put(colors.mantle, ball(1, [0, -0.04, 0.2], [0.3, 0.08, 0.36]), torso);
+  if (colors.sash) put(colors.sash, xf(new THREE.TorusGeometry(0.2, 0.03, 5, 14), { pos: [0, 0, 0.05], scale: [1.05, 0.7, 1] }), torso);
+  const neck = at(0, 0.02, 0.62);
+  const head = new THREE.Vector3(neck.x, neck.y + 0.1 + (propped ? 0 : 0.06), neck.z + 0.1);
+  put(colors.skin, ball(0.13, head.toArray(), [1, 1, 1], 10));
+  put(colors.hair, xf(new THREE.SphereGeometry(0.142, 10, 7, 0, Math.PI * 2, 0, Math.PI * 0.58), { pos: [head.x, head.y + 0.01, head.z - 0.02], rot: [-1.0, 0, 0] }));
+
+  // One arm bears the weight, the other reaches toward the serpent.
+  const shoulderA = at(side * 0.24, 0.02, 0.5);
+  const shoulderB = at(-side * 0.24, 0.02, 0.5);
+  if (propped) {
+    const elbow = new THREE.Vector3(shoulderA.x + side * 0.06, 0.07, shoulderA.z + 0.02);
+    put(colors.mantle, limb(shoulderA, elbow, 0.07));
+    const hand = new THREE.Vector3(elbow.x - side * 0.04, 0.06, elbow.z + 0.34);
+    put(colors.mantle, limb(elbow, hand, 0.06));
+    put(colors.skin, ball(0.055, hand.toArray(), [1, 0.8, 1.2], 8));
+  } else {
+    const hand = new THREE.Vector3(shoulderA.x + side * 0.14, 0.06, shoulderA.z - 0.45);
+    put(colors.mantle, limb(shoulderA, hand, 0.065));
+    put(colors.skin, ball(0.055, hand.toArray(), [1, 1, 1], 8));
+  }
+  const out = new THREE.Vector3(-side * 0.08, Math.sin(reach), Math.cos(reach)).normalize().multiplyScalar(0.58);
+  const hand = shoulderB.clone().add(out);
+  put(colors.mantle, limb(shoulderB, hand, 0.065));
+  put(colors.skin, ball(0.058, hand.toArray(), [1, 1, 1], 8));
+  ctx.exclude({ kind: 'circle', x, z, r: 1.3 });
 }
 
 export function sheep(b, ctx, { pos, rot = 0, color = '#ece4d2', face = '#3a2a20' }) {

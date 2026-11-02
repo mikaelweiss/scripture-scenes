@@ -87,7 +87,8 @@ function custom(ctx) {
   pillar(ctx, { pos: [t.x, t.z], lift: t.h, height: 90, radius: 7, color: '#ffe8c4', shade: '#5a3020', fire: true });
   stars(ctx, { count: 500, size: 1.6, minY: 0.35 });
 
-  person(ctx, { pos: [COURT.x + 17, COURT.z + 6], face: [t.x, t.z], scale: 1.1, colors: { ...MOSES, arms: [0.4, 0.9] } });
+  // Moses waits before the gate: he could not enter, for the cloud abode upon the tent.
+  person(ctx, { pos: [COURT.x + COURT.hx + 6.5, COURT.z - 1.8], face: [t.x, t.z], scale: 1.25, colors: { ...MOSES, arms: [0.45, 1.2] } });
   person(ctx, { pos: [COURT.x + 9, COURT.z - 3], face: [t.x, t.z], colors: { ...PRIEST, mantle: '#3a4f9a', sash: '#b5303b' } });
   person(ctx, { pos: [COURT.x + 10, COURT.z + 3.5], face: [al[0], al[1]], colors: PRIEST });
   person(ctx, { pos: [COURT.x + 15, COURT.z - 4], face: [al[0], al[1]], colors: PRIEST });
@@ -124,7 +125,7 @@ export default {
     ],
   },
   player: {
-    start: [56, -13],
+    start: [39, -17.2],
     lookAt: [TENT.x, TENT.z + 4],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },

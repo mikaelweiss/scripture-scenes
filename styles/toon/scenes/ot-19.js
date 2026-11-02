@@ -37,8 +37,10 @@ function custom(ctx) {
   }
   // Moses speaks from a low outcrop.
   const ry = ctx.terrainHeight(...MOSES_AT);
-  b.add('#b89070', new THREE.DodecahedronGeometry(2.4, 0).scale(1.3, 0.45, 1).translate(MOSES_AT[0] - 0.8, ry, MOSES_AT[1] - 0.3));
-  ctx.addCollider({ x: MOSES_AT[0] - 0.8, z: MOSES_AT[1] - 0.3, hx: 2.6, hz: 1.9, rot: 0, top: ry + 0.95, walkable: true });
+  const top = ry + 1.9;
+  b.add('#b89070', new THREE.DodecahedronGeometry(2.4, 0).scale(1.4, 0.5, 1.1).translate(MOSES_AT[0] - 0.8, ry, MOSES_AT[1] - 0.3));
+  b.add('#c9a27e', new THREE.CylinderGeometry(2.1, 2.6, 1.9, 7).translate(MOSES_AT[0] - 0.8, ry + 0.95, MOSES_AT[1] - 0.3));
+  ctx.addCollider({ x: MOSES_AT[0] - 0.8, z: MOSES_AT[1] - 0.3, hx: 2.8, hz: 2.2, rot: 0, top, walkable: true });
   b.flush();
 
   // The bread itself: white flakes over the open ground and between the tents.
@@ -47,8 +49,8 @@ function custom(ctx) {
 
   addSun(ctx, { dir: [0.9, 0.12, -0.25], size: 70, color: '#fff0d0', halo: '#ffc890' });
 
-  person(ctx, { pos: MOSES_AT, y: ry + 0.95, face: [0, 14], scale: 1.1, colors: { ...MOSES, arms: [0.5, 1.1] } });
-  person(ctx, { pos: [MOSES_AT[0] - 1.8, MOSES_AT[1] - 0.6], y: ry + 0.95, face: [0, 14], scale: 1.05, colors: AARON });
+  person(ctx, { pos: MOSES_AT, y: top, face: [0, 14], scale: 1.3, colors: { ...MOSES, arms: [0.5, 1.1] } });
+  person(ctx, { pos: [MOSES_AT[0] - 1.8, MOSES_AT[1] - 0.6], y: top, face: [0, 14], scale: 1.2, colors: AARON });
   person(ctx, { pos: [2.2, 4.5], face: [0, 14], scale: 0.62, colors: { robe: '#c98b3c', mantle: '#e6d8b8', skin: '#a87650', hair: '#2b1a12', arms: [0.3, 1.3] } });
 }
 
@@ -80,12 +82,12 @@ export default {
     keepClear: [{ kind: 'circle', x: MOSES_AT[0], z: MOSES_AT[1], r: 3 }],
     groups: [
       { shape: 'rect', center: [0, -8], size: [56, 62], count: 170, kneel: 0.6, children: 0.15, facingJitter: 6, lean: 0.4 },
-      { center: MOSES_AT, radius: [3.2, 7], angle: [-1.6, 1.6], count: 26, children: 0.1, facingJitter: 0.4 },
+      { center: MOSES_AT, radius: [3.6, 7], angle: [-1.6, 1.6], count: 26, children: 0.1, facingJitter: 0.4 },
       { center: [0, -8], radius: [36, 70], count: 160, kneel: 0.4, children: 0.15, facingJitter: 6, lean: 0.3 },
     ],
   },
   player: {
-    start: [0, 16],
+    start: [-2.7, -8],
     lookAt: [MOSES_AT[0], MOSES_AT[1]],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },

@@ -53,10 +53,10 @@ function custom(ctx) {
   camp(b, ctx, { center: CALF, ring: [24, 150], count: 300, seed: 211, keepOut: [{ kind: 'rect', x: 4, z: 30, hx: 9, hz: 18 }, { kind: 'circle', x: -40, z: -30, r: 20 }] });
   b.flush();
 
-  const moses = person(ctx, { pos: MOSES_AT, y: my + 1.85, face: CALF, scale: 1.12, colors: { ...MOSES, arms: [0.25, 2.75] } });
+  const moses = person(ctx, { pos: MOSES_AT, y: my + 1.85, face: CALF, scale: 1.28, colors: { ...MOSES, arms: [0.25, 2.75] } });
   const t = tablets();
   attach(ctx, moses, t.geo.scale(1.4, 1.4, 1.4), t.color, { pos: [0, 1.7, 0.12], rot: [-0.2, 0, 0] });
-  person(ctx, { pos: [MOSES_AT[0] - 1.5, MOSES_AT[1] - 1.2], y: my + 1.75, face: CALF, scale: 1.05, colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e' } });
+  person(ctx, { pos: [MOSES_AT[0] - 1.5, MOSES_AT[1] - 1.2], y: my + 1.75, face: CALF, scale: 1.18, colors: { robe: '#a87b4f', mantle: '#5e4632', skin: '#9c6a45', hair: '#2b1a12', sash: '#c8912e' } });
 
   // The ring of dancers circling the calf.
   const dancers = [];
@@ -116,8 +116,8 @@ export default {
     ],
   },
   player: {
-    start: [4, 17],
-    lookAt: [-2, -8],
+    start: [1, 13],
+    lookAt: [-3.5, -6],
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
 };

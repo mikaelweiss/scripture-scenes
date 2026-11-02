@@ -1,5 +1,6 @@
 // Joshua 6:12-20: on the seventh day the priests blow the trumpets, the people shout, and the wall falls down flat.
 // x is east, z is south. Jericho stands north of the player; the procession circles it.
+import { FX_LAYER } from '../engine/renderer.js';
 import { Batch, DAY_STYLE, PALETTE, PRIEST, arkGroup, house, makeRng, palm, shofar } from './lib/ot-19-kit.js';
 import { makeFigure } from '../engine/people.js';
 
@@ -94,18 +95,19 @@ function custom(ctx) {
   b.flush();
 
   // Dust thrown up as the wall falls.
-  const dustN = SIDES * 5;
-  const dust = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 9), ctx.kit.toon('#e2c89c', { emissive: '#5a4630' }), dustN);
+  const dustN = SIDES * 9;
+  const dust = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 9), new THREE.MeshLambertMaterial({ color: '#ecd6ac', emissive: '#806a4c', transparent: true, opacity: 0.45, depthWrite: false }), dustN);
+  dust.layers.set(FX_LAYER);
   dust.frustumCulled = false;
   dust.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   ctx.scene.add(dust);
   const puffs = [];
   for (const s of segs) {
     if (s.i === RAHAB) continue;
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 9; k++) {
       const along = (rng() - 0.5) * s.L, out = 2 + rng() * 9;
       const tx = Math.cos(s.yaw), tz = -Math.sin(s.yaw);
-      puffs.push({ seg: s, x: s.mx + tx * along + s.nx * out, z: s.mz + tz * along + s.nz * out, size: 0.9 + rng() * 1.3, ph: rng() * 0.6 });
+      puffs.push({ seg: s, x: s.mx + tx * along + s.nx * out, z: s.mz + tz * along + s.nz * out, size: 0.9 + rng() * 1.2, ph: rng() * 0.6 });
     }
   }
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), sc = new THREE.Vector3();
@@ -199,8 +201,8 @@ export default {
     ],
   },
   player: {
-    start: [6, 16],
-    lookAt: CITY,
+    start: [4, 9],
+    lookAt: [CITY[0] - 7, CITY[1]],
     colors: { robe: '#7a6a52', mantle: '#b5523b', skin: '#a8724a', hair: '#2b1a12', sash: '#c8912e' },
   },
 };

@@ -54,22 +54,21 @@ function custom(ctx) {
   }
 
   camp(b, ctx, { center: POLE, ring: [30, 160], count: 280, seed: 231, keepOut: [{ kind: 'rect', x: 0, z: 30, hx: 8, hz: 16 }] });
-  b.flush();
-
   glow(ctx, { pos: [POLE[0], top + 5.4, POLE[1]], size: 5, color: '#ffd080', opacity: 0.5, pulse: 0.06 });
 
-  person(ctx, { pos: [POLE[0] - 1.6, POLE[1] + 0.8], y: top, face: [0, 14], scale: 1.12, colors: { ...MOSES, arms: [0.35, 2.3] } });
+  person(ctx, { pos: [POLE[0] - 1.6, POLE[1] + 0.8], y: top, face: [0, 14], scale: 1.3, colors: { ...MOSES, arms: [0.35, 2.3] } });
 
-  // The bitten, lying about the rise and lifting their heads to look upon the serpent.
+  // The bitten, lying about the rise. Some still lie flat, most raise themselves to look upon the serpent.
   const pal = PALETTE;
-  for (let i = 0; i < 30; i++) {
-    const a = (i / 30) * Math.PI * 2 + rng() * 0.2;
-    const r = 5.5 + rng() * 8;
+  for (let i = 0; i < 34; i++) {
+    const a = (i / 34) * Math.PI * 2 + rng() * 0.2;
+    const r = 5.6 + rng() * 8;
     const x = POLE[0] + Math.sin(a) * r, z = POLE[1] + Math.cos(a) * r;
-    if (ctx.blocked(x, z, 0.4) || (Math.abs(x) < 2.4 && z > 0)) continue;
-    const colors = { robe: pal.robes[i % pal.robes.length], mantle: pal.mantles[(i * 5) % pal.mantles.length], skin: pal.skins[i % pal.skins.length], hair: pal.hair[i % 4], arms: [0.5, 0.2] };
-    lying(ctx, { pos: [x, z], dir: Math.atan2(x - POLE[0], z - POLE[1]), colors, prop: 0.18 + rng() * 0.12 });
+    if (ctx.blocked(x, z, 0.6) || (Math.abs(x) < 2.6 && z > -5)) continue;
+    const colors = { robe: pal.robes[i % pal.robes.length], mantle: pal.mantles[(i * 5) % pal.mantles.length], skin: pal.skins[i % pal.skins.length], hair: pal.hair[i % 4] };
+    lying(b, ctx, { pos: [x, z], toward: POLE, colors, propped: rng() < 0.7, lift: 0.45 + rng() * 0.35, reach: 0.4 + rng() * 0.6, seed: i });
   }
+  b.flush();
 }
 
 export default {
@@ -102,7 +101,7 @@ export default {
     ],
   },
   player: {
-    start: [0, 9],
+    start: [0, 1.5],
     lookAt: POLE,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },

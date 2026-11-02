@@ -93,8 +93,8 @@ function custom(ctx) {
   b.flush();
 
   // Moses and Aaron at the bounds, nearest the mount.
-  person(ctx, { pos: [-1, BOUNDS_Z + 4], face: PEAK, scale: 1.1, colors: { ...MOSES, arms: [0.6, 1.4] } });
-  person(ctx, { pos: [-3, BOUNDS_Z + 5], face: PEAK, scale: 1.05, colors: AARON });
+  person(ctx, { pos: [-1, BOUNDS_Z + 4], face: PEAK, scale: 1.25, colors: { ...MOSES, arms: [0.6, 1.4] } });
+  person(ctx, { pos: [-2.6, BOUNDS_Z + 3.6], face: PEAK, scale: 1.15, colors: AARON });
 }
 
 export default {
@@ -132,7 +132,7 @@ export default {
     ],
   },
   player: {
-    start: [0, 26],
+    start: [0.6, -30],
     lookAt: PEAK,
     colors: { robe: '#8c5a3c', mantle: '#c8912e', skin: '#a8724a', hair: '#2b1a12', sash: '#4f7f80' },
   },
